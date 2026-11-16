@@ -338,11 +338,11 @@ export default function App() {
         </section>
 
         {/* Active Filters Indicator banner if search or quadrant active */}
-        {(activeQuadrantFilter || searchQuery) && (
+        {((activeQuadrantFilter && activeQuadrantFilter !== "all") || searchQuery) && (
           <div className="flex items-center justify-between text-xs bg-zinc-100 border border-zinc-200 px-3.5 py-2 rounded-lg text-zinc-600">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-zinc-800">Filter Aktif:</span>
-              {activeQuadrantFilter && (
+              {activeQuadrantFilter && activeQuadrantFilter !== "all" && (
                 <span className="bg-white border border-zinc-200 px-2 py-0.5 rounded font-medium text-zinc-800">
                   {QUADRANTS[activeQuadrantFilter]?.name || activeQuadrantFilter}
                 </span>
@@ -369,28 +369,7 @@ export default function App() {
           </div>
         )}
 
-        {/* Zero State Alert Banner when all ideas are reset */}
-        {ideas.length === 0 && (
-          <div className="bg-white border border-zinc-200 rounded-xl p-5 sm:p-6 text-center flex flex-col items-center justify-center shadow-xs">
-            <h3 className="text-sm font-bold text-zinc-900">
-              Matriks Bersih (0 Ide)
-            </h3>
-            <p className="text-xs text-zinc-500 mt-1 max-w-md leading-relaxed">
-              Seluruh ide telah di-reset ke 0. Anda dapat mulai menambahkan ide fitur produk baru Anda secara mandiri.
-            </p>
-            <div className="flex items-center gap-2.5 mt-3.5 flex-wrap justify-center">
-              <button
-                type="button"
-                onClick={handleOpenAddModal}
-                className="px-4 py-2 text-xs font-semibold text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-colors cursor-pointer shadow-xs"
-              >
-                + Tambah Ide Pertama
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* 3. Main Views: Matrix View vs Table View */}
+        {/* 3. Main Views: Matrix View vs Table View (Always displayed directly, even when 0 ideas) */}
         <section aria-label="Area Kerja Ideation Matrix">
           {viewMode === "matrix" ? (
             <MatrixView

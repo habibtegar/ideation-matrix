@@ -29,7 +29,7 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
       label: "Kuadran II",
       name: "Major Projects",
       count: countII,
-      sub: "F ≤ 3, I ≥ 4",
+      sub: "F < 4, I ≥ 4",
       dot: QUADRANTS.II.dotColor,
     },
     {
@@ -37,7 +37,7 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
       label: "Kuadran III",
       name: "Time Sinks",
       count: countIII,
-      sub: "F ≤ 3, I ≤ 3",
+      sub: "F < 4, I < 4",
       dot: QUADRANTS.III.dotColor,
     },
     {
@@ -45,7 +45,7 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
       label: "Kuadran IV",
       name: "Fill-Ins",
       count: countIV,
-      sub: "F ≥ 4, I ≤ 3",
+      sub: "F ≥ 4, I < 4",
       dot: QUADRANTS.IV.dotColor,
     },
     {
@@ -61,12 +61,21 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
       {stats.map((stat) => {
-        const isSelected = activeQuadrantFilter === stat.id;
+        const isSelected =
+          stat.id === "all"
+            ? !activeQuadrantFilter || activeQuadrantFilter === "all"
+            : activeQuadrantFilter === stat.id;
         return (
           <button
             key={stat.id}
             type="button"
-            onClick={() => onSelectQuadrant(stat.id === activeQuadrantFilter ? null : stat.id)}
+            onClick={() => {
+              if (stat.id === "all" || stat.id === activeQuadrantFilter) {
+                onSelectQuadrant(null);
+              } else {
+                onSelectQuadrant(stat.id);
+              }
+            }}
             className={`text-left p-3 rounded-lg border transition-all cursor-pointer ${
               isSelected
                 ? "bg-zinc-100 border-zinc-900 ring-1 ring-zinc-900"
