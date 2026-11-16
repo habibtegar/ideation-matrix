@@ -49,29 +49,9 @@ export default function MatrixView({
               </span>
             </div>
 
-            {/* Matrix 2x2 Grid with precise #d4d4d8 axes lines */}
-            <div className="flex-1 relative">
-              {/* Vertical Center Axis Line */}
-              <div
-                className="absolute inset-y-0 left-1/2 w-[1px] bg-[#d4d4d8] pointer-events-none z-10 -translate-x-1/2"
-                aria-hidden="true"
-              ></div>
-              {/* Horizontal Center Axis Line */}
-              <div
-                className="absolute inset-x-0 top-1/2 h-[1px] bg-[#d4d4d8] pointer-events-none z-10 -translate-y-1/2"
-                aria-hidden="true"
-              ></div>
-
-              {/* Center Origin Dot */}
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border border-[#d4d4d8] flex items-center justify-center pointer-events-none z-20 shadow-2xs"
-                title="Titik Pusat Matrix (F: 3.5, I: 3.5)"
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-zinc-400"></div>
-              </div>
-
-              {/* 2x2 Quadrant Grid with consistent gap (16-20px) */}
-              <div className="grid grid-cols-2 gap-4 lg:gap-5 p-1">
+            {/* Matrix 2x2 Unified Cartesian Frame */}
+            <div className="flex-1 relative rounded-xl border border-[#d4d4d8] overflow-hidden bg-white shadow-2xs">
+              <div className="grid grid-cols-2 auto-rows-fr relative">
                 {/* TOP-LEFT: Kuadran II (Major Projects) - Impact High, Feasibility Low */}
                 <QuadrantBox
                   quadrantId="II"
@@ -86,6 +66,7 @@ export default function MatrixView({
                   onDragOver={onDragOver}
                   onDragLeave={onDragLeave}
                   onDrop={onDrop}
+                  className="border-r border-b border-[#d4d4d8]"
                 />
 
                 {/* TOP-RIGHT: Kuadran I (Quick Wins) - Impact High, Feasibility High */}
@@ -102,6 +83,7 @@ export default function MatrixView({
                   onDragOver={onDragOver}
                   onDragLeave={onDragLeave}
                   onDrop={onDrop}
+                  className="border-b border-[#d4d4d8]"
                 />
 
                 {/* BOTTOM-LEFT: Kuadran III (Time Sinks) - Impact Low, Feasibility Low */}
@@ -118,6 +100,7 @@ export default function MatrixView({
                   onDragOver={onDragOver}
                   onDragLeave={onDragLeave}
                   onDrop={onDrop}
+                  className="border-r border-[#d4d4d8]"
                 />
 
                 {/* BOTTOM-RIGHT: Kuadran IV (Fill-Ins) - Impact Low, Feasibility High */}
@@ -134,7 +117,16 @@ export default function MatrixView({
                   onDragOver={onDragOver}
                   onDragLeave={onDragLeave}
                   onDrop={onDrop}
+                  className=""
                 />
+
+                {/* Center Origin Dot - sitting precisely at the crossroads of Sumbu X and Sumbu Y */}
+                <div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border border-[#d4d4d8] flex items-center justify-center pointer-events-none z-20 shadow-2xs"
+                  title="Titik Pusat Matrix (Feasibility: 3.5, Impact: 3.5)"
+                >
+                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-500"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -175,6 +167,7 @@ export default function MatrixView({
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           onDrop={onDrop}
+          className="rounded-xl border border-zinc-200"
         />
 
         {/* Kuadran II: Major Projects */}
@@ -191,6 +184,7 @@ export default function MatrixView({
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           onDrop={onDrop}
+          className="rounded-xl border border-zinc-200"
         />
 
         {/* Kuadran IV: Fill-Ins */}
@@ -207,6 +201,7 @@ export default function MatrixView({
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           onDrop={onDrop}
+          className="rounded-xl border border-zinc-200"
         />
 
         {/* Kuadran III: Time Sinks */}
@@ -223,6 +218,7 @@ export default function MatrixView({
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           onDrop={onDrop}
+          className="rounded-xl border border-zinc-200"
         />
       </div>
 

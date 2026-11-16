@@ -14,6 +14,7 @@ export default function QuadrantBox({
   onDragOver,
   onDragLeave,
   onDrop,
+  className = "",
 }) {
   const quad = QUADRANTS[quadrantId];
   const sortedIdeas = sortIdeasByScore(ideas);
@@ -31,13 +32,13 @@ export default function QuadrantBox({
       onDragOver={(e) => onDragOver(e, quadrantId)}
       onDragLeave={onDragLeave}
       onDrop={(e) => onDrop(e, quadrantId)}
-      className={`flex flex-col rounded-xl border p-4 sm:p-5 transition-all min-h-[260px] ${
+      className={`flex flex-col p-4 sm:p-5 transition-all min-h-[260px] ${
         isDragOver
-          ? "border-zinc-900 bg-zinc-100/90 ring-2 ring-zinc-900/10"
-          : `border-zinc-200 ${quadrantBgStyles[quadrantId] || "bg-zinc-50/40"}`
-      }`}
+          ? "bg-zinc-100/90 ring-2 ring-inset ring-zinc-900/10"
+          : `${quadrantBgStyles[quadrantId] || "bg-zinc-50/40"}`
+      } ${className}`}
     >
-      {/* 4. Compact Quadrant Header */}
+      {/* Compact Quadrant Header */}
       <div className="flex items-center justify-between gap-2.5 pb-3 mb-3 border-b border-zinc-200/80">
         <div className="flex items-center gap-2 min-w-0">
           {/* Roman Numeral */}
@@ -66,7 +67,7 @@ export default function QuadrantBox({
         </span>
       </div>
 
-      {/* 3. Card Arrangement: CSS Grid with 2 columns on desktop (gap 12-16px) */}
+      {/* Card Arrangement: CSS Grid with 2 columns on desktop (gap 12-16px) */}
       <div className="flex-1 overflow-y-auto max-h-[460px] pr-0.5">
         {sortedIdeas.length === 0 ? (
           <div className="h-full min-h-[110px] flex flex-col items-center justify-center text-center p-4 border border-dashed border-zinc-200/90 rounded-lg bg-white/40">
