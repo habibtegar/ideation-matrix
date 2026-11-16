@@ -24,6 +24,9 @@ export default function AnalysisSummary({ ideas }) {
   }
 
   const percentQ1 = total > 0 ? Math.round((q1.length / total) * 100) : 0;
+  const percentQ2 = total > 0 ? Math.round((q2.length / total) * 100) : 0;
+  const percentQ3 = total > 0 ? Math.round((q3.length / total) * 100) : 0;
+  const percentQ4 = total > 0 ? Math.round((q4.length / total) * 100) : 0;
 
   return (
     <div className="bg-white border border-zinc-200 rounded-xl p-5 sm:p-6 space-y-5 shadow-xs">
@@ -46,6 +49,49 @@ export default function AnalysisSummary({ ideas }) {
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <span className="text-xs font-mono px-3 py-1 bg-zinc-100 text-zinc-700 rounded-md border border-zinc-200 font-semibold">
             {q1.length} Quick Wins ({percentQ1}%)
+          </span>
+        </div>
+      </div>
+
+      {/* Ringkasan Distribusi Jumlah Ide pada Setiap Kuadran */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div className="p-2.5 rounded-lg border border-emerald-200 bg-emerald-50/50 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span className="text-xs font-semibold text-emerald-950">Kuadran I</span>
+          </div>
+          <span className="font-mono text-xs font-bold text-emerald-800 bg-white px-2 py-0.5 rounded border border-emerald-200">
+            {q1.length} ide ({percentQ1}%)
+          </span>
+        </div>
+
+        <div className="p-2.5 rounded-lg border border-blue-200 bg-blue-50/50 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span className="text-xs font-semibold text-blue-950">Kuadran II</span>
+          </div>
+          <span className="font-mono text-xs font-bold text-blue-800 bg-white px-2 py-0.5 rounded border border-blue-200">
+            {q2.length} ide ({percentQ2}%)
+          </span>
+        </div>
+
+        <div className="p-2.5 rounded-lg border border-rose-200 bg-rose-50/50 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span className="text-xs font-semibold text-rose-950">Kuadran III</span>
+          </div>
+          <span className="font-mono text-xs font-bold text-rose-800 bg-white px-2 py-0.5 rounded border border-rose-200">
+            {q3.length} ide ({percentQ3}%)
+          </span>
+        </div>
+
+        <div className="p-2.5 rounded-lg border border-amber-200 bg-amber-50/50 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span className="text-xs font-semibold text-amber-950">Kuadran IV</span>
+          </div>
+          <span className="font-mono text-xs font-bold text-amber-800 bg-white px-2 py-0.5 rounded border border-amber-200">
+            {q4.length} ide ({percentQ4}%)
           </span>
         </div>
       </div>

@@ -6,7 +6,6 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
   const countII = ideas.filter((item) => item.quadrant === "II").length;
   const countIII = ideas.filter((item) => item.quadrant === "III").length;
   const countIV = ideas.filter((item) => item.quadrant === "IV").length;
-  const countPool = ideas.filter((item) => item.quadrant === "pool" || !item.quadrant).length;
 
   const stats = [
     {
@@ -48,18 +47,10 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
       sub: "F ≥ 4, I < 4",
       dot: QUADRANTS.IV.dotColor,
     },
-    {
-      id: "pool",
-      label: "Idea Pool",
-      name: "Belum Diplot",
-      count: countPool,
-      sub: "Parkir / Draf",
-      dot: QUADRANTS.pool.dotColor,
-    },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
       {stats.map((stat) => {
         const isSelected =
           stat.id === "all"

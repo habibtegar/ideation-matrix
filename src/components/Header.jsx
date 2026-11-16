@@ -1,11 +1,8 @@
-import { Plus, Sparkles, Copy, RotateCcw, Download, Printer, BookOpen } from "lucide-react";
+import { Plus, Sparkles, RotateCcw, BookOpen } from "lucide-react";
 
 export default function Header({
   onOpenAddModal,
   onAutoPlot,
-  onCopyResults,
-  onExportCsv,
-  onPrintPdf,
   onResetData,
   onLoadLkpdData,
   totalIdeas,
@@ -61,39 +58,6 @@ export default function Header({
                 <span>Reset ({totalIdeas})</span>
               </button>
             )}
-
-            {/* Export Actions Group */}
-            <div className="inline-flex items-center rounded-md border border-zinc-200 bg-white p-0.5">
-              <button
-                type="button"
-                onClick={onCopyResults}
-                title="Salin Rangkuman Ide ke Clipboard (Format Google Docs)"
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 rounded transition-colors cursor-pointer"
-              >
-                <Copy className="w-3.5 h-3.5 text-zinc-500" />
-                <span>Salin Teks</span>
-              </button>
-              <span className="h-3.5 w-[1px] bg-zinc-200"></span>
-              <button
-                type="button"
-                onClick={onExportCsv}
-                title="Unduh Data dalam format CSV (Excel / Sheets)"
-                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 rounded transition-colors cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5 text-zinc-500" />
-                <span className="hidden sm:inline">CSV</span>
-              </button>
-              <span className="h-3.5 w-[1px] bg-zinc-200"></span>
-              <button
-                type="button"
-                onClick={onPrintPdf}
-                title="Cetak / Simpan sebagai PDF"
-                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 rounded transition-colors cursor-pointer"
-              >
-                <Printer className="w-3.5 h-3.5 text-zinc-500" />
-                <span className="hidden sm:inline">PDF</span>
-              </button>
-            </div>
 
             {/* Auto-Plot Button */}
             <button

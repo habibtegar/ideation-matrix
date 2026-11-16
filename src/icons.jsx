@@ -380,3 +380,20 @@ export function ChevronUp(props) {
     </BaseSvg>
   );
 }
+
+export function Award(props) {
+  return (
+    <BaseSvg {...props}>
+      <circle cx="12" cy="8" r="6" />
+      <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.204 0l-3.58 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" />
+    </BaseSvg>
+  );
+}
+
+export function Zap(props) {
+  return (
+    <BaseSvg {...props}>
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </BaseSvg>
+  );
+}

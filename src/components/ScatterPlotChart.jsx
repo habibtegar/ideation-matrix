@@ -15,48 +15,69 @@ import { QUADRANTS } from "../utils/matrixUtils";
 
 // SVG Chart Geometry Constants
 const VIEW_BOX_WIDTH = 760;
-const VIEW_BOX_HEIGHT = 520;
+const VIEW_BOX_HEIGHT = 500;
 
-const PADDING_LEFT = 75;
-const PADDING_RIGHT = 45;
-const PADDING_TOP = 40;
-const PADDING_BOTTOM = 65;
+const PADDING_LEFT = 60;
+const PADDING_RIGHT = 35;
+const PADDING_TOP = 30;
+const PADDING_BOTTOM = 45;
 
-const INNER_WIDTH = VIEW_BOX_WIDTH - PADDING_LEFT - PADDING_RIGHT; // 640
-const INNER_HEIGHT = VIEW_BOX_HEIGHT - PADDING_TOP - PADDING_BOTTOM; // 415
+const INNER_WIDTH = VIEW_BOX_WIDTH - PADDING_LEFT - PADDING_RIGHT; // 665
+const INNER_HEIGHT = VIEW_BOX_HEIGHT - PADDING_TOP - PADDING_BOTTOM; // 425
 
-// X Axis: Feasibility 1 to 5
-const MARGIN_X = 40;
-const PLOT_WIDTH = INNER_WIDTH - MARGIN_X * 2; // 560
+// Dividing lines: EXACTLY in the horizontal and vertical center (50% / 50%)
+// Menghasilkan 4 kotak kuadran yang benar-benar simetris, seimbang, dan proporsional
+const BOUNDARY_X = PADDING_LEFT + INNER_WIDTH / 2; // 392.5
+const BOUNDARY_Y = PADDING_TOP + INNER_HEIGHT / 2; // 242.5
 
+/**
+ * Pemetaan koordinat Feasibility (X) dan Impact (Y)
+ * Tanpa angka linear 1-5 yang mendistorsi kotak kuadran.
+ * - Kuadran kiri (II & III): Skor Rendah (1–3)
+ * - Kuadran kanan (I & IV): Skor Tinggi (4–5)
+ * - Kuadran atas (I & II): Skor Tinggi (4–5)
+ * - Kuadran bawah (III & IV): Skor Rendah (1–3)
+ */
 const getX = (feasibility) => {
   const val = Number(feasibility);
-  return PADDING_LEFT + MARGIN_X + ((val - 1) / 4) * PLOT_WIDTH;
+  if (val <= 3.5) {
+    // Sisi Kiri (Kuadran II & III, F: 1..3.5)
+    const minX = PADDING_LEFT + 55;
+    const maxX = BOUNDARY_X - 55;
+    const clamped = Math.max(1, Math.min(3.5, val));
+    return minX + ((clamped - 1) / 2.5) * (maxX - minX);
+  } else {
+    // Sisi Kanan (Kuadran I & IV, F: 3.5..5)
+    const minX = BOUNDARY_X + 65;
+    const maxX = PADDING_LEFT + INNER_WIDTH - 65;
+    const clamped = Math.max(3.5, Math.min(5, val));
+    return minX + ((clamped - 3.5) / 1.5) * (maxX - minX);
+  }
 };
-
-// Y Axis: Impact 1 to 5
-// Reserved top banner height: y = 40 to y = 80 (40px buffer)
-// Reserved bottom banner height: y = 415 to y = 455 (40px buffer)
-// Points at Impact 5 sit at y = 112 (safely 34px below the top header badges!)
-// Points at Impact 1 sit at y = 382 (safely 33px above the bottom header badges!)
-const Y_TOP_SCORE = 112; // Impact 5
-const Y_BOTTOM_SCORE = 382; // Impact 1
-const PLOT_HEIGHT = Y_BOTTOM_SCORE - Y_TOP_SCORE; // 270px
 
 const getY = (impact) => {
   const val = Number(impact);
-  return Y_TOP_SCORE + ((5 - val) / 4) * PLOT_HEIGHT;
+  if (val >= 3.5) {
+    // Sisi Atas (Kuadran I & II, I: 3.5..5)
+    const minY = PADDING_TOP + 80; // area aman di bawah header badge
+    const maxY = BOUNDARY_Y - 40; // area aman di atas garis pembatas
+    const clamped = Math.max(3.5, Math.min(5, val));
+    return minY + ((5 - clamped) / 1.5) * (maxY - minY);
+  } else {
+    // Sisi Bawah (Kuadran III & IV, I: 1..3.5)
+    const minY = BOUNDARY_Y + 40; // area aman di bawah garis pembatas
+    const maxY = PADDING_TOP + INNER_HEIGHT - 65; // area aman di atas footer badge
+    const clamped = Math.max(1, Math.min(3.5, val));
+    return minY + ((3.5 - clamped) / 2.5) * (maxY - minY);
+  }
 };
-
-// Quadrant dividing threshold lines (Feasibility = 3.5, Impact = 3.5)
-const BOUNDARY_X = getX(3.5); // 465
-const BOUNDARY_Y = getY(3.5); // 213.25
 
 /**
  * ScatterPlotChart
- * Visualisasi Scatter Plot Interaktif Feasibility (Sumbu X) vs Impact (Sumbu Y)
- * - Area khusus (reserved space) untuk judul kuadran agar tidak tertutup data point
- * - Anti-overlap terarah agar titik pada skor 5 (seperti Kuadran I) tidak bertabrakan dengan header
+ * Visualisasi Scatter Plot Interaktif Feasibility vs Impact
+ * - 4 Kotak Kuadran Simetris & Proporsional (50% x 50%)
+ * - Angka 1-5 pada sumbu ditiadakan agar proporsi kotak kuadran seimbang dan tidak terdistorsi
+ * - Sumbu menampilkan keterangan kategori yang jelas: Rendah (1-3) & Tinggi (4-5)
  * - Nomor identitas pada setiap titik (#1 - #N) sesuai urutan tabel LKPD
  * - Tooltip dinamis saat hover & Popover detail saat titik diklik
  * - Legenda interaktif untuk tampilkan/sembunyikan kuadran
@@ -136,52 +157,39 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
         let cx;
         let cy;
 
-        // Anti-overlap mechanism with directional awareness (prevents pushing upward into headers)
         if (count === 1) {
           cx = centerX;
           cy = centerY;
         } else if (count === 2) {
-          // If at top edge (i === 5), spread horizontally with slight downward shift
-          if (i === 5) {
-            const dx = index === 0 ? -16 : 16;
-            const dy = 6;
-            cx = centerX + dx;
-            cy = centerY + dy;
-          } else if (i === 1) {
-            // If at bottom edge, spread horizontally with slight upward shift
-            const dx = index === 0 ? -16 : 16;
-            const dy = -6;
-            cx = centerX + dx;
-            cy = centerY + dy;
-          } else {
-            // Internal point
-            const dx = index === 0 ? -15 : 15;
-            const dy = index === 0 ? -8 : 8;
-            cx = centerX + dx;
-            cy = centerY + dy;
-          }
+          // Spread horizontally
+          const dx = index === 0 ? -16 : 16;
+          cx = centerX + dx;
+          cy = centerY;
         } else if (count === 3) {
-          // If at top edge (i === 5, like coordinate (4, 5))
-          if (i === 5) {
-            if (index === 0) {
-              cx = centerX - 18;
-              cy = centerY + 5;
-            } else if (index === 1) {
-              cx = centerX;
-              cy = centerY + 20;
-            } else {
-              cx = centerX + 18;
-              cy = centerY + 5;
-            }
+          // Triangular spread
+          if (index === 0) {
+            cx = centerX;
+            cy = centerY - 15;
+          } else if (index === 1) {
+            cx = centerX - 15;
+            cy = centerY + 10;
           } else {
-            const radius = 18;
-            const angle = (2 * Math.PI * index) / 3 - Math.PI / 2;
-            cx = centerX + radius * Math.cos(angle);
-            cy = centerY + radius * Math.sin(angle);
+            cx = centerX + 15;
+            cy = centerY + 10;
           }
+        } else if (count === 4) {
+          // Diamond spread
+          const offsets = [
+            { dx: 0, dy: -16 },
+            { dx: 16, dy: 0 },
+            { dx: 0, dy: 16 },
+            { dx: -16, dy: 0 },
+          ];
+          cx = centerX + offsets[index].dx;
+          cy = centerY + offsets[index].dy;
         } else {
-          // General radial distribution
-          const radius = 20;
+          // Radial distribution
+          const radius = 18;
           const angle = (2 * Math.PI * index) / count - Math.PI / 2;
           cx = centerX + radius * Math.cos(angle);
           cy = centerY + radius * Math.sin(angle);
@@ -297,11 +305,11 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 Grafik Analisis Feasibility vs Impact
               </h2>
               <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
-                Scatter Plot View
+                Matriks Prioritas
               </span>
             </div>
             <p className="text-xs text-zinc-500 mt-0.5">
-              Sebaran titik nomor fitur produk (#1–#{plottableIdeas.length}) berdasarkan skor Feasibility (Sumbu X) dan Impact (Sumbu Y).
+              Sebaran 4 kuadran simetris fitur produk UMKM berdasarkan skor Feasibility (Sumbu X) dan Impact (Sumbu Y).
             </p>
           </div>
         </div>
@@ -335,7 +343,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
               <button
                 type="button"
                 onClick={() => toggleQuadrantVisibility("I")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                   visibleQuadrants.I
                     ? "bg-emerald-50 hover:bg-emerald-100/70 text-emerald-800 border-emerald-300 shadow-2xs"
                     : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
@@ -351,7 +359,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 ) : (
                   <EyeOff className="w-3 h-3 text-zinc-400" />
                 )}
-                <span className={!visibleQuadrants.I ? "line-through" : ""}>
+                <span className={!visibleQuadrants.I ? "line-through" : "font-semibold"}>
                   Kuadran I: Quick Wins
                 </span>
                 <span
@@ -369,7 +377,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
               <button
                 type="button"
                 onClick={() => toggleQuadrantVisibility("II")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                   visibleQuadrants.II
                     ? "bg-blue-50 hover:bg-blue-100/70 text-blue-800 border-blue-300 shadow-2xs"
                     : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
@@ -385,7 +393,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 ) : (
                   <EyeOff className="w-3 h-3 text-zinc-400" />
                 )}
-                <span className={!visibleQuadrants.II ? "line-through" : ""}>
+                <span className={!visibleQuadrants.II ? "line-through" : "font-semibold"}>
                   Kuadran II: Major Projects
                 </span>
                 <span
@@ -403,7 +411,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
               <button
                 type="button"
                 onClick={() => toggleQuadrantVisibility("III")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                   visibleQuadrants.III
                     ? "bg-rose-50 hover:bg-rose-100/70 text-rose-800 border-rose-300 shadow-2xs"
                     : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
@@ -419,7 +427,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 ) : (
                   <EyeOff className="w-3 h-3 text-zinc-400" />
                 )}
-                <span className={!visibleQuadrants.III ? "line-through" : ""}>
+                <span className={!visibleQuadrants.III ? "line-through" : "font-semibold"}>
                   Kuadran III: Time Sinks
                 </span>
                 <span
@@ -437,7 +445,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
               <button
                 type="button"
                 onClick={() => toggleQuadrantVisibility("IV")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                   visibleQuadrants.IV
                     ? "bg-amber-50 hover:bg-amber-100/70 text-amber-800 border-amber-300 shadow-2xs"
                     : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
@@ -453,7 +461,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 ) : (
                   <EyeOff className="w-3 h-3 text-zinc-400" />
                 )}
-                <span className={!visibleQuadrants.IV ? "line-through" : ""}>
+                <span className={!visibleQuadrants.IV ? "line-through" : "font-semibold"}>
                   Kuadran IV: Fill-Ins
                 </span>
                 <span
@@ -537,7 +545,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   </filter>
                 </defs>
 
-                {/* 1. Quadrant Background Tints (Clipped inside inner bounds) */}
+                {/* 1. Background Warna 4 Kuadran yang Proporsional & Simetris (50% x 50%) */}
                 <g clipPath="url(#chart-inner-bounds)">
                   {/* Top-Left: Kuadran II (Major Projects) */}
                   <rect
@@ -590,37 +598,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   strokeWidth="1.5"
                 />
 
-                {/* 3. Subtle Grid Lines for 1..5 scores */}
-                {[1, 2, 3, 4, 5].map((score) => {
-                  const gx = getX(score);
-                  const gy = getY(score);
-                  return (
-                    <g key={`grid-${score}`}>
-                      {/* Vertical Grid Line */}
-                      <line
-                        x1={gx}
-                        y1={PADDING_TOP}
-                        x2={gx}
-                        y2={PADDING_TOP + INNER_HEIGHT}
-                        stroke="#e4e4e7"
-                        strokeWidth="1"
-                        strokeDasharray="2 3"
-                      />
-                      {/* Horizontal Grid Line */}
-                      <line
-                        x1={PADDING_LEFT}
-                        y1={gy}
-                        x2={PADDING_LEFT + INNER_WIDTH}
-                        y2={gy}
-                        stroke="#e4e4e7"
-                        strokeWidth="1"
-                        strokeDasharray="2 3"
-                      />
-                    </g>
-                  );
-                })}
-
-                {/* 4. Quadrant Dividing Lines (at Feasibility = 3.5 & Impact = 3.5) */}
+                {/* 3. Garis Pembatas Kuadran Horizontal & Vertikal Tepat di Tengah (50% / 50%) */}
                 {/* Vertical Divider */}
                 <line
                   x1={BOUNDARY_X}
@@ -654,17 +632,17 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 <circle cx={BOUNDARY_X} cy={BOUNDARY_Y} r="2" fill="#52525b" />
 
                 {/* ========================================================
-                    5. RESERVED SPACE AREA: DEDICATED QUADRANT HEADER CARDS
-                    Ditempatkan pada area khusus yang bebas dari jangkauan titik
+                    4. DEDICATED QUADRANT HEADER CARDS
+                    Posisi seragam & seimbang di masing-masing kuadran
                     ======================================================== */}
 
-                {/* Top-Right: Kuadran I (Quick Wins) - Area Khusus Reserved Banner */}
+                {/* Top-Right: Kuadran I (Quick Wins) */}
                 <g
-                  transform={`translate(${BOUNDARY_X + 14}, ${PADDING_TOP + 8})`}
+                  transform={`translate(${BOUNDARY_X + 14}, ${PADDING_TOP + 10})`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="220"
+                    width="210"
                     height="30"
                     rx="6"
                     fill="#ffffff"
@@ -698,13 +676,13 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   </text>
                 </g>
 
-                {/* Top-Left: Kuadran II (Major Projects) - Area Khusus Reserved Banner */}
+                {/* Top-Left: Kuadran II (Major Projects) */}
                 <g
-                  transform={`translate(${PADDING_LEFT + 14}, ${PADDING_TOP + 8})`}
+                  transform={`translate(${PADDING_LEFT + 14}, ${PADDING_TOP + 10})`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="220"
+                    width="210"
                     height="30"
                     rx="6"
                     fill="#ffffff"
@@ -738,15 +716,15 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   </text>
                 </g>
 
-                {/* Bottom-Left: Kuadran III (Time Sinks) - Area Khusus Reserved Banner */}
+                {/* Bottom-Left: Kuadran III (Time Sinks) */}
                 <g
                   transform={`translate(${PADDING_LEFT + 14}, ${
-                    PADDING_TOP + INNER_HEIGHT - 38
+                    PADDING_TOP + INNER_HEIGHT - 40
                   })`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="220"
+                    width="210"
                     height="30"
                     rx="6"
                     fill="#ffffff"
@@ -780,15 +758,15 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   </text>
                 </g>
 
-                {/* Bottom-Right: Kuadran IV (Fill-Ins) - Area Khusus Reserved Banner */}
+                {/* Bottom-Right: Kuadran IV (Fill-Ins) */}
                 <g
                   transform={`translate(${BOUNDARY_X + 14}, ${
-                    PADDING_TOP + INNER_HEIGHT - 38
+                    PADDING_TOP + INNER_HEIGHT - 40
                   })`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="220"
+                    width="210"
                     height="30"
                     rx="6"
                     fill="#ffffff"
@@ -822,76 +800,11 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   </text>
                 </g>
 
-                {/* 6. Axis Tick Labels & Marks */}
-                {/* Sumbu X Ticks (Feasibility: 1, 2, 3, 4, 5) */}
-                {[1, 2, 3, 4, 5].map((val) => {
-                  const x = getX(val);
-                  return (
-                    <g key={`x-tick-${val}`}>
-                      <line
-                        x1={x}
-                        y1={PADDING_TOP + INNER_HEIGHT}
-                        x2={x}
-                        y2={PADDING_TOP + INNER_HEIGHT + 7}
-                        stroke="#52525b"
-                        strokeWidth="1.5"
-                      />
-                      <rect
-                        x={x - 11}
-                        y={PADDING_TOP + INNER_HEIGHT + 10}
-                        width="22"
-                        height="18"
-                        rx="4"
-                        fill="#f4f4f5"
-                        stroke="#e4e4e7"
-                      />
-                      <text
-                        x={x}
-                        y={PADDING_TOP + INNER_HEIGHT + 23}
-                        textAnchor="middle"
-                        className="text-[11px] font-mono font-bold fill-zinc-800"
-                      >
-                        {val}
-                      </text>
-                    </g>
-                  );
-                })}
+                {/* ========================================================
+                    5. LABEL SUMBU X & SUMBU Y
+                    ======================================================== */}
 
-                {/* Sumbu Y Ticks (Impact: 1, 2, 3, 4, 5) */}
-                {[1, 2, 3, 4, 5].map((val) => {
-                  const y = getY(val);
-                  return (
-                    <g key={`y-tick-${val}`}>
-                      <line
-                        x1={PADDING_LEFT - 7}
-                        y1={y}
-                        x2={PADDING_LEFT}
-                        y2={y}
-                        stroke="#52525b"
-                        strokeWidth="1.5"
-                      />
-                      <rect
-                        x={PADDING_LEFT - 32}
-                        y={y - 9}
-                        width="22"
-                        height="18"
-                        rx="4"
-                        fill="#f4f4f5"
-                        stroke="#e4e4e7"
-                      />
-                      <text
-                        x={PADDING_LEFT - 21}
-                        y={y + 4}
-                        textAnchor="middle"
-                        className="text-[11px] font-mono font-bold fill-zinc-800"
-                      >
-                        {val}
-                      </text>
-                    </g>
-                  );
-                })}
-
-                {/* Sumbu X Axis Title */}
+                {/* Judul Sumbu X */}
                 <g transform={`translate(${PADDING_LEFT + INNER_WIDTH / 2}, ${VIEW_BOX_HEIGHT - 12})`}>
                   <text
                     textAnchor="middle"
@@ -899,37 +812,22 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   >
                     SUMBU X: FEASIBILITY (KEMUDAHAN IMPLEMENTASI) →
                   </text>
-                  <text
-                    y="-15"
-                    textAnchor="middle"
-                    className="text-[9px] font-medium fill-zinc-500"
-                  >
-                    Skor 1–3: Rendah • Skor 4–5: Tinggi
-                  </text>
                 </g>
 
-                {/* Sumbu Y Axis Title (Rotated on the Left) */}
-                <g transform={`translate(18, ${PADDING_TOP + INNER_HEIGHT / 2}) rotate(-90)`}>
+                {/* Judul Sumbu Y (Rotated on Left) */}
+                <g transform={`translate(24, ${PADDING_TOP + INNER_HEIGHT / 2}) rotate(-90)`}>
                   <text
                     textAnchor="middle"
                     className="text-[11px] font-bold font-sans fill-zinc-900 tracking-wider uppercase"
                   >
                     SUMBU Y: IMPACT (DAMPAK BISNIS) →
                   </text>
-                  <text
-                    y="13"
-                    textAnchor="middle"
-                    className="text-[9px] font-medium fill-zinc-500"
-                  >
-                    Skor 1–3: Rendah • Skor 4–5: Tinggi
-                  </text>
                 </g>
 
-                {/* 7. Anti-Overlap Coordinate Hub & Spoke Lines for clusters with >1 items */}
+                {/* 6. Anti-Overlap Coordinate Hub & Spoke Lines for clusters with >1 items */}
                 {plottedPoints
                   .filter((p) => p.clusterCount > 1 && p.clusterIndex === 0)
                   .map((cluster) => {
-                    // Check if at least one item in cluster is visible
                     const hasVisibleItem = plottedPoints.some(
                       (p) =>
                         p.centerX === cluster.centerX &&
@@ -970,7 +868,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                         />
                         <text
                           x={cluster.centerX}
-                          y={cluster.centerY - 5}
+                          y={cluster.centerY - (cluster.clusterCount >= 3 ? 24 : 14)}
                           textAnchor="middle"
                           className="text-[9px] font-mono font-semibold fill-zinc-400 select-none"
                         >
@@ -981,7 +879,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                     );
                   })}
 
-                {/* 8. Data Points (One numbered dot per idea) */}
+                {/* 7. Data Points (One numbered dot per idea) */}
                 {plottedPoints.map(({ idea, cx, cy }) => {
                   const qid = idea.quadrant || "pool";
                   const conf = quadrantConfig[qid] || quadrantConfig.pool;

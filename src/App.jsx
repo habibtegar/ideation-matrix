@@ -13,9 +13,6 @@ import { INITIAL_IDEAS } from "./data/initialIdeas";
 import {
   calculateQuadrant,
   generateUniqueId,
-  formatSummaryForClipboard,
-  exportIdeasToCsv,
-  downloadCsvFile,
   QUADRANTS,
 } from "./utils/matrixUtils";
 
@@ -40,7 +37,7 @@ export default function App() {
 
   // UI States
   const [targetFilter, setTargetFilter] = useState("Semua"); // Semua, Pembeli, Penjual
-  const [activeQuadrantFilter, setActiveQuadrantFilter] = useState(null); // null, I, II, III, IV, pool
+  const [activeQuadrantFilter, setActiveQuadrantFilter] = useState(null); // null, I, II, III, IV
   const [searchQuery, setSearchQuery] = useState("");
 
   // Modals & UI states
@@ -81,7 +78,7 @@ export default function App() {
       if (targetFilter !== "Semua" && item.target !== targetFilter) {
         return false;
       }
-      // 2. Quadrant Filter from Stats Bar (if active)
+      // 2. Active Quadrant Filter from Stats Bar (if selected)
       if (activeQuadrantFilter && activeQuadrantFilter !== "all") {
         const q = item.quadrant || "pool";
         if (q !== activeQuadrantFilter) return false;
@@ -117,47 +114,6 @@ export default function App() {
       `Auto-Plot selesai! ${plottedCount > 0 ? `${plottedCount} ide baru berhasil diplot` : "Seluruh ide telah sesuai dengan skor masing-masing"}.`,
       "success"
     );
-  };
-
-  // Copy Results to Clipboard for Google Docs
-  const handleCopyResults = async () => {
-    try {
-      const summaryText = formatSummaryForClipboard(ideas);
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(summaryText);
-      } else {
-        // Fallback for older browsers
-        const textarea = document.createElement("textarea");
-        textarea.value = summaryText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-      }
-      showToast(
-        "Rangkuman LKPD berhasil disalin ke clipboard! Format rapi siap dipaste ke Google Docs.",
-        "success"
-      );
-    } catch (e) {
-      console.error("Gagal menyalin ke clipboard:", e);
-      showToast("Gagal menyalin teks ke clipboard. Silakan coba lagi.", "error");
-    }
-  };
-
-  // Export ideas to CSV (Excel / Google Sheets)
-  const handleExportCsv = () => {
-    if (ideas.length === 0) {
-      showToast("Belum ada data ide untuk diekspor ke CSV.", "info");
-      return;
-    }
-    const csvContent = exportIdeasToCsv(ideas);
-    downloadCsvFile(csvContent, "ideation-matrix-umkm-sepatu-sandal.csv");
-    showToast("File CSV berhasil diunduh!", "success");
-  };
-
-  // Print or Save as PDF
-  const handlePrintPdf = () => {
-    window.print();
   };
 
   // Reset to 0 ideas (clear all ideas completely)
@@ -257,13 +213,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 flex flex-col font-sans selection:bg-zinc-900 selection:text-white">
-      {/* 1. Header */}
+      {/* 1. Header (Navbar tanpa tombol Salin Teks, CSV, dan PDF) */}
       <Header
         onOpenAddModal={handleOpenAddModal}
         onAutoPlot={handleAutoPlot}
-        onCopyResults={handleCopyResults}
-        onExportCsv={handleExportCsv}
-        onPrintPdf={handlePrintPdf}
         onResetData={handleResetData}
         onLoadLkpdData={handleLoadOfficialLkpd}
         totalIdeas={ideas.length}
@@ -271,7 +224,7 @@ export default function App() {
 
       {/* 2. Main Content Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-        {/* Ringkasan Jumlah Seluruh Ide & Kuadran */}
+        {/* Ringkasan Jumlah Seluruh Ide & Kuadran (5 Kartu, tanpa Idea Pool) */}
         <section aria-label="Ringkasan Statistik">
           <StatsSummary
             ideas={ideas}
@@ -304,7 +257,7 @@ export default function App() {
               <span className="font-semibold text-zinc-800">Filter Aktif:</span>
               {activeQuadrantFilter && activeQuadrantFilter !== "all" && (
                 <span className="bg-white border border-zinc-200 px-2 py-0.5 rounded font-medium text-zinc-800">
-                  {QUADRANTS[activeQuadrantFilter]?.name || activeQuadrantFilter}
+                  {QUADRANTS[activeQuadrantFilter]?.name || `Kuadran ${activeQuadrantFilter}`}
                 </span>
               )}
               {searchQuery && (
@@ -362,88 +315,112 @@ export default function App() {
 
           <table className="w-full text-left border-collapse text-xs border border-zinc-300">
             <thead>
-              <tr className="bg-zinc-100 border-b border-zinc-300 text-zinc-800 font-bold">
-                <th className="py-2 px-2 text-center w-8 border-r border-zinc-300">No</th>
-                <th className="py-2 px-2 border-r border-zinc-300">Nama Ide Fitur</th>
-                <th className="py-2 px-2 border-r border-zinc-300">Deskripsi</th>
-                <th className="py-2 px-2 text-center border-r border-zinc-300">Target</th>
-                <th className="py-2 px-1.5 text-center border-r border-zinc-300">Feas</th>
-                <th className="py-2 px-1.5 text-center border-r border-zinc-300">Imp</th>
-                <th className="py-2 px-1.5 text-center border-r border-zinc-300">Total</th>
-                <th className="py-2 px-2 border-r border-zinc-300">Kuadran</th>
-                <th className="py-2 px-2">Prioritas</th>
+              <tr className="bg-zinc-100 text-zinc-900 font-semibold border-b border-zinc-300">
+                <th className="p-2 border-r border-zinc-300 w-12 text-center">No</th>
+                <th className="p-2 border-r border-zinc-300">Nama Ide / Fitur</th>
+                <th className="p-2 border-r border-zinc-300 w-24">Target</th>
+                <th className="p-2 border-r border-zinc-300 w-20 text-center">Feas (1-5)</th>
+                <th className="p-2 border-r border-zinc-300 w-20 text-center">Impact (1-5)</th>
+                <th className="p-2 border-r border-zinc-300 w-20 text-center">Total (2-10)</th>
+                <th className="p-2 w-32">Kuadran</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-200">
-              {ideas.map((item, idx) => {
-                const qid = item.quadrant || "pool";
-                const quad = QUADRANTS[qid] || QUADRANTS.pool;
-                const totalScore = (item.feasibility ?? 0) + (item.impact ?? 0);
-                return (
-                  <tr key={item.id} className="border-b border-zinc-200">
-                    <td className="py-1.5 px-2 text-center font-mono border-r border-zinc-300">{idx + 1}</td>
-                    <td className="py-1.5 px-2 font-bold text-zinc-900 border-r border-zinc-300">{item.title}</td>
-                    <td className="py-1.5 px-2 text-zinc-700 leading-snug border-r border-zinc-300 text-[11px]">{item.description}</td>
-                    <td className="py-1.5 px-2 text-center border-r border-zinc-300">{item.target}</td>
-                    <td className="py-1.5 px-1.5 text-center font-mono font-bold border-r border-zinc-300">{item.feasibility}</td>
-                    <td className="py-1.5 px-1.5 text-center font-mono font-bold border-r border-zinc-300">{item.impact}</td>
-                    <td className="py-1.5 px-1.5 text-center font-mono font-bold border-r border-zinc-300">{totalScore}</td>
-                    <td className="py-1.5 px-2 font-semibold border-r border-zinc-300">Kuadran {quad.id}</td>
-                    <td className="py-1.5 px-2 text-zinc-800 text-[11px]">{quad.priority}</td>
-                  </tr>
-                );
-              })}
+            <tbody>
+              {ideas.map((idea, idx) => (
+                <tr key={idea.id} className="border-b border-zinc-200">
+                  <td className="p-2 border-r border-zinc-200 text-center font-mono font-medium">
+                    {idx + 1}
+                  </td>
+                  <td className="p-2 border-r border-zinc-200 font-medium">
+                    {idea.title}
+                    {idea.description && (
+                      <span className="block text-[10px] text-zinc-500 mt-0.5">
+                        {idea.description}
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-2 border-r border-zinc-200">{idea.target}</td>
+                  <td className="p-2 border-r border-zinc-200 text-center font-mono">
+                    {idea.feasibility}
+                  </td>
+                  <td className="p-2 border-r border-zinc-200 text-center font-mono">
+                    {idea.impact}
+                  </td>
+                  <td className="p-2 border-r border-zinc-200 text-center font-mono font-bold">
+                    {(idea.feasibility ?? 0) + (idea.impact ?? 0)}
+                  </td>
+                  <td className="p-2 font-semibold">
+                    {idea.quadrant === "I"
+                      ? "I (Quick Wins)"
+                      : idea.quadrant === "II"
+                      ? "II (Major Projects)"
+                      : idea.quadrant === "III"
+                      ? "III (Time Sinks)"
+                      : idea.quadrant === "IV"
+                      ? "IV (Fill-Ins)"
+                      : "Idea Pool"}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </main>
 
-      {/* 4. Footer */}
-      <footer className="border-t border-zinc-200 bg-white py-4 mt-12 no-print">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-zinc-800">Ideation Matrix</span>
-            <span>•</span>
-            <span>Lembar Kerja Peserta Didik (LKPD) Produk Digital UMKM</span>
-          </div>
-          <div className="text-[11px] text-zinc-400">
-            Metode Feasibility vs Impact • E-Commerce Sepatu &amp; Sandal
-          </div>
+      {/* Footer */}
+      <footer className="border-t border-zinc-200 bg-white py-4 text-center text-xs text-zinc-400 no-print mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span>Ideation Matrix UMKM • E-Commerce Sepatu &amp; Sandal</span>
+          <span className="font-mono text-[11px] text-zinc-400">
+            10 Ide Fitur Resmi LKPD Guru
+          </span>
         </div>
       </footer>
 
-      {/* Modal Detail Lengkap Ide */}
-      <IdeaDetailModal
-        isOpen={!!detailIdea}
-        onClose={() => setDetailIdea(null)}
-        idea={detailIdea}
-        onEdit={(idea) => {
-          setDetailIdea(null);
-          handleOpenEditModal(idea);
-        }}
-      />
+      {/* Add / Edit Idea Modal */}
+      {isModalOpen && (
+        <IdeaModal
+          isOpen={isModalOpen}
+          initialData={editingIdea}
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingIdea(null);
+          }}
+          onSave={handleSaveIdea}
+        />
+      )}
 
-      {/* Modal Tambah / Edit Ide */}
-      <IdeaModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingIdea(null);
-        }}
-        onSave={handleSaveIdea}
-        editingIdea={editingIdea}
-      />
+      {/* View Detail Modal */}
+      {detailIdea && (
+        <IdeaDetailModal
+          isOpen={!!detailIdea}
+          idea={detailIdea}
+          onClose={() => setDetailIdea(null)}
+          onEdit={(idea) => {
+            setDetailIdea(null);
+            handleOpenEditModal(idea);
+          }}
+        />
+      )}
 
-      {/* Modal Konfirmasi Hapus */}
-      <DeleteConfirmModal
-        isOpen={!!deletingIdeaId}
-        onClose={() => setDeletingIdeaId(null)}
-        onConfirm={handleConfirmDelete}
-        ideaTitle={ideaBeingDeleted?.title || ""}
-      />
+      {/* Delete Confirmation Modal */}
+      {deletingIdeaId && (
+        <DeleteConfirmModal
+          isOpen={!!deletingIdeaId}
+          ideaTitle={ideaBeingDeleted?.title || "Fitur"}
+          onClose={() => setDeletingIdeaId(null)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
 
-      {/* Toast Notification */}
-      <Toast toast={toast} onClose={() => setToast(null)} />
+      {/* Toast Floating Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }
