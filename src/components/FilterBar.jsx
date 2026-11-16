@@ -1,10 +1,8 @@
-import { LayoutGrid, Table, Search, UserCheck, ShoppingBag, Store } from "lucide-react";
+import { Search, UserCheck, ShoppingBag, Store } from "lucide-react";
 
 export default function FilterBar({
   targetFilter,
   onTargetFilterChange,
-  viewMode,
-  onViewModeChange,
   searchQuery,
   onSearchQueryChange,
   ideasCount,
@@ -49,48 +47,16 @@ export default function FilterBar({
         })}
       </div>
 
-      <div className="flex items-center gap-2.5 w-full sm:w-auto">
-        {/* Search Input */}
-        <div className="relative flex-1 sm:w-56">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
-          <input
-            type="text"
-            placeholder="Cari fitur ide..."
-            value={searchQuery}
-            onChange={(e) => onSearchQueryChange(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 text-xs sm:text-sm bg-white border border-zinc-200 rounded-md placeholder-zinc-400 text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 focus:border-zinc-900 transition-all"
-          />
-        </div>
-
-        {/* View Switch: Matrix View vs Table View */}
-        <div className="flex items-center p-1 bg-zinc-100 rounded-lg border border-zinc-200 shrink-0">
-          <button
-            type="button"
-            onClick={() => onViewModeChange("matrix")}
-            title="Matrix View (Diagram Kartesius 4 Kuadran)"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
-              viewMode === "matrix"
-                ? "bg-white text-zinc-900 shadow-xs"
-                : "text-zinc-600 hover:text-zinc-900"
-            }`}
-          >
-            <LayoutGrid className="w-3.5 h-3.5" />
-            <span className="hidden xs:inline">Matrix View</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onViewModeChange("table")}
-            title="Table View (Rangkuman LKPD Tabel)"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
-              viewMode === "table"
-                ? "bg-white text-zinc-900 shadow-xs"
-                : "text-zinc-600 hover:text-zinc-900"
-            }`}
-          >
-            <Table className="w-3.5 h-3.5" />
-            <span className="hidden xs:inline">Table View</span>
-          </button>
-        </div>
+      {/* Search Input */}
+      <div className="relative w-full sm:w-64">
+        <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+        <input
+          type="text"
+          placeholder="Cari ide fitur..."
+          value={searchQuery}
+          onChange={(e) => onSearchQueryChange(e.target.value)}
+          className="w-full pl-8 pr-3 py-1.5 text-xs sm:text-sm bg-white border border-zinc-200 rounded-md placeholder-zinc-400 text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 focus:border-zinc-900 transition-all"
+        />
       </div>
     </div>
   );

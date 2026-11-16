@@ -6,15 +6,7 @@ export default function MatrixView({
   ideas,
   onEditIdea,
   onDeleteIdea,
-  onMoveQuadrant,
   onViewDetail,
-  onDragStart,
-  onDragEnd,
-  draggedIdeaId,
-  dragOverQuadrant,
-  onDragOver,
-  onDragLeave,
-  onDrop,
   onAutoPlot,
 }) {
   const ideasQ1 = ideas.filter((item) => item.quadrant === "I");
@@ -72,15 +64,7 @@ export default function MatrixView({
                   ideas={ideasQ2}
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
-                  onMoveQuadrant={onMoveQuadrant}
                   onViewDetail={onViewDetail}
-                  onDragStart={onDragStart}
-                  onDragEnd={onDragEnd}
-                  draggedIdeaId={draggedIdeaId}
-                  isDragOver={dragOverQuadrant === "II"}
-                  onDragOver={onDragOver}
-                  onDragLeave={onDragLeave}
-                  onDrop={onDrop}
                   className="border-r border-b border-[#d4d4d8]"
                 />
 
@@ -90,15 +74,7 @@ export default function MatrixView({
                   ideas={ideasQ1}
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
-                  onMoveQuadrant={onMoveQuadrant}
                   onViewDetail={onViewDetail}
-                  onDragStart={onDragStart}
-                  onDragEnd={onDragEnd}
-                  draggedIdeaId={draggedIdeaId}
-                  isDragOver={dragOverQuadrant === "I"}
-                  onDragOver={onDragOver}
-                  onDragLeave={onDragLeave}
-                  onDrop={onDrop}
                   className="border-b border-[#d4d4d8]"
                 />
 
@@ -108,15 +84,7 @@ export default function MatrixView({
                   ideas={ideasQ3}
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
-                  onMoveQuadrant={onMoveQuadrant}
                   onViewDetail={onViewDetail}
-                  onDragStart={onDragStart}
-                  onDragEnd={onDragEnd}
-                  draggedIdeaId={draggedIdeaId}
-                  isDragOver={dragOverQuadrant === "III"}
-                  onDragOver={onDragOver}
-                  onDragLeave={onDragLeave}
-                  onDrop={onDrop}
                   className="border-r border-[#d4d4d8]"
                 />
 
@@ -126,15 +94,7 @@ export default function MatrixView({
                   ideas={ideasQ4}
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
-                  onMoveQuadrant={onMoveQuadrant}
                   onViewDetail={onViewDetail}
-                  onDragStart={onDragStart}
-                  onDragEnd={onDragEnd}
-                  draggedIdeaId={draggedIdeaId}
-                  isDragOver={dragOverQuadrant === "IV"}
-                  onDragOver={onDragOver}
-                  onDragLeave={onDragLeave}
-                  onDrop={onDrop}
                   className=""
                 />
 
@@ -177,15 +137,7 @@ export default function MatrixView({
           ideas={ideasQ1}
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
-          onMoveQuadrant={onMoveQuadrant}
           onViewDetail={onViewDetail}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-          draggedIdeaId={draggedIdeaId}
-          isDragOver={dragOverQuadrant === "I"}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
           className="rounded-xl border border-zinc-200"
         />
 
@@ -195,15 +147,7 @@ export default function MatrixView({
           ideas={ideasQ2}
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
-          onMoveQuadrant={onMoveQuadrant}
           onViewDetail={onViewDetail}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-          draggedIdeaId={draggedIdeaId}
-          isDragOver={dragOverQuadrant === "II"}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
           className="rounded-xl border border-zinc-200"
         />
 
@@ -213,15 +157,7 @@ export default function MatrixView({
           ideas={ideasQ4}
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
-          onMoveQuadrant={onMoveQuadrant}
           onViewDetail={onViewDetail}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-          draggedIdeaId={draggedIdeaId}
-          isDragOver={dragOverQuadrant === "IV"}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
           className="rounded-xl border border-zinc-200"
         />
 
@@ -231,15 +167,7 @@ export default function MatrixView({
           ideas={ideasQ3}
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
-          onMoveQuadrant={onMoveQuadrant}
           onViewDetail={onViewDetail}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-          draggedIdeaId={draggedIdeaId}
-          isDragOver={dragOverQuadrant === "III"}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
           className="rounded-xl border border-zinc-200"
         />
       </div>
@@ -251,15 +179,7 @@ export default function MatrixView({
         ideas={ideasPool}
         onEditIdea={onEditIdea}
         onDeleteIdea={onDeleteIdea}
-        onMoveQuadrant={onMoveQuadrant}
         onViewDetail={onViewDetail}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        draggedIdeaId={draggedIdeaId}
-        isDragOver={dragOverQuadrant === "pool"}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
         onAutoPlot={onAutoPlot}
       />
     </div>

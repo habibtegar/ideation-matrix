@@ -329,3 +329,33 @@ export function Eye(props) {
     </BaseSvg>
   );
 }
+
+export function ScatterChart(props) {
+  return (
+    <BaseSvg {...props}>
+      <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+      <circle cx="17" cy="6" r="1.5" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+      <circle cx="7" cy="16" r="1.5" fill="currentColor" />
+      <circle cx="17" cy="15" r="1.5" fill="currentColor" />
+      <line x1="3" x2="3" y1="3" y2="21" />
+      <line x1="3" x2="21" y1="21" y2="21" />
+    </BaseSvg>
+  );
+}
+
+export function ChevronDown(props) {
+  return (
+    <BaseSvg {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </BaseSvg>
+  );
+}
+
+export function ChevronUp(props) {
+  return (
+    <BaseSvg {...props}>
+      <path d="m18 15-6-6-6 6" />
+    </BaseSvg>
+  );
+}

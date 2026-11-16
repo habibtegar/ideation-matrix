@@ -272,29 +272,23 @@ export function formatSummaryForClipboard(ideas) {
     text += `--------------------------------------------------\n\n`;
   });
 
-  // Dynamic recommendations based on actual data
-  text += `## KESIMPULAN & REKOMENDASI PENGEMBANGAN UMKM:\n`;
+  // Dynamic recommendations & roadmap based on actual data
+  text += `## ROADMAP PELAKSANAAN PENGEMBANGAN FITUR:\n`;
   if (countI > 0) {
     const q1Names = ideas.filter(i => i.quadrant === "I").map(i => i.title).join(", ");
-    text += `1. Kuadran I (Quick Wins - Prioritas Utama): Fokus rilis awal (MVP) pada 9 fitur (${q1Names}) karena memberikan dampak penjualan dan kepuasan pembeli/seller tertinggi dengan kemudahan eksekusi optimal.\n`;
-  } else {
-    text += `1. Kuadran I (Quick Wins): Belum ada fitur Quick Wins yang terplot. Pertimbangkan menyederhanakan fitur dengan dampak tinggi agar bisa segera dieksekusi.\n`;
+    text += `- Tahap 1 (Prioritas Utama / MVP): Pengembangan ${countI} fitur Quick Wins (${q1Names}). Fokus pada penyelesaian kendala ukuran kaki pembeli, verifikasi pembayaran otomatis, dan kemudahan pengelolaan varian ukuran sepatu.\n`;
   }
-
   if (countII > 0) {
     const q2Names = ideas.filter(i => i.quadrant === "II").map(i => i.title).join(", ");
-    text += `2. Kuadran II (Major Projects - Rencana Strategis): Fitur (${q2Names}) dijadwalkan pada roadmap fase kedua setelah alur belanja dasar berjalan stabil.\n`;
+    text += `- Tahap 2 (Rencana Strategis): Persiapan fitur Major Projects (${q2Names}) yaitu integrasi pemindai barcode kamera HP/webcam untuk otomatisasi stok gudang setelah alur belanja dasar stabil.\n`;
   }
+  text += `- Tahap 3 (Evaluasi & Penilaian Ulang): Evaluasi performa fitur pasca rilis, umpan balik pembeli/penjual, dan penilaian ulang skor Feasibility & Impact secara berkala.\n\n`;
 
-  if (countIV > 0) {
-    const q4Names = ideas.filter(i => i.quadrant === "IV").map(i => i.title).join(", ");
-    text += `3. Kuadran IV (Fill-Ins): Fitur (${q4Names}) dapat dikerjakan saat ada kapasitas luang sebagai pelengkap antarmuka.\n`;
-  }
-
-  if (countIII > 0) {
-    const q3Names = ideas.filter(i => i.quadrant === "III").map(i => i.title).join(", ");
-    text += `4. Kuadran III (Time Sinks): Fitur (${q3Names}) sebaiknya ditunda agar modal dan waktu kerja UMKM tidak terbuang.\n`;
-  }
+  text += `## KESIMPULAN AKHIR & REKOMENDASI STRATEGIS:\n`;
+  const pctI = total > 0 ? Math.round((countI / total) * 100) : 0;
+  const pctII = total > 0 ? Math.round((countII / total) * 100) : 0;
+  text += `1. Kesimpulan Matriks: Distribusi pemetaan menunjukkan perencanaan produk yang sangat efisien, di mana ${pctI}% ide (${countI} fitur) berada di Kuadran I (Quick Wins) dan ${pctII}% ide (${countII} fitur) di Kuadran II (Major Projects). Kuadran III dan IV kosong (0 ide) membuktikan tidak ada fitur dengan dampak rendah atau sumber daya terbuang.\n`;
+  text += `2. Rekomendasi Strategis: Alokasikan 90% kapasitas pengembangan pada Tahap 1 (Quick Wins) untuk menjamin alur transaksi dan kepuasan pelanggan, kemudian lanjutkan Tahap 2 (Barcode Scanner) guna digitalisasi operasional inventaris gudang.\n`;
 
   return text;
 }

@@ -15,7 +15,6 @@ export default function TableView({
   ideas,
   onEditIdea,
   onDeleteIdea,
-  onMoveQuadrant,
   onViewDetail,
 }) {
   const [sortField, setSortField] = useState("impact");
@@ -72,14 +71,6 @@ export default function TableView({
       <ArrowDown className="w-3 h-3 text-zinc-900" />
     );
   };
-
-  const quadrantOptions = [
-    { id: "I", label: "I" },
-    { id: "II", label: "II" },
-    { id: "IV", label: "IV" },
-    { id: "III", label: "III" },
-    { id: "pool", label: "Pool" },
-  ];
 
   return (
     <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-xs">
@@ -240,39 +231,19 @@ export default function TableView({
                       </span>
                     </td>
 
-                    {/* Kuadran */}
+                    {/* Kuadran (Dihitung Otomatis Berdasarkan Skor) */}
                     <td className="py-3 px-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5">
+                      <span
+                        className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md border ${
+                          quad.tagColor
+                        }`}
+                        title={`Kuadran ${quad.id} - ${quad.name}`}
+                      >
                         <span
-                          className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded border ${
-                            quad.tagColor
-                          }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${quad.dotColor}`}
-                          ></span>
-                          <span>{quad.id === "pool" ? "Pool" : `Kuadran ${quad.id}`}</span>
-                        </span>
-
-                        {/* Quick switch quadrant mini selector */}
-                        <div className="inline-flex items-center gap-0.5 border border-zinc-200 rounded p-0.5 bg-white">
-                          {quadrantOptions.map((opt) => (
-                            <button
-                              key={opt.id}
-                              type="button"
-                              onClick={() => onMoveQuadrant(idea.id, opt.id)}
-                              title={`Pindah ke ${opt.label}`}
-                              className={`text-[9px] font-mono px-1 py-0.2 rounded transition-colors cursor-pointer ${
-                                (idea.quadrant || "pool") === opt.id
-                                  ? "bg-zinc-900 text-white font-bold"
-                                  : "text-zinc-500 hover:bg-zinc-100"
-                              }`}
-                            >
-                              {opt.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+                          className={`w-1.5 h-1.5 rounded-full ${quad.dotColor}`}
+                        ></span>
+                        <span>{quad.id === "pool" ? "Idea Pool" : `Kuadran ${quad.id} (${quad.name})`}</span>
+                      </span>
                     </td>
 
                     {/* Prioritas */}

@@ -6,15 +6,7 @@ export default function QuadrantBox({
   ideas,
   onEditIdea,
   onDeleteIdea,
-  onMoveQuadrant,
   onViewDetail,
-  onDragStart,
-  onDragEnd,
-  draggedIdeaId,
-  isDragOver,
-  onDragOver,
-  onDragLeave,
-  onDrop,
   className = "",
 }) {
   const quad = QUADRANTS[quadrantId];
@@ -30,13 +22,8 @@ export default function QuadrantBox({
 
   return (
     <div
-      onDragOver={(e) => onDragOver(e, quadrantId)}
-      onDragLeave={onDragLeave}
-      onDrop={(e) => onDrop(e, quadrantId)}
       className={`flex flex-col p-4 sm:p-5 transition-all h-full min-h-0 ${
-        isDragOver
-          ? "bg-zinc-100/90 ring-2 ring-inset ring-zinc-900/10"
-          : `${quadrantBgStyles[quadrantId] || "bg-zinc-50/40"}`
+        quadrantBgStyles[quadrantId] || "bg-zinc-50/40"
       } ${className}`}
     >
       {/* Compact Quadrant Header */}
@@ -76,7 +63,7 @@ export default function QuadrantBox({
               Belum ada kartu di Kuadran {quad.id}
             </p>
             <p className="text-[11px] text-zinc-400 mt-0.5">
-              Tarik kartu ke sini atau gunakan Auto-Plot
+              Fitur dengan skor ({quad.rule}) otomatis terplot ke sini
             </p>
           </div>
         ) : (
@@ -87,11 +74,7 @@ export default function QuadrantBox({
                 idea={idea}
                 onEdit={onEditIdea}
                 onDelete={onDeleteIdea}
-                onMoveQuadrant={onMoveQuadrant}
                 onViewDetail={onViewDetail}
-                onDragStart={onDragStart}
-                onDragEnd={onDragEnd}
-                isDragging={draggedIdeaId === idea.id}
               />
             ))}
           </div>

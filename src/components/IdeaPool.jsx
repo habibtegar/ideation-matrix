@@ -6,30 +6,13 @@ export default function IdeaPool({
   ideas,
   onEditIdea,
   onDeleteIdea,
-  onMoveQuadrant,
   onViewDetail,
-  onDragStart,
-  onDragEnd,
-  draggedIdeaId,
-  isDragOver,
-  onDragOver,
-  onDragLeave,
-  onDrop,
   onAutoPlot,
 }) {
   const sortedIdeas = sortIdeasByScore(ideas);
 
   return (
-    <div
-      onDragOver={(e) => onDragOver(e, "pool")}
-      onDragLeave={onDragLeave}
-      onDrop={(e) => onDrop(e, "pool")}
-      className={`rounded-xl border p-5 sm:p-6 transition-all ${
-        isDragOver
-          ? "border-zinc-900 bg-zinc-100/90 ring-2 ring-zinc-900/10"
-          : "border-zinc-200 bg-white"
-      }`}
-    >
+    <div className="rounded-xl border border-zinc-200 bg-white p-5 sm:p-6 transition-all">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-zinc-200">
         <div className="flex items-center gap-2.5">
@@ -46,7 +29,7 @@ export default function IdeaPool({
               </span>
             </div>
             <p className="text-xs text-zinc-500 mt-0.5">
-              Wadah draf fitur atau ide yang menunggu penentuan skor dan plot matriks.
+              Wadah draf fitur atau ide yang menunggu penentuan skor dan plot matriks otomatis.
             </p>
           </div>
         </div>
@@ -71,7 +54,7 @@ export default function IdeaPool({
             Idea Pool saat ini kosong
           </p>
           <p className="text-[11px] text-zinc-400 mt-0.5">
-            Semua ide telah berhasil terplot ke dalam 4 kuadran prioritas.
+            Semua ide telah berhasil terplot ke dalam 4 kuadran prioritas sesuai skor masing-masing.
           </p>
         </div>
       ) : (
@@ -82,11 +65,7 @@ export default function IdeaPool({
               idea={idea}
               onEdit={onEditIdea}
               onDelete={onDeleteIdea}
-              onMoveQuadrant={onMoveQuadrant}
               onViewDetail={onViewDetail}
-              onDragStart={onDragStart}
-              onDragEnd={onDragEnd}
-              isDragging={draggedIdeaId === idea.id}
             />
           ))}
         </div>

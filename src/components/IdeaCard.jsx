@@ -1,12 +1,8 @@
-import { useState, useRef, useEffect } from "react";
 import {
-  GripVertical,
-  MoreVertical,
   Edit2,
   Trash2,
   ShoppingBag,
   Store,
-  Check,
   Eye,
 } from "lucide-react";
 import { QUADRANTS } from "../utils/matrixUtils";
@@ -15,49 +11,14 @@ export default function IdeaCard({
   idea,
   onEdit,
   onDelete,
-  onMoveQuadrant,
   onViewDetail,
-  isDragging,
-  onDragStart,
-  onDragEnd,
 }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-
   const isPembeli = idea.target === "Pembeli";
-
-  // Close dropdown menu on click outside
-  useEffect(() => {
-    if (!menuOpen) return;
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuOpen]);
-
-  const quadrantOptions = [
-    { id: "I", label: "Kuadran I (Quick Wins)" },
-    { id: "II", label: "Kuadran II (Major Projects)" },
-    { id: "III", label: "Kuadran III (Time Sinks)" },
-    { id: "IV", label: "Kuadran IV (Fill-Ins)" },
-    { id: "pool", label: "Idea Pool (Belum Diplot)" },
-  ];
-
   const currentQ = idea.quadrant || "pool";
 
   return (
     <div
-      draggable
-      onDragStart={(e) => onDragStart(e, idea)}
-      onDragEnd={onDragEnd}
-      className={`group relative bg-white border rounded-lg p-3 sm:p-3.5 transition-all shadow-xs hover:shadow-sm flex flex-col justify-between min-h-[108px] ${
-        isDragging
-          ? "opacity-35 border-zinc-400 scale-[0.98] ring-1 ring-zinc-400"
-          : "border-zinc-200 hover:border-zinc-300"
-      }`}
+      className="group relative bg-white border border-zinc-200 hover:border-zinc-300 rounded-lg p-3 sm:p-3.5 transition-all shadow-xs hover:shadow-sm flex flex-col justify-between min-h-[108px]"
     >
       {/* Top row: Target Badge, Score Pill, and Action Buttons */}
       <div className="flex items-center justify-between gap-1.5 mb-2">
@@ -83,8 +44,8 @@ export default function IdeaCard({
           </span>
         </div>
 
-        {/* Action Controls & Drag Handle */}
-        <div className="flex items-center gap-0.5 shrink-0 relative" ref={menuRef}>
+        {/* Action Controls: Detail, Edit, Hapus (Tanpa Pemindahan Manual) */}
+        <div className="flex items-center gap-0.5 shrink-0">
           {/* Quick View Detail */}
           <button
             type="button"
@@ -99,7 +60,7 @@ export default function IdeaCard({
             <Eye className="w-3.5 h-3.5" />
           </button>
 
-          {/* Quick Edit */}
+          {/* Quick Edit (Ubah Skor & Data) */}
           <button
             type="button"
             onClick={(e) => {
@@ -107,8 +68,8 @@ export default function IdeaCard({
               onEdit(idea);
             }}
             className="p-1 rounded text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 transition-colors cursor-pointer"
-            title="Edit Ide"
-            aria-label="Edit Ide"
+            title="Edit Ide & Skor"
+            aria-label="Edit Ide & Skor"
           >
             <Edit2 className="w-3.5 h-3.5" />
           </button>
@@ -126,62 +87,6 @@ export default function IdeaCard({
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
-
-          {/* More options / Move Quadrant Dropdown */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuOpen((prev) => !prev);
-            }}
-            className="p-1 rounded text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors cursor-pointer"
-            title="Pindahkan Kuadran"
-            aria-label="Pindahkan Kuadran"
-          >
-            <MoreVertical className="w-3.5 h-3.5" />
-          </button>
-
-          {/* Drag Handle */}
-          <div
-            className="p-1 text-zinc-300 group-hover:text-zinc-500 cursor-grab active:cursor-grabbing transition-colors"
-            title="Tahan dan geser untuk memindahkan kartu"
-          >
-            <GripVertical className="w-3.5 h-3.5" />
-          </div>
-
-          {/* Minimalist Dropdown Menu for Quadrant Movement */}
-          {menuOpen && (
-            <div
-              className="absolute right-0 top-full mt-1 w-48 bg-white border border-zinc-200 rounded-lg shadow-lg z-30 py-1 text-xs animate-in fade-in zoom-in-95 duration-100"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="px-3 py-1 text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
-                Pindahkan Kuadran
-              </div>
-              {quadrantOptions.map((opt) => {
-                const isCurrent = currentQ === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    disabled={isCurrent}
-                    onClick={() => {
-                      setMenuOpen(false);
-                      onMoveQuadrant(idea.id, opt.id);
-                    }}
-                    className={`w-full flex items-center justify-between px-3 py-1.5 text-left transition-colors cursor-pointer ${
-                      isCurrent
-                        ? "bg-zinc-50 text-zinc-400 font-medium cursor-default"
-                        : "text-zinc-700 hover:bg-zinc-100"
-                    }`}
-                  >
-                    <span className="truncate">{opt.label}</span>
-                    {isCurrent && <Check className="w-3 h-3 text-zinc-500 shrink-0 ml-1" />}
-                  </button>
-                );
-              })}
-            </div>
-          )}
         </div>
       </div>
 

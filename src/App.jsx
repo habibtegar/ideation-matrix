@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import Header from "./components/Header";
 import StatsSummary from "./components/StatsSummary";
+import ScatterPlotChart from "./components/ScatterPlotChart";
 import FilterBar from "./components/FilterBar";
-import MatrixView from "./components/MatrixView";
 import TableView from "./components/TableView";
 import AnalysisSummary from "./components/AnalysisSummary";
 import IdeaModal from "./components/IdeaModal";
@@ -12,7 +12,6 @@ import Toast from "./components/Toast";
 import { INITIAL_IDEAS } from "./data/initialIdeas";
 import {
   calculateQuadrant,
-  getScoresForQuadrant,
   generateUniqueId,
   formatSummaryForClipboard,
   exportIdeasToCsv,
@@ -43,16 +42,12 @@ export default function App() {
   const [targetFilter, setTargetFilter] = useState("Semua"); // Semua, Pembeli, Penjual
   const [activeQuadrantFilter, setActiveQuadrantFilter] = useState(null); // null, I, II, III, IV, pool
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState("matrix"); // matrix | table
 
-  // Modals & Drag states
+  // Modals & UI states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIdea, setEditingIdea] = useState(null);
   const [detailIdea, setDetailIdea] = useState(null);
   const [deletingIdeaId, setDeletingIdeaId] = useState(null);
-
-  const [draggedIdeaId, setDraggedIdeaId] = useState(null);
-  const [dragOverQuadrant, setDragOverQuadrant] = useState(null);
 
   // Toast notification
   const [toast, setToast] = useState(null);
@@ -189,8 +184,10 @@ export default function App() {
     }
   };
 
-  // Add or Edit Save handler
+  // Add or Edit Save handler (Kuadran selalu ditentukan otomatis dari Feasibility & Impact)
   const handleSaveIdea = (ideaData) => {
+    const autoQuadrant = calculateQuadrant(ideaData.feasibility, ideaData.impact);
+
     if (editingIdea) {
       // Update existing
       setIdeas((prev) =>
@@ -199,6 +196,7 @@ export default function App() {
             ? {
                 ...item,
                 ...ideaData,
+                quadrant: autoQuadrant,
                 updatedAt: Date.now(),
               }
             : item
@@ -210,6 +208,7 @@ export default function App() {
       const newIdea = {
         id: generateUniqueId(),
         ...ideaData,
+        quadrant: autoQuadrant,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
@@ -238,33 +237,6 @@ export default function App() {
     setIsModalOpen(true);
   };
 
-  // Move quadrant (via quick buttons or drag and drop)
-  const handleMoveQuadrant = (ideaId, targetQuadrant) => {
-    setIdeas((prev) =>
-      prev.map((item) => {
-        if (item.id === ideaId) {
-          // Adjust scores to match target quadrant so scores and positions stay in sync!
-          const { feasibility, impact } = getScoresForQuadrant(
-            targetQuadrant,
-            item.feasibility,
-            item.impact
-          );
-          return {
-            ...item,
-            quadrant: targetQuadrant,
-            feasibility,
-            impact,
-            updatedAt: Date.now(),
-          };
-        }
-        return item;
-      })
-    );
-
-    const quadTitle = QUADRANTS[targetQuadrant]?.name || targetQuadrant;
-    showToast(`Ide dipindahkan ke ${quadTitle}.`, "info");
-  };
-
   // Delete idea confirmation
   const handleDeleteClick = (ideaId) => {
     setDeletingIdeaId(ideaId);
@@ -279,42 +251,6 @@ export default function App() {
       `Ide "${ideaToDelete?.title || "Fitur"}" berhasil dihapus.`,
       "info"
     );
-  };
-
-  // HTML5 Drag and Drop handlers
-  const handleDragStart = (e, idea) => {
-    e.dataTransfer.setData("text/plain", idea.id);
-    e.dataTransfer.effectAllowed = "move";
-    setDraggedIdeaId(idea.id);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIdeaId(null);
-    setDragOverQuadrant(null);
-  };
-
-  const handleDragOver = (e, quadrantId) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-    if (dragOverQuadrant !== quadrantId) {
-      setDragOverQuadrant(quadrantId);
-    }
-  };
-
-  const handleDragLeave = (e) => {
-    // Only clear if leaving the quadrant area
-    if (e.currentTarget.contains(e.relatedTarget)) return;
-    setDragOverQuadrant(null);
-  };
-
-  const handleDrop = (e, targetQuadrant) => {
-    e.preventDefault();
-    const ideaId = e.dataTransfer.getData("text/plain") || draggedIdeaId;
-    if (ideaId) {
-      handleMoveQuadrant(ideaId, targetQuadrant);
-    }
-    setDraggedIdeaId(null);
-    setDragOverQuadrant(null);
   };
 
   const ideaBeingDeleted = ideas.find((item) => item.id === deletingIdeaId);
@@ -344,13 +280,17 @@ export default function App() {
           />
         </section>
 
-        {/* Filter Target Pengguna & View Switch */}
+        {/* Fitur Grafik Kuadran (Scatter Plot): Analisis Feasibility vs Impact */}
+        <ScatterPlotChart
+          ideas={ideas}
+          onViewDetail={handleOpenDetailModal}
+        />
+
+        {/* Filter Target Pengguna & Pencarian */}
         <section aria-label="Filter dan Kontrol Tampilan">
           <FilterBar
             targetFilter={targetFilter}
             onTargetFilterChange={setTargetFilter}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
             searchQuery={searchQuery}
             onSearchQueryChange={setSearchQuery}
             ideasCount={ideasCount}
@@ -389,33 +329,14 @@ export default function App() {
           </div>
         )}
 
-        {/* 3. Main Views: Matrix View vs Table View (Always displayed directly, even when 0 ideas) */}
-        <section aria-label="Area Kerja Ideation Matrix">
-          {viewMode === "matrix" ? (
-            <MatrixView
-              ideas={filteredIdeas}
-              onEditIdea={handleOpenEditModal}
-              onDeleteIdea={handleDeleteClick}
-              onMoveQuadrant={handleMoveQuadrant}
-              onViewDetail={handleOpenDetailModal}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              draggedIdeaId={draggedIdeaId}
-              dragOverQuadrant={dragOverQuadrant}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onAutoPlot={handleAutoPlot}
-            />
-          ) : (
-            <TableView
-              ideas={filteredIdeas}
-              onEditIdea={handleOpenEditModal}
-              onDeleteIdea={handleDeleteClick}
-              onMoveQuadrant={handleMoveQuadrant}
-              onViewDetail={handleOpenDetailModal}
-            />
-          )}
+        {/* 3. Tampilan Utama: Table View (Satu-Satunya Tampilan Daftar Ide) */}
+        <section aria-label="Area Kerja Tabel Ide LKPD">
+          <TableView
+            ideas={filteredIdeas}
+            onEditIdea={handleOpenEditModal}
+            onDeleteIdea={handleDeleteClick}
+            onViewDetail={handleOpenDetailModal}
+          />
         </section>
 
         {/* 4. Kesimpulan Analisis Otomatis & Rekomendasi Prioritas (LKPD) */}
