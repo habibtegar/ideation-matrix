@@ -1,4 +1,4 @@
-import { Plus, Sparkles, Copy, RotateCcw, Download, Printer } from "lucide-react";
+import { Plus, Sparkles, Copy, RotateCcw, Download, Printer, BookOpen } from "lucide-react";
 
 export default function Header({
   onOpenAddModal,
@@ -7,6 +7,7 @@ export default function Header({
   onExportCsv,
   onPrintPdf,
   onResetData,
+  onLoadLkpdData,
   totalIdeas,
 }) {
   return (
@@ -36,6 +37,18 @@ export default function Header({
 
           {/* Action Buttons */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            {/* Muat 10 Ide LKPD Guru Button */}
+            <button
+              type="button"
+              onClick={onLoadLkpdData}
+              title="Terapkan 10 data ide resmi LKPD Guru (dengan konfirmasi)"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 hover:text-zinc-900 transition-colors cursor-pointer"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-zinc-600" />
+              <span className="hidden sm:inline">10 Ide LKPD</span>
+              <span className="sm:hidden">LKPD</span>
+            </button>
+
             {/* Reset Button with confirmation */}
             {totalIdeas > 0 && (
               <button

@@ -211,10 +211,10 @@ export function formatSummaryForClipboard(ideas) {
   const countPembeli = ideas.filter((item) => item.target === "Pembeli").length;
   const countPenjual = ideas.filter((item) => item.target === "Penjual").length;
 
-  let text = `# IDEATION PRIORITY MATRIX: E-COMMERCE SEPATU & SANDAL UMKM\n`;
-  text += `Rangkuman Penentuan Prioritas Pengembangan Fitur Produk (Feasibility vs Impact Matrix)\n\n`;
+  let text = `# LEMBAR KERJA PESERTA DIDIK (LKPD): IDEATION PRIORITY MATRIX\n`;
+  text += `## E-Commerce Sepatu & Sandal UMKM (Metode Feasibility vs Impact)\n\n`;
 
-  text += `## RINGKASAN METRIK PROYEK\n`;
+  text += `### RINGKASAN METRIK PROYEK\n`;
   text += `- Total Seluruh Ide: ${total} ide\n`;
   text += `  • Target Pembeli: ${countPembeli} ide\n`;
   text += `  • Target Penjual: ${countPenjual} ide\n`;
@@ -225,6 +225,19 @@ export function formatSummaryForClipboard(ideas) {
   if (countPool > 0) {
     text += `- Idea Pool (Belum Diplot): ${countPool} ide\n`;
   }
+  text += `\n==================================================\n\n`;
+
+  // Comprehensive Table for quick paste into Google Docs
+  text += `### TABEL REKAPITULASI 10 IDE LKPD\n\n`;
+  text += `| No | Nama Fitur | Target | Feasibility | Impact | Total Skor | Kuadran | Prioritas |\n`;
+  text += `|---|---|---|:---:|:---:|:---:|---|---|\n`;
+  const allSorted = sortIdeasByScore(ideas);
+  allSorted.forEach((item, idx) => {
+    const qid = item.quadrant || "pool";
+    const quad = QUADRANTS[qid] || QUADRANTS.pool;
+    const totalScore = (item.feasibility ?? 0) + (item.impact ?? 0);
+    text += `| ${idx + 1} | ${item.title} | ${item.target} | ${item.feasibility ?? "-"} | ${item.impact ?? "-"} | ${totalScore} | Kuadran ${quad.id} | ${quad.priority} |\n`;
+  });
   text += `\n==================================================\n\n`;
 
   // Exact requested order: Total, I, II, III, IV, Pool
@@ -245,10 +258,13 @@ export function formatSummaryForClipboard(ideas) {
       text += `(Belum ada ide pada kuadran ini)\n\n`;
     } else {
       quadIdeas.forEach((item, index) => {
+        const itemTotal = (item.feasibility ?? 0) + (item.impact ?? 0);
         text += `${index + 1}. ${item.title}\n`;
         text += `   - Target Pengguna: ${item.target}\n`;
         text += `   - Skor Feasibility: ${item.feasibility != null ? item.feasibility + "/5" : "-"}\n`;
         text += `   - Skor Impact: ${item.impact != null ? item.impact + "/5" : "-"}\n`;
+        text += `   - Total Skor: ${itemTotal}/10 (Feas + Imp)\n`;
+        text += `   - Kuadran: Kuadran ${quad.id} (${quad.name})\n`;
         text += `   - Deskripsi: ${item.description || "-"}\n`;
         text += `   - Prioritas LKPD: ${quad.priority}\n\n`;
       });
@@ -260,14 +276,14 @@ export function formatSummaryForClipboard(ideas) {
   text += `## KESIMPULAN & REKOMENDASI PENGEMBANGAN UMKM:\n`;
   if (countI > 0) {
     const q1Names = ideas.filter(i => i.quadrant === "I").map(i => i.title).join(", ");
-    text += `1. Kuadran I (Quick Wins): Fokus rilis awal (MVP) pada fitur (${q1Names}) karena memberikan dampak penjualan dan kepuasan pelanggan tertinggi dengan implementasi paling cepat.\n`;
+    text += `1. Kuadran I (Quick Wins - Prioritas Utama): Fokus rilis awal (MVP) pada 9 fitur (${q1Names}) karena memberikan dampak penjualan dan kepuasan pembeli/seller tertinggi dengan kemudahan eksekusi optimal.\n`;
   } else {
     text += `1. Kuadran I (Quick Wins): Belum ada fitur Quick Wins yang terplot. Pertimbangkan menyederhanakan fitur dengan dampak tinggi agar bisa segera dieksekusi.\n`;
   }
 
   if (countII > 0) {
     const q2Names = ideas.filter(i => i.quadrant === "II").map(i => i.title).join(", ");
-    text += `2. Kuadran II (Major Projects): Fitur (${q2Names}) dijadwalkan pada roadmap fase kedua setelah persiapan alur teknis dan operasional siap.\n`;
+    text += `2. Kuadran II (Major Projects - Rencana Strategis): Fitur (${q2Names}) dijadwalkan pada roadmap fase kedua setelah alur belanja dasar berjalan stabil.\n`;
   }
 
   if (countIV > 0) {

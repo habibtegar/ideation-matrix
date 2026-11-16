@@ -6,6 +6,7 @@ import MatrixView from "./components/MatrixView";
 import TableView from "./components/TableView";
 import AnalysisSummary from "./components/AnalysisSummary";
 import IdeaModal from "./components/IdeaModal";
+import IdeaDetailModal from "./components/IdeaDetailModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import Toast from "./components/Toast";
 import { INITIAL_IDEAS } from "./data/initialIdeas";
@@ -19,10 +20,10 @@ import {
   QUADRANTS,
 } from "./utils/matrixUtils";
 
-const STORAGE_KEY = "ideation_matrix_umkm_shoes_v1";
+const STORAGE_KEY = "ideation_matrix_umkm_shoes_lkpd_final";
 
 export default function App() {
-  // Initialize ideas from localStorage or fallback to the 10 initial ideas
+  // Initialize ideas from localStorage or fallback to the 10 official LKPD ideas
   const [ideas, setIdeas] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -47,6 +48,7 @@ export default function App() {
   // Modals & Drag states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIdea, setEditingIdea] = useState(null);
+  const [detailIdea, setDetailIdea] = useState(null);
   const [deletingIdeaId, setDeletingIdeaId] = useState(null);
 
   const [draggedIdeaId, setDraggedIdeaId] = useState(null);
@@ -175,6 +177,18 @@ export default function App() {
     }
   };
 
+  // Load/Restore 10 official LKPD ideas with confirmation
+  const handleLoadOfficialLkpd = () => {
+    if (
+      window.confirm(
+        "Apakah Anda yakin ingin memuat 10 data ide resmi LKPD Guru? Seluruh perubahan atau data saat ini akan digantikan dengan dataset resmi LKPD."
+      )
+    ) {
+      setIdeas(INITIAL_IDEAS);
+      showToast("10 ide resmi LKPD Guru berhasil dimuat!", "success");
+    }
+  };
+
   // Add or Edit Save handler
   const handleSaveIdea = (ideaData) => {
     if (editingIdea) {
@@ -211,6 +225,11 @@ export default function App() {
   const handleOpenEditModal = (idea) => {
     setEditingIdea(idea);
     setIsModalOpen(true);
+  };
+
+  // Open modal for full detail viewing
+  const handleOpenDetailModal = (idea) => {
+    setDetailIdea(idea);
   };
 
   // Open modal for adding
@@ -310,6 +329,7 @@ export default function App() {
         onExportCsv={handleExportCsv}
         onPrintPdf={handlePrintPdf}
         onResetData={handleResetData}
+        onLoadLkpdData={handleLoadOfficialLkpd}
         totalIdeas={ideas.length}
       />
 
@@ -377,6 +397,7 @@ export default function App() {
               onEditIdea={handleOpenEditModal}
               onDeleteIdea={handleDeleteClick}
               onMoveQuadrant={handleMoveQuadrant}
+              onViewDetail={handleOpenDetailModal}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               draggedIdeaId={draggedIdeaId}
@@ -392,6 +413,7 @@ export default function App() {
               onEditIdea={handleOpenEditModal}
               onDeleteIdea={handleDeleteClick}
               onMoveQuadrant={handleMoveQuadrant}
+              onViewDetail={handleOpenDetailModal}
             />
           )}
         </section>
@@ -400,10 +422,63 @@ export default function App() {
         <section aria-label="Kesimpulan Analisis dan Rekomendasi Prioritas LKPD">
           <AnalysisSummary ideas={ideas} />
         </section>
+
+        {/* Print-Only: Rekapitulasi Lengkap Seluruh Ide LKPD untuk Ekspor PDF / Cetak */}
+        <div className="hidden print:block pt-6 border-t-2 border-zinc-900 mt-8 space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-zinc-300">
+            <div>
+              <h2 className="text-base font-bold text-zinc-900 uppercase tracking-wide">
+                Tabel Rangkuman LKPD - Rekapitulasi 10 Fitur Produk
+              </h2>
+              <p className="text-xs text-zinc-600">
+                E-Commerce Sepatu &amp; Sandal UMKM • Feasibility vs Impact Matrix
+              </p>
+            </div>
+            <div className="text-xs text-zinc-500 font-mono text-right">
+              Total: {ideas.length} Ide Fitur
+            </div>
+          </div>
+
+          <table className="w-full text-left border-collapse text-xs border border-zinc-300">
+            <thead>
+              <tr className="bg-zinc-100 border-b border-zinc-300 text-zinc-800 font-bold">
+                <th className="py-2 px-2 text-center w-8 border-r border-zinc-300">No</th>
+                <th className="py-2 px-2 border-r border-zinc-300">Nama Ide Fitur</th>
+                <th className="py-2 px-2 border-r border-zinc-300">Deskripsi</th>
+                <th className="py-2 px-2 text-center border-r border-zinc-300">Target</th>
+                <th className="py-2 px-1.5 text-center border-r border-zinc-300">Feas</th>
+                <th className="py-2 px-1.5 text-center border-r border-zinc-300">Imp</th>
+                <th className="py-2 px-1.5 text-center border-r border-zinc-300">Total</th>
+                <th className="py-2 px-2 border-r border-zinc-300">Kuadran</th>
+                <th className="py-2 px-2">Prioritas</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-200">
+              {ideas.map((item, idx) => {
+                const qid = item.quadrant || "pool";
+                const quad = QUADRANTS[qid] || QUADRANTS.pool;
+                const totalScore = (item.feasibility ?? 0) + (item.impact ?? 0);
+                return (
+                  <tr key={item.id} className="border-b border-zinc-200">
+                    <td className="py-1.5 px-2 text-center font-mono border-r border-zinc-300">{idx + 1}</td>
+                    <td className="py-1.5 px-2 font-bold text-zinc-900 border-r border-zinc-300">{item.title}</td>
+                    <td className="py-1.5 px-2 text-zinc-700 leading-snug border-r border-zinc-300 text-[11px]">{item.description}</td>
+                    <td className="py-1.5 px-2 text-center border-r border-zinc-300">{item.target}</td>
+                    <td className="py-1.5 px-1.5 text-center font-mono font-bold border-r border-zinc-300">{item.feasibility}</td>
+                    <td className="py-1.5 px-1.5 text-center font-mono font-bold border-r border-zinc-300">{item.impact}</td>
+                    <td className="py-1.5 px-1.5 text-center font-mono font-bold border-r border-zinc-300">{totalScore}</td>
+                    <td className="py-1.5 px-2 font-semibold border-r border-zinc-300">Kuadran {quad.id}</td>
+                    <td className="py-1.5 px-2 text-zinc-800 text-[11px]">{quad.priority}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </main>
 
       {/* 4. Footer */}
-      <footer className="border-t border-zinc-200 bg-white py-4 mt-12">
+      <footer className="border-t border-zinc-200 bg-white py-4 mt-12 no-print">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-zinc-800">Ideation Matrix</span>
@@ -415,6 +490,17 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Modal Detail Lengkap Ide */}
+      <IdeaDetailModal
+        isOpen={!!detailIdea}
+        onClose={() => setDetailIdea(null)}
+        idea={detailIdea}
+        onEdit={(idea) => {
+          setDetailIdea(null);
+          handleOpenEditModal(idea);
+        }}
+      />
 
       {/* Modal Tambah / Edit Ide */}
       <IdeaModal

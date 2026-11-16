@@ -311,3 +311,21 @@ export function Printer(props) {
     </BaseSvg>
   );
 }
+
+export function BookOpen(props) {
+  return (
+    <BaseSvg {...props}>
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+    </BaseSvg>
+  );
+}
+
+export function Eye(props) {
+  return (
+    <BaseSvg {...props}>
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </BaseSvg>
+  );
+}

@@ -7,6 +7,7 @@ import {
   ShoppingBag,
   Store,
   Check,
+  Eye,
 } from "lucide-react";
 import { QUADRANTS } from "../utils/matrixUtils";
 
@@ -15,6 +16,7 @@ export default function IdeaCard({
   onEdit,
   onDelete,
   onMoveQuadrant,
+  onViewDetail,
   isDragging,
   onDragStart,
   onDragEnd,
@@ -83,6 +85,20 @@ export default function IdeaCard({
 
         {/* Action Controls & Drag Handle */}
         <div className="flex items-center gap-0.5 shrink-0 relative" ref={menuRef}>
+          {/* Quick View Detail */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onViewDetail) onViewDetail(idea);
+            }}
+            className="p-1 rounded text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 transition-colors cursor-pointer"
+            title="Lihat Deskripsi Lengkap"
+            aria-label="Lihat Deskripsi Lengkap"
+          >
+            <Eye className="w-3.5 h-3.5" />
+          </button>
+
           {/* Quick Edit */}
           <button
             type="button"
@@ -169,11 +185,14 @@ export default function IdeaCard({
         </div>
       </div>
 
-      {/* Middle row: Feature Title (font semibold) & Description (text-zinc-500) */}
-      <div className="my-auto pr-0.5">
+      {/* Middle row: Feature Title (font semibold) & Description (clickable for full detail) */}
+      <div
+        className="my-auto pr-0.5 cursor-pointer group/content"
+        onClick={() => onViewDetail && onViewDetail(idea)}
+        title="Klik untuk membaca deskripsi lengkap"
+      >
         <h4
-          className="text-sm font-semibold text-zinc-900 tracking-tight leading-snug line-clamp-2 break-words"
-          title={idea.title}
+          className="text-sm font-semibold text-zinc-900 group-hover/content:text-zinc-600 transition-colors tracking-tight leading-snug line-clamp-2 break-words"
         >
           {idea.title}
         </h4>
@@ -181,7 +200,6 @@ export default function IdeaCard({
         {/* Short Description: clean spacing, line-clamp-2 */}
         <p
           className="text-xs text-zinc-500 line-clamp-2 break-words mt-1 leading-relaxed"
-          title={idea.description || ""}
         >
           {idea.description || "Tidak ada deskripsi singkat."}
         </p>

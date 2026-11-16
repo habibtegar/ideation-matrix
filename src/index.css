@@ -60,4 +60,12 @@
   .border {
     border-color: #e4e4e7 !important;
   }
+  /* Ensure all cards are visible in print */
+  .overflow-y-auto {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  tr {
+    page-break-inside: avoid !important;
+  }
 }

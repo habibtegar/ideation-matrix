@@ -7,6 +7,7 @@ export default function IdeaPool({
   onEditIdea,
   onDeleteIdea,
   onMoveQuadrant,
+  onViewDetail,
   onDragStart,
   onDragEnd,
   draggedIdeaId,
@@ -82,6 +83,7 @@ export default function IdeaPool({
               onEdit={onEditIdea}
               onDelete={onDeleteIdea}
               onMoveQuadrant={onMoveQuadrant}
+              onViewDetail={onViewDetail}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
               isDragging={draggedIdeaId === idea.id}

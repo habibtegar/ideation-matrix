@@ -7,6 +7,7 @@ import {
   Trash2,
   ShoppingBag,
   Store,
+  Eye,
 } from "lucide-react";
 import { QUADRANTS } from "../utils/matrixUtils";
 
@@ -15,6 +16,7 @@ export default function TableView({
   onEditIdea,
   onDeleteIdea,
   onMoveQuadrant,
+  onViewDetail,
 }) {
   const [sortField, setSortField] = useState("impact");
   const [sortDirection, setSortDirection] = useState("desc"); // 'asc' or 'desc'
@@ -138,6 +140,15 @@ export default function TableView({
                 </div>
               </th>
               <th
+                onClick={() => handleSort("totalScore")}
+                className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group text-center"
+              >
+                <div className="flex items-center justify-center gap-1.5">
+                  <span>Total Skor</span>
+                  {renderSortIcon("totalScore")}
+                </div>
+              </th>
+              <th
                 onClick={() => handleSort("quadrant")}
                 className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
@@ -153,7 +164,7 @@ export default function TableView({
           <tbody className="divide-y divide-zinc-200/70">
             {sortedIdeas.length === 0 ? (
               <tr>
-                <td colSpan={9} className="py-12 text-center text-zinc-400">
+                <td colSpan={10} className="py-12 text-center text-zinc-400">
                   Tidak ada ide yang cocok dengan filter.
                 </td>
               </tr>
@@ -162,6 +173,7 @@ export default function TableView({
                 const qid = idea.quadrant || "pool";
                 const quad = QUADRANTS[qid];
                 const isPembeli = idea.target === "Pembeli";
+                const totalScore = (idea.feasibility ?? 0) + (idea.impact ?? 0);
 
                 return (
                   <tr
@@ -221,6 +233,13 @@ export default function TableView({
                       </span>
                     </td>
 
+                    {/* Total Skor */}
+                    <td className="py-3 px-3.5 text-center whitespace-nowrap">
+                      <span className="inline-block font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-zinc-900 text-white shadow-2xs">
+                        {totalScore}
+                      </span>
+                    </td>
+
                     {/* Kuadran */}
                     <td className="py-3 px-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
@@ -271,6 +290,14 @@ export default function TableView({
                     {/* Aksi */}
                     <td className="py-3 px-3.5 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => onViewDetail && onViewDetail(idea)}
+                          className="p-1 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded transition-colors cursor-pointer"
+                          title="Lihat Detail Lengkap"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
                         <button
                           type="button"
                           onClick={() => onEditIdea(idea)}

@@ -7,6 +7,7 @@ export default function MatrixView({
   onEditIdea,
   onDeleteIdea,
   onMoveQuadrant,
+  onViewDetail,
   onDragStart,
   onDragEnd,
   draggedIdeaId,
@@ -72,6 +73,7 @@ export default function MatrixView({
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
                   onMoveQuadrant={onMoveQuadrant}
+                  onViewDetail={onViewDetail}
                   onDragStart={onDragStart}
                   onDragEnd={onDragEnd}
                   draggedIdeaId={draggedIdeaId}
@@ -89,6 +91,7 @@ export default function MatrixView({
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
                   onMoveQuadrant={onMoveQuadrant}
+                  onViewDetail={onViewDetail}
                   onDragStart={onDragStart}
                   onDragEnd={onDragEnd}
                   draggedIdeaId={draggedIdeaId}
@@ -106,6 +109,7 @@ export default function MatrixView({
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
                   onMoveQuadrant={onMoveQuadrant}
+                  onViewDetail={onViewDetail}
                   onDragStart={onDragStart}
                   onDragEnd={onDragEnd}
                   draggedIdeaId={draggedIdeaId}
@@ -123,6 +127,7 @@ export default function MatrixView({
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
                   onMoveQuadrant={onMoveQuadrant}
+                  onViewDetail={onViewDetail}
                   onDragStart={onDragStart}
                   onDragEnd={onDragEnd}
                   draggedIdeaId={draggedIdeaId}
@@ -173,6 +178,7 @@ export default function MatrixView({
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
           onMoveQuadrant={onMoveQuadrant}
+          onViewDetail={onViewDetail}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
           draggedIdeaId={draggedIdeaId}
@@ -190,6 +196,7 @@ export default function MatrixView({
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
           onMoveQuadrant={onMoveQuadrant}
+          onViewDetail={onViewDetail}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
           draggedIdeaId={draggedIdeaId}
@@ -207,6 +214,7 @@ export default function MatrixView({
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
           onMoveQuadrant={onMoveQuadrant}
+          onViewDetail={onViewDetail}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
           draggedIdeaId={draggedIdeaId}
@@ -224,6 +232,7 @@ export default function MatrixView({
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
           onMoveQuadrant={onMoveQuadrant}
+          onViewDetail={onViewDetail}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
           draggedIdeaId={draggedIdeaId}
@@ -243,6 +252,7 @@ export default function MatrixView({
         onEditIdea={onEditIdea}
         onDeleteIdea={onDeleteIdea}
         onMoveQuadrant={onMoveQuadrant}
+        onViewDetail={onViewDetail}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         draggedIdeaId={draggedIdeaId}
