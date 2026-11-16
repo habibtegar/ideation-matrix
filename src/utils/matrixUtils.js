@@ -19,7 +19,7 @@ export const QUADRANTS = {
     position: "Kiri Atas",
     badge: "Rencana Strategis",
     description: "Ide berdampak tinggi yang membutuhkan persiapan lebih.",
-    rule: "Feasibility ≤ 3 & Impact ≥ 4",
+    rule: "Feasibility < 4 & Impact ≥ 4",
     tagColor: "bg-blue-50 text-blue-800 border-blue-200",
     dotColor: "bg-blue-600",
     priority: "Tinggi (P2)",
@@ -32,7 +32,7 @@ export const QUADRANTS = {
     position: "Kiri Bawah",
     badge: "Pertimbangkan Kembali",
     description: "Ide dengan prioritas rendah.",
-    rule: "Feasibility ≤ 3 & Impact ≤ 3",
+    rule: "Feasibility < 4 & Impact < 4",
     tagColor: "bg-rose-50 text-rose-800 border-rose-200",
     dotColor: "bg-rose-600",
     priority: "Rendah (P4)",
@@ -45,7 +45,7 @@ export const QUADRANTS = {
     position: "Kanan Bawah",
     badge: "Pengisi Waktu",
     description: "Ide mudah diterapkan tetapi dampaknya relatif rendah.",
-    rule: "Feasibility ≥ 4 & Impact ≤ 3",
+    rule: "Feasibility ≥ 4 & Impact < 4",
     tagColor: "bg-amber-50 text-amber-800 border-amber-200",
     dotColor: "bg-amber-600",
     priority: "Sedang (P3)",
@@ -68,11 +68,11 @@ export const QUADRANTS = {
 
 /**
  * Determine quadrant based on Feasibility & Impact scores.
- * Rule:
- * - Feasibility 4–5 and Impact 4–5 → Kuadran I
- * - Feasibility 1–3 and Impact 4–5 → Kuadran II
- * - Feasibility 1–3 and Impact 1–3 → Kuadran III
- * - Feasibility 4–5 and Impact 1–3 → Kuadran IV
+ * Exact rule:
+ * - Kuadran I: Feasibility ≥ 4 dan Impact ≥ 4
+ * - Kuadran II: Feasibility < 4 dan Impact ≥ 4
+ * - Kuadran III: Feasibility < 4 dan Impact < 4
+ * - Kuadran IV: Feasibility ≥ 4 dan Impact < 4
  * Missing/incomplete scores → pool
  */
 export function calculateQuadrant(feasibility, impact) {
@@ -82,9 +82,9 @@ export function calculateQuadrant(feasibility, impact) {
   if (isNaN(f) || isNaN(i) || f < 1 || f > 5 || i < 1 || i > 5) return "pool";
 
   if (f >= 4 && i >= 4) return "I";
-  if (f <= 3 && i >= 4) return "II";
-  if (f <= 3 && i <= 3) return "III";
-  if (f >= 4 && i <= 3) return "IV";
+  if (f < 4 && i >= 4) return "II";
+  if (f < 4 && i < 4) return "III";
+  if (f >= 4 && i < 4) return "IV";
 
   return "pool";
 }
@@ -103,16 +103,16 @@ export function getScoresForQuadrant(quadrantId, currentF, currentI) {
       if (i < 4) i = 4;
       break;
     case "II":
-      if (f > 3) f = 3;
+      if (f >= 4) f = 3;
       if (i < 4) i = 4;
       break;
     case "III":
-      if (f > 3) f = 3;
-      if (i > 3) i = 3;
+      if (f >= 4) f = 3;
+      if (i >= 4) i = 3;
       break;
     case "IV":
       if (f < 4) f = 4;
-      if (i > 3) i = 3;
+      if (i >= 4) i = 3;
       break;
   }
   return { feasibility: f, impact: i };
@@ -131,7 +131,7 @@ export function sortIdeasByScore(ideas) {
     const feasB = b.feasibility ?? 0;
     if (feasB !== feasA) return feasB - feasA;
 
-    return a.title.localeCompare(b.title);
+    return (a.title || "").localeCompare(b.title || "");
   });
 }
 
@@ -143,6 +143,58 @@ export function generateUniqueId() {
     return crypto.randomUUID();
   }
   return "idea-" + Date.now() + "-" + Math.random().toString(36).substring(2, 9);
+}
+
+/**
+ * Export ideas to CSV format for Excel & Google Sheets
+ */
+export function exportIdeasToCsv(ideas) {
+  const headers = [
+    "No",
+    "Nama Ide",
+    "Deskripsi",
+    "Target Pengguna",
+    "Feasibility (1-5)",
+    "Impact (1-5)",
+    "Total Skor",
+    "Kuadran",
+    "Prioritas"
+  ];
+
+  const sorted = sortIdeasByScore(ideas);
+  const rows = sorted.map((item, idx) => {
+    const qid = item.quadrant || "pool";
+    const quad = QUADRANTS[qid] || QUADRANTS.pool;
+    const totalScore = (item.feasibility ?? 0) + (item.impact ?? 0);
+    return [
+      idx + 1,
+      `"${(item.title || "").replace(/"/g, '""')}"`,
+      `"${(item.description || "").replace(/"/g, '""')}"`,
+      `"${item.target || ""}"`,
+      item.feasibility ?? "",
+      item.impact ?? "",
+      totalScore,
+      `"${quad.id === "pool" ? "Idea Pool" : `Kuadran ${quad.id} - ${quad.name}`}"`,
+      `"${quad.priority}"`
+    ];
+  });
+
+  return "\uFEFF" + [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
+}
+
+/**
+ * Download CSV file trigger
+ */
+export function downloadCsvFile(csvContent, filename = "ideation-matrix-lkpd.csv") {
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 /**
@@ -175,7 +227,8 @@ export function formatSummaryForClipboard(ideas) {
   }
   text += `\n==================================================\n\n`;
 
-  const quadrantOrder = ["I", "II", "IV", "III", "pool"];
+  // Exact requested order: Total, I, II, III, IV, Pool
+  const quadrantOrder = ["I", "II", "III", "IV", "pool"];
 
   quadrantOrder.forEach((qid) => {
     const quad = QUADRANTS[qid];
@@ -203,12 +256,29 @@ export function formatSummaryForClipboard(ideas) {
     text += `--------------------------------------------------\n\n`;
   });
 
+  // Dynamic recommendations based on actual data
   text += `## KESIMPULAN & REKOMENDASI PENGEMBANGAN UMKM:\n`;
-  text += `1. Fitur pada Kuadran I (Quick Wins) merupakan prioritas mutlak yang harus dikembangkan pada fase pertama (MVP), karena memberikan nilai maksimal bagi operasional toko sepatu/sandal dan kenyamanan pembeli dengan investasi sumber daya yang efisien.\n`;
-  text += `2. Fitur pada Kuadran II (Major Projects) harus dijadwalkan secara bertahap pada fase berikutnya setelah alur belanja dasar berjalan stabil.\n`;
-  text += `3. Fitur pada Kuadran IV (Fill-Ins) dapat dikerjakan sebagai pengisi waktu luang atau pelengkap antarmuka.\n`;
-  text += `4. Fitur pada Kuadran III (Time Sinks) dihindari terlebih dahulu untuk menghemat modal dan waktu kerja UMKM.\n`;
+  if (countI > 0) {
+    const q1Names = ideas.filter(i => i.quadrant === "I").map(i => i.title).join(", ");
+    text += `1. Kuadran I (Quick Wins): Fokus rilis awal (MVP) pada fitur (${q1Names}) karena memberikan dampak penjualan dan kepuasan pelanggan tertinggi dengan implementasi paling cepat.\n`;
+  } else {
+    text += `1. Kuadran I (Quick Wins): Belum ada fitur Quick Wins yang terplot. Pertimbangkan menyederhanakan fitur dengan dampak tinggi agar bisa segera dieksekusi.\n`;
+  }
+
+  if (countII > 0) {
+    const q2Names = ideas.filter(i => i.quadrant === "II").map(i => i.title).join(", ");
+    text += `2. Kuadran II (Major Projects): Fitur (${q2Names}) dijadwalkan pada roadmap fase kedua setelah persiapan alur teknis dan operasional siap.\n`;
+  }
+
+  if (countIV > 0) {
+    const q4Names = ideas.filter(i => i.quadrant === "IV").map(i => i.title).join(", ");
+    text += `3. Kuadran IV (Fill-Ins): Fitur (${q4Names}) dapat dikerjakan saat ada kapasitas luang sebagai pelengkap antarmuka.\n`;
+  }
+
+  if (countIII > 0) {
+    const q3Names = ideas.filter(i => i.quadrant === "III").map(i => i.title).join(", ");
+    text += `4. Kuadran III (Time Sinks): Fitur (${q3Names}) sebaiknya ditunda agar modal dan waktu kerja UMKM tidak terbuang.\n`;
+  }
 
   return text;
 }
-

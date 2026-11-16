@@ -14,6 +14,8 @@ import {
   getScoresForQuadrant,
   generateUniqueId,
   formatSummaryForClipboard,
+  exportIdeasToCsv,
+  downloadCsvFile,
   QUADRANTS,
 } from "./utils/matrixUtils";
 
@@ -145,6 +147,22 @@ export default function App() {
     }
   };
 
+  // Export ideas to CSV (Excel / Google Sheets)
+  const handleExportCsv = () => {
+    if (ideas.length === 0) {
+      showToast("Belum ada data ide untuk diekspor ke CSV.", "info");
+      return;
+    }
+    const csvContent = exportIdeasToCsv(ideas);
+    downloadCsvFile(csvContent, "ideation-matrix-umkm-sepatu-sandal.csv");
+    showToast("File CSV berhasil diunduh!", "success");
+  };
+
+  // Print or Save as PDF
+  const handlePrintPdf = () => {
+    window.print();
+  };
+
   // Reset to 0 ideas (clear all ideas completely)
   const handleResetData = () => {
     if (
@@ -155,12 +173,6 @@ export default function App() {
       setIdeas([]);
       showToast("Seluruh ide telah dihapus. Total ide sekarang 0.", "info");
     }
-  };
-
-  // Load initial 10 LKPD sample ideas
-  const handleLoadSampleIdeas = () => {
-    setIdeas(INITIAL_IDEAS);
-    showToast("10 ide contoh LKPD berhasil dimuat kembali.", "success");
   };
 
   // Add or Edit Save handler
@@ -295,8 +307,9 @@ export default function App() {
         onOpenAddModal={handleOpenAddModal}
         onAutoPlot={handleAutoPlot}
         onCopyResults={handleCopyResults}
+        onExportCsv={handleExportCsv}
+        onPrintPdf={handlePrintPdf}
         onResetData={handleResetData}
-        onLoadSampleIdeas={handleLoadSampleIdeas}
         totalIdeas={ideas.length}
       />
 
@@ -363,22 +376,15 @@ export default function App() {
               Matriks Bersih (0 Ide)
             </h3>
             <p className="text-xs text-zinc-500 mt-1 max-w-md leading-relaxed">
-              Seluruh ide telah di-reset ke 0. Anda dapat mulai merancang ide fitur baru dari awal, atau memuat kembali 10 contoh ide LKPD E-Commerce Sepatu &amp; Sandal kapan saja.
+              Seluruh ide telah di-reset ke 0. Anda dapat mulai menambahkan ide fitur produk baru Anda secara mandiri.
             </p>
             <div className="flex items-center gap-2.5 mt-3.5 flex-wrap justify-center">
               <button
                 type="button"
                 onClick={handleOpenAddModal}
-                className="px-3.5 py-1.5 text-xs font-medium text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-colors cursor-pointer shadow-xs"
               >
                 + Tambah Ide Pertama
-              </button>
-              <button
-                type="button"
-                onClick={handleLoadSampleIdeas}
-                className="px-3.5 py-1.5 text-xs font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 rounded-md transition-colors cursor-pointer"
-              >
-                Muat 10 Contoh Ide LKPD
               </button>
             </div>
           </div>

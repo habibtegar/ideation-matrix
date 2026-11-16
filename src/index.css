@@ -31,3 +31,33 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
 }
+
+/* Clean Print / PDF Export Styles */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print,
+  button,
+  header,
+  footer,
+  [role="dialog"] {
+    display: none !important;
+  }
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .shadow-xs,
+  .shadow-sm,
+  .shadow-md,
+  .shadow-lg {
+    box-shadow: none !important;
+  }
+  /* Avoid page breaks inside cards */
+  .border {
+    border-color: #e4e4e7 !important;
+  }
+}

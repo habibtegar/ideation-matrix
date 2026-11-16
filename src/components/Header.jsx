@@ -1,89 +1,105 @@
-import { Plus, Sparkles, Copy, RotateCcw } from "lucide-react";
+import { Plus, Sparkles, Copy, RotateCcw, Download, Printer } from "lucide-react";
 
 export default function Header({
   onOpenAddModal,
   onAutoPlot,
   onCopyResults,
+  onExportCsv,
+  onPrintPdf,
   onResetData,
-  onLoadSampleIdeas,
   totalIdeas,
 }) {
   return (
-    <header className="border-b border-zinc-200 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <header className="border-b border-zinc-200 bg-white no-print">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
           {/* Brand & Subtitle */}
-          <div className="flex items-start sm:items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-semibold text-lg shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-semibold text-sm shrink-0 shadow-2xs">
               IM
             </div>
             <div>
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-xl font-bold tracking-tight text-zinc-900">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-lg sm:text-xl font-bold tracking-tight text-zinc-900">
                   Ideation Matrix
                 </h1>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                   Idea Planning
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
+              <p className="text-xs text-zinc-500">
                 E-Commerce Sepatu &amp; Sandal UMKM • Feasibility vs Impact Matrix
               </p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-            {/* Reset / Load Samples */}
-            {totalIdeas === 0 ? (
-              <button
-                type="button"
-                onClick={onLoadSampleIdeas}
-                title="Muat kembali 10 ide contoh LKPD"
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 hover:text-zinc-900 transition-colors cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-zinc-500" />
-                <span>Muat Contoh</span>
-              </button>
-            ) : (
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            {/* Reset Button with confirmation */}
+            {totalIdeas > 0 && (
               <button
                 type="button"
                 onClick={onResetData}
-                title="Hapus semua ide (Reset ke 0)"
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-zinc-600 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 hover:text-rose-600 transition-colors cursor-pointer"
+                title="Hapus seluruh ide (Reset ke 0) dengan konfirmasi"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-600 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 hover:text-rose-600 transition-colors cursor-pointer"
               >
-                <RotateCcw className="w-3.5 h-3.5 text-zinc-500" />
-                <span>Reset (0)</span>
+                <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
+                <span>Reset ({totalIdeas})</span>
               </button>
             )}
 
-            <button
-              type="button"
-              onClick={onCopyResults}
-              title="Salin Rangkuman Ide ke Clipboard (Google Docs format)"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-medium text-zinc-700 bg-white border border-zinc-200 rounded-md hover:bg-zinc-50 hover:text-zinc-900 transition-colors cursor-pointer"
-            >
-              <Copy className="w-3.5 h-3.5 text-zinc-500" />
-              <span>Salin Hasil</span>
-            </button>
+            {/* Export Actions Group */}
+            <div className="inline-flex items-center rounded-md border border-zinc-200 bg-white p-0.5">
+              <button
+                type="button"
+                onClick={onCopyResults}
+                title="Salin Rangkuman Ide ke Clipboard (Format Google Docs)"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 rounded transition-colors cursor-pointer"
+              >
+                <Copy className="w-3.5 h-3.5 text-zinc-500" />
+                <span>Salin Teks</span>
+              </button>
+              <span className="h-3.5 w-[1px] bg-zinc-200"></span>
+              <button
+                type="button"
+                onClick={onExportCsv}
+                title="Unduh Data dalam format CSV (Excel / Sheets)"
+                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 rounded transition-colors cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5 text-zinc-500" />
+                <span className="hidden sm:inline">CSV</span>
+              </button>
+              <span className="h-3.5 w-[1px] bg-zinc-200"></span>
+              <button
+                type="button"
+                onClick={onPrintPdf}
+                title="Cetak / Simpan sebagai PDF"
+                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 rounded transition-colors cursor-pointer"
+              >
+                <Printer className="w-3.5 h-3.5 text-zinc-500" />
+                <span className="hidden sm:inline">PDF</span>
+              </button>
+            </div>
 
+            {/* Auto-Plot Button */}
             <button
               type="button"
               onClick={onAutoPlot}
               title="Kelompokkan seluruh ide secara otomatis berdasarkan skor Feasibility dan Impact"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-medium text-zinc-900 bg-zinc-100 border border-zinc-200 rounded-md hover:bg-zinc-200 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-800 bg-zinc-100 border border-zinc-200 rounded-md hover:bg-zinc-200 transition-colors cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-zinc-700" />
               <span>Auto-Plot</span>
             </button>
 
+            {/* Tambah Ide Button */}
             <button
               type="button"
               onClick={onOpenAddModal}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-medium text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-colors shadow-xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-colors shadow-xs cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               <span>Tambah Ide</span>
             </button>
           </div>

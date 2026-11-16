@@ -32,14 +32,14 @@ export default function QuadrantBox({
       onDragOver={(e) => onDragOver(e, quadrantId)}
       onDragLeave={onDragLeave}
       onDrop={(e) => onDrop(e, quadrantId)}
-      className={`flex flex-col p-4 sm:p-5 transition-all min-h-[260px] ${
+      className={`flex flex-col p-4 sm:p-5 transition-all h-full min-h-0 ${
         isDragOver
           ? "bg-zinc-100/90 ring-2 ring-inset ring-zinc-900/10"
           : `${quadrantBgStyles[quadrantId] || "bg-zinc-50/40"}`
       } ${className}`}
     >
       {/* Compact Quadrant Header */}
-      <div className="flex items-center justify-between gap-2.5 pb-3 mb-3 border-b border-zinc-200/80">
+      <div className="flex items-center justify-between gap-2.5 pb-2.5 mb-2.5 border-b border-zinc-200/80 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           {/* Roman Numeral */}
           <span className="flex items-center justify-center w-5 h-5 rounded bg-zinc-900 text-white font-serif font-bold text-[11px] shrink-0 shadow-2xs">
@@ -67,10 +67,10 @@ export default function QuadrantBox({
         </span>
       </div>
 
-      {/* Card Arrangement: CSS Grid with 2 columns on desktop (gap 12-16px) */}
-      <div className="flex-1 overflow-y-auto max-h-[460px] pr-0.5">
+      {/* Card Arrangement: CSS Grid with 2 columns on desktop (gap 10-12px) */}
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1">
         {sortedIdeas.length === 0 ? (
-          <div className="h-full min-h-[110px] flex flex-col items-center justify-center text-center p-4 border border-dashed border-zinc-200/90 rounded-lg bg-white/40">
+          <div className="h-full min-h-[90px] flex flex-col items-center justify-center text-center p-3 sm:p-4 border border-dashed border-zinc-200/90 rounded-lg bg-white/40">
             <p className="text-xs text-zinc-400 font-medium">
               Belum ada kartu di Kuadran {quad.id}
             </p>
@@ -79,7 +79,7 @@ export default function QuadrantBox({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-fr">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-2.5">
             {sortedIdeas.map((idea) => (
               <IdeaCard
                 key={idea.id}
@@ -97,7 +97,7 @@ export default function QuadrantBox({
       </div>
 
       {/* Subtle Bottom Priority Indicator */}
-      <div className="mt-3 pt-2.5 border-t border-zinc-200/60 flex items-center justify-between text-[10px] text-zinc-500">
+      <div className="mt-2.5 pt-2 border-t border-zinc-200/60 flex items-center justify-between text-[10px] text-zinc-500 shrink-0">
         <span className="inline-flex items-center gap-1.5 font-medium">
           <span className={`w-1.5 h-1.5 rounded-full ${quad.dotColor}`}></span>
           {quad.badge}

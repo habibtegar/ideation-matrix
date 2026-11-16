@@ -13,11 +13,11 @@ export default function AnalysisSummary({ ideas }) {
     return (
       <div className="bg-white border border-zinc-200 rounded-xl p-5 sm:p-6 text-center text-zinc-500 shadow-xs">
         <Info className="w-5 h-5 mx-auto text-zinc-400 mb-2" />
-        <p className="text-xs sm:text-sm font-medium text-zinc-700">
+        <p className="text-xs sm:text-sm font-semibold text-zinc-800">
           Belum ada data ide untuk dianalisis
         </p>
         <p className="text-xs text-zinc-400 mt-1 max-w-sm mx-auto">
-          Tambahkan fitur ide atau muat data default untuk melihat kesimpulan otomatis prioritas pengembangan LKPD.
+          Silakan tambahkan ide fitur baru untuk melihat kesimpulan otomatis dan rekomendasi prioritas pengembangan LKPD.
         </p>
       </div>
     );
@@ -39,7 +39,7 @@ export default function AnalysisSummary({ ideas }) {
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-zinc-500 mt-1">
-            Evaluasi otomatis prioritas fitur produk E-Commerce Sepatu &amp; Sandal UMKM berdasarkan distribusi kuadran.
+            Evaluasi otomatis prioritas fitur produk E-Commerce Sepatu &amp; Sandal UMKM berdasarkan distribusi aktual pada matriks.
           </p>
         </div>
 
@@ -53,12 +53,29 @@ export default function AnalysisSummary({ ideas }) {
       {/* Dynamic Executive Takeaway */}
       <div className="bg-zinc-50 border border-zinc-200/90 rounded-lg p-4 text-xs sm:text-sm leading-relaxed text-zinc-700">
         <strong className="text-zinc-900 font-semibold">Ringkasan Eksekutif: </strong>
-        Dari total <strong className="text-zinc-900 font-bold">{total} ide fitur</strong> yang dievaluasi, sistem mengidentifikasi{" "}
-        <strong className="text-zinc-900 font-bold">{q1.length} fitur Quick Wins</strong> yang memiliki dampak tinggi dan tingkat kemudahan implementasi optimal bagi UMKM. Sementara itu, terdapat{" "}
-        <strong className="text-zinc-900 font-bold">{q2.length} Major Projects</strong>,{" "}
-        <strong className="text-zinc-900 font-bold">{q4.length} Fill-Ins</strong>, dan{" "}
-        <strong className="text-zinc-900 font-bold">{q3.length} Time Sinks</strong>
-        {pool.length > 0 ? `, serta ${pool.length} ide dalam Idea Pool yang perlu penentuan skor lanjutan.` : "."}
+        Berdasarkan <strong className="text-zinc-900 font-bold">{total} ide fitur aktual</strong> yang terdaftar, terdapat{" "}
+        <strong className="text-zinc-900 font-bold">{q1.length} fitur Quick Wins (Kuadran I)</strong>
+        {q1.length > 0 && ` (${q1.map((i) => i.title).join(", ")})`} yang siap memberikan nilai optimal bagi pembeli/penjual dengan biaya dan usaha implementasi yang terjangkau.
+        {q2.length > 0 && (
+          <span>
+            {" "}Sementara <strong className="text-zinc-900 font-bold">{q2.length} fitur Major Projects</strong> ({q2.map((i) => i.title).join(", ")}) disiapkan untuk roadmap jangka menengah.
+          </span>
+        )}
+        {q4.length > 0 && (
+          <span>
+            {" "}Sebanyak <strong className="text-zinc-900 font-bold">{q4.length} fitur Fill-Ins</strong> ({q4.map((i) => i.title).join(", ")}) dapat dikerjakan saat ada waktu luang.
+          </span>
+        )}
+        {q3.length > 0 && (
+          <span>
+            {" "}Dan <strong className="text-zinc-900 font-bold">{q3.length} fitur Time Sinks</strong> ({q3.map((i) => i.title).join(", ")}) disarankan untuk ditunda.
+          </span>
+        )}
+        {pool.length > 0 && (
+          <span>
+            {" "}Terdapat <strong className="text-zinc-900 font-bold">{pool.length} ide dalam Idea Pool</strong> yang belum memiliki skor lengkap.
+          </span>
+        )}
       </div>
 
       {/* 4 Quadrants Detailed Priority Recommendations */}
@@ -84,9 +101,9 @@ export default function AnalysisSummary({ ideas }) {
           </p>
 
           <div className="pt-2 border-t border-emerald-100 text-xs">
-            <span className="font-semibold text-zinc-800">Daftar Fitur: </span>
+            <span className="font-semibold text-zinc-800">Daftar Fitur Aktual: </span>
             {q1.length > 0 ? (
-              <span className="text-zinc-600">
+              <span className="text-zinc-700 font-medium">
                 {q1.map((item) => item.title).join(", ")}.
               </span>
             ) : (
@@ -116,9 +133,9 @@ export default function AnalysisSummary({ ideas }) {
           </p>
 
           <div className="pt-2 border-t border-blue-100 text-xs">
-            <span className="font-semibold text-zinc-800">Daftar Fitur: </span>
+            <span className="font-semibold text-zinc-800">Daftar Fitur Aktual: </span>
             {q2.length > 0 ? (
-              <span className="text-zinc-600">
+              <span className="text-zinc-700 font-medium">
                 {q2.map((item) => item.title).join(", ")}.
               </span>
             ) : (
@@ -127,39 +144,7 @@ export default function AnalysisSummary({ ideas }) {
           </div>
         </div>
 
-        {/* Phase 3: Fill-Ins */}
-        <div className="border border-amber-200/80 bg-amber-50/20 rounded-lg p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-5 h-5 rounded bg-amber-700 text-white font-serif font-bold text-[10px]">
-                IV
-              </span>
-              <h3 className="text-xs sm:text-sm font-bold text-zinc-900 uppercase tracking-tight">
-                Fase 3: Fill-Ins (Pengisi Waktu Luang)
-              </h3>
-            </div>
-            <span className="text-xs font-mono font-bold text-amber-800 bg-white border border-amber-200 px-2 py-0.5 rounded-full">
-              {q4.length} Ide
-            </span>
-          </div>
-
-          <p className="text-xs text-zinc-600 leading-relaxed">
-            {QUADRANTS.IV.recommendation}
-          </p>
-
-          <div className="pt-2 border-t border-amber-100 text-xs">
-            <span className="font-semibold text-zinc-800">Daftar Fitur: </span>
-            {q4.length > 0 ? (
-              <span className="text-zinc-600">
-                {q4.map((item) => item.title).join(", ")}.
-              </span>
-            ) : (
-              <span className="text-zinc-400 italic">Belum ada fitur di kuadran ini.</span>
-            )}
-          </div>
-        </div>
-
-        {/* Phase 4: Time Sinks */}
+        {/* Phase 3: Time Sinks */}
         <div className="border border-rose-200/80 bg-rose-50/20 rounded-lg p-4 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -167,7 +152,7 @@ export default function AnalysisSummary({ ideas }) {
                 III
               </span>
               <h3 className="text-xs sm:text-sm font-bold text-zinc-900 uppercase tracking-tight">
-                Fase 4: Time Sinks (Pertimbangkan / Tunda)
+                Kuadran III: Time Sinks (Tunda / Evaluasi)
               </h3>
             </div>
             <span className="text-xs font-mono font-bold text-rose-800 bg-white border border-rose-200 px-2 py-0.5 rounded-full">
@@ -180,10 +165,42 @@ export default function AnalysisSummary({ ideas }) {
           </p>
 
           <div className="pt-2 border-t border-rose-100 text-xs">
-            <span className="font-semibold text-zinc-800">Daftar Fitur: </span>
+            <span className="font-semibold text-zinc-800">Daftar Fitur Aktual: </span>
             {q3.length > 0 ? (
-              <span className="text-zinc-600">
+              <span className="text-zinc-700 font-medium">
                 {q3.map((item) => item.title).join(", ")}.
+              </span>
+            ) : (
+              <span className="text-zinc-400 italic">Belum ada fitur di kuadran ini.</span>
+            )}
+          </div>
+        </div>
+
+        {/* Phase 4: Fill-Ins */}
+        <div className="border border-amber-200/80 bg-amber-50/20 rounded-lg p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="flex items-center justify-center w-5 h-5 rounded bg-amber-700 text-white font-serif font-bold text-[10px]">
+                IV
+              </span>
+              <h3 className="text-xs sm:text-sm font-bold text-zinc-900 uppercase tracking-tight">
+                Kuadran IV: Fill-Ins (Pengisi Waktu Luang)
+              </h3>
+            </div>
+            <span className="text-xs font-mono font-bold text-amber-800 bg-white border border-amber-200 px-2 py-0.5 rounded-full">
+              {q4.length} Ide
+            </span>
+          </div>
+
+          <p className="text-xs text-zinc-600 leading-relaxed">
+            {QUADRANTS.IV.recommendation}
+          </p>
+
+          <div className="pt-2 border-t border-amber-100 text-xs">
+            <span className="font-semibold text-zinc-800">Daftar Fitur Aktual: </span>
+            {q4.length > 0 ? (
+              <span className="text-zinc-700 font-medium">
+                {q4.map((item) => item.title).join(", ")}.
               </span>
             ) : (
               <span className="text-zinc-400 italic">Belum ada fitur di kuadran ini.</span>
@@ -192,7 +209,7 @@ export default function AnalysisSummary({ ideas }) {
         </div>
       </div>
 
-      {/* Action Plan Guidance for Student / LKPD */}
+      {/* Dynamic Action Plan Guidance based on Available Data */}
       <div className="border border-zinc-200 bg-white rounded-lg p-4">
         <h4 className="text-xs sm:text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -200,13 +217,36 @@ export default function AnalysisSummary({ ideas }) {
         </h4>
         <ul className="text-xs text-zinc-600 space-y-1.5 list-disc list-inside">
           <li>
-            <strong>MVP Prioritas (Sprint 1):</strong> Kerjakan terlebih dahulu seluruh fitur pada <strong>Kuadran I (Quick Wins)</strong> untuk memastikan katalog, pencarian, keranjang, dan manajemen stok siap pakai.
+            <strong>MVP Prioritas (Sprint 1):</strong>{" "}
+            {q1.length > 0 ? (
+              <span>
+                Fokuskan seluruh sumber daya awal untuk merilis fitur Quick Wins (<strong>{q1.map((i) => i.title).join(", ")}</strong>).
+              </span>
+            ) : (
+              <span>
+                Belum ada fitur Quick Wins. Evaluasi kembali fitur pada Kuadran II untuk melihat apakah ada bagian yang bisa disederhanakan.
+              </span>
+            )}
           </li>
           <li>
-            <strong>Pengembangan Lanjutan (Sprint 2):</strong> Mulai rancang integrasi payment gateway dan kurir dari <strong>Kuadran II (Major Projects)</strong> agar checkout online dapat berjalan otomatis.
+            <strong>Rencana Lanjutan (Sprint 2):</strong>{" "}
+            {q2.length > 0 ? (
+              <span>
+                Siapkan arsitektur dan integrasi untuk fitur Major Projects (<strong>{q2.map((i) => i.title).join(", ")}</strong>) setelah alur dasar berjalan lancar.
+              </span>
+            ) : (
+              <span>Tidak ada fitur Major Projects yang perlu dipersiapkan saat ini.</span>
+            )}
           </li>
           <li>
-            <strong>Efisiensi Anggaran:</strong> Hindari menghabiskan waktu pada fitur <strong>Kuadran III (Time Sinks)</strong> sebelum toko online membuktikan traksi penjualan nyata.
+            <strong>Efisiensi Biaya &amp; Waktu:</strong>{" "}
+            {q3.length > 0 ? (
+              <span>
+                Hindari memprioritaskan fitur Time Sinks (<strong>{q3.map((i) => i.title).join(", ")}</strong>) guna menjaga efisiensi anggaran UMKM.
+              </span>
+            ) : (
+              <span>Seluruh ide yang dievaluasi memiliki dampak atau kelayakan yang dapat dipertanggungjawabkan.</span>
+            )}
           </li>
         </ul>
       </div>
