@@ -78,20 +78,20 @@ export default function MatrixView({
                   className="border-b border-[#d4d4d8]"
                 />
 
-                {/* BOTTOM-LEFT: Kuadran III (Time Sinks) - Impact Low, Feasibility Low */}
+                {/* BOTTOM-LEFT: Kuadran IV (Tunda / Hindari) - Impact Low, Feasibility Low */}
                 <QuadrantBox
-                  quadrantId="III"
-                  ideas={ideasQ3}
+                  quadrantId="IV"
+                  ideas={ideasQ4}
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
                   onViewDetail={onViewDetail}
                   className="border-r border-[#d4d4d8]"
                 />
 
-                {/* BOTTOM-RIGHT: Kuadran IV (Fill-Ins) - Impact Low, Feasibility High */}
+                {/* BOTTOM-RIGHT: Kuadran III (Fill-Ins) - Impact Low, Feasibility High */}
                 <QuadrantBox
-                  quadrantId="IV"
-                  ideas={ideasQ4}
+                  quadrantId="III"
+                  ideas={ideasQ3}
                   onEditIdea={onEditIdea}
                   onDeleteIdea={onDeleteIdea}
                   onViewDetail={onViewDetail}
@@ -151,20 +151,20 @@ export default function MatrixView({
           className="rounded-xl border border-zinc-200"
         />
 
-        {/* Kuadran IV: Fill-Ins */}
+        {/* Kuadran III: Fill-Ins */}
         <QuadrantBox
-          quadrantId="IV"
-          ideas={ideasQ4}
+          quadrantId="III"
+          ideas={ideasQ3}
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
           onViewDetail={onViewDetail}
           className="rounded-xl border border-zinc-200"
         />
 
-        {/* Kuadran III: Time Sinks */}
+        {/* Kuadran IV: Tunda / Hindari */}
         <QuadrantBox
-          quadrantId="III"
-          ideas={ideasQ3}
+          quadrantId="IV"
+          ideas={ideasQ4}
           onEditIdea={onEditIdea}
           onDeleteIdea={onDeleteIdea}
           onViewDetail={onViewDetail}

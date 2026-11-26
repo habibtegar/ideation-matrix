@@ -107,14 +107,14 @@ export default function AnalysisSummary({ ideas }) {
             {" "}Sementara <strong className="text-zinc-900 font-bold">{q2.length} fitur Major Projects</strong> ({q2.map((i) => i.title).join(", ")}) disiapkan untuk roadmap jangka menengah.
           </span>
         )}
-        {q4.length > 0 && (
-          <span>
-            {" "}Sebanyak <strong className="text-zinc-900 font-bold">{q4.length} fitur Fill-Ins</strong> ({q4.map((i) => i.title).join(", ")}) dapat dikerjakan saat ada waktu luang.
-          </span>
-        )}
         {q3.length > 0 && (
           <span>
-            {" "}Dan <strong className="text-zinc-900 font-bold">{q3.length} fitur Time Sinks</strong> ({q3.map((i) => i.title).join(", ")}) disarankan untuk ditunda.
+            {" "}Sebanyak <strong className="text-zinc-900 font-bold">{q3.length} fitur Fill-Ins</strong> ({q3.map((i) => i.title).join(", ")}) dapat dikerjakan saat ada waktu luang.
+          </span>
+        )}
+        {q4.length > 0 && (
+          <span>
+            {" "}Dan <strong className="text-zinc-900 font-bold">{q4.length} fitur Tunda / Hindari</strong> ({q4.map((i) => i.title).join(", ")}) disarankan untuk ditunda.
           </span>
         )}
         {pool.length > 0 && (
@@ -190,18 +190,18 @@ export default function AnalysisSummary({ ideas }) {
           </div>
         </div>
 
-        {/* Phase 3: Time Sinks */}
-        <div className="border border-rose-200/80 bg-rose-50/20 rounded-lg p-4 space-y-2">
+        {/* Phase 3: Fill-Ins */}
+        <div className="border border-amber-200/80 bg-amber-50/20 rounded-lg p-4 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-5 h-5 rounded bg-rose-700 text-white font-serif font-bold text-[10px]">
+              <span className="flex items-center justify-center w-5 h-5 rounded bg-amber-700 text-white font-serif font-bold text-[10px]">
                 III
               </span>
               <h3 className="text-xs sm:text-sm font-bold text-zinc-900 uppercase tracking-tight">
-                Kuadran III: Time Sinks (Tunda / Evaluasi)
+                Kuadran III: Fill-Ins (Pengisi Waktu Luang)
               </h3>
             </div>
-            <span className="text-xs font-mono font-bold text-rose-800 bg-white border border-rose-200 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-mono font-bold text-amber-800 bg-white border border-amber-200 px-2 py-0.5 rounded-full">
               {q3.length} Ide
             </span>
           </div>
@@ -210,7 +210,7 @@ export default function AnalysisSummary({ ideas }) {
             {QUADRANTS.III.recommendation}
           </p>
 
-          <div className="pt-2 border-t border-rose-100 text-xs">
+          <div className="pt-2 border-t border-amber-100 text-xs">
             <span className="font-semibold text-zinc-800">Daftar Fitur Aktual: </span>
             {q3.length > 0 ? (
               <span className="text-zinc-700 font-medium">
@@ -222,18 +222,18 @@ export default function AnalysisSummary({ ideas }) {
           </div>
         </div>
 
-        {/* Phase 4: Fill-Ins */}
-        <div className="border border-amber-200/80 bg-amber-50/20 rounded-lg p-4 space-y-2">
+        {/* Phase 4: Tunda / Hindari */}
+        <div className="border border-rose-200/80 bg-rose-50/20 rounded-lg p-4 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-5 h-5 rounded bg-amber-700 text-white font-serif font-bold text-[10px]">
+              <span className="flex items-center justify-center w-5 h-5 rounded bg-rose-700 text-white font-serif font-bold text-[10px]">
                 IV
               </span>
               <h3 className="text-xs sm:text-sm font-bold text-zinc-900 uppercase tracking-tight">
-                Kuadran IV: Fill-Ins (Pengisi Waktu Luang)
+                Kuadran IV: Tunda / Hindari (Evaluasi)
               </h3>
             </div>
-            <span className="text-xs font-mono font-bold text-amber-800 bg-white border border-amber-200 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-mono font-bold text-rose-800 bg-white border border-rose-200 px-2 py-0.5 rounded-full">
               {q4.length} Ide
             </span>
           </div>
@@ -242,7 +242,7 @@ export default function AnalysisSummary({ ideas }) {
             {QUADRANTS.IV.recommendation}
           </p>
 
-          <div className="pt-2 border-t border-amber-100 text-xs">
+          <div className="pt-2 border-t border-rose-100 text-xs">
             <span className="font-semibold text-zinc-800">Daftar Fitur Aktual: </span>
             {q4.length > 0 ? (
               <span className="text-zinc-700 font-medium">
@@ -288,7 +288,7 @@ export default function AnalysisSummary({ ideas }) {
             <strong>Efisiensi Biaya &amp; Waktu:</strong>{" "}
             {q3.length > 0 ? (
               <span>
-                Hindari memprioritaskan fitur Time Sinks (<strong>{q3.map((i) => i.title).join(", ")}</strong>) guna menjaga efisiensi anggaran UMKM.
+                Hindari memprioritaskan fitur Tunda / Hindari (<strong>{q4.map((i) => i.title).join(", ")}</strong>) guna menjaga efisiensi anggaran UMKM.
               </span>
             ) : (
               <span>Seluruh ide yang dievaluasi memiliki dampak atau kelayakan yang dapat dipertanggungjawabkan.</span>

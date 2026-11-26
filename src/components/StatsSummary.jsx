@@ -1,5 +1,3 @@
-import { QUADRANTS } from "../utils/matrixUtils";
-
 export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuadrant }) {
   const total = ideas.length;
   const countI = ideas.filter((item) => item.quadrant === "I").length;
@@ -10,47 +8,53 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
   const stats = [
     {
       id: "all",
-      label: "Total Ide",
+      badge: "TOTAL IDE",
+      badgeStyle: "bg-zinc-900 text-white border-zinc-900",
+      activeRing: "ring-zinc-900 border-zinc-900",
+      subtitle: "Katalog",
       count: total,
-      sub: "Seluruh Fitur",
-      dot: "bg-zinc-900",
+      detail: "Seluruh Fitur",
     },
     {
       id: "I",
-      label: "Kuadran I",
-      name: "Quick Wins",
+      badge: "QUICK WINS",
+      badgeStyle: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+      activeRing: "ring-emerald-600 border-emerald-600",
+      subtitle: "Prioritas #1",
       count: countI,
-      sub: "F ≥ 4, I ≥ 4",
-      dot: QUADRANTS.I.dotColor,
+      detail: "Dampak Tinggi • Mudah",
     },
     {
       id: "II",
-      label: "Kuadran II",
-      name: "Major Projects",
+      badge: "MAJOR PROJECTS",
+      badgeStyle: "bg-blue-50 text-blue-700 border-blue-200/80",
+      activeRing: "ring-blue-600 border-blue-600",
+      subtitle: "Strategis",
       count: countII,
-      sub: "F < 4, I ≥ 4",
-      dot: QUADRANTS.II.dotColor,
+      detail: "Dampak Tinggi • Rumit",
     },
     {
       id: "III",
-      label: "Kuadran III",
-      name: "Time Sinks",
+      badge: "FILL-INS",
+      badgeStyle: "bg-amber-50 text-amber-800 border-amber-200/80",
+      activeRing: "ring-amber-600 border-amber-600",
+      subtitle: "Sambilan",
       count: countIII,
-      sub: "F < 4, I < 4",
-      dot: QUADRANTS.III.dotColor,
+      detail: "Dampak Rendah • Mudah",
     },
     {
       id: "IV",
-      label: "Kuadran IV",
-      name: "Fill-Ins",
+      badge: "TUNDA / HINDARI",
+      badgeStyle: "bg-rose-50 text-rose-700 border-rose-200/80",
+      activeRing: "ring-rose-600 border-rose-600",
+      subtitle: "Evaluasi",
       count: countIV,
-      sub: "F ≥ 4, I < 4",
-      dot: QUADRANTS.IV.dotColor,
+      detail: "Dampak Rendah • Rumit",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
       {stats.map((stat) => {
         const isSelected =
           stat.id === "all"
@@ -67,31 +71,38 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
                 onSelectQuadrant(stat.id);
               }
             }}
-            className={`text-left p-3 rounded-lg border transition-all cursor-pointer ${
+            className={`text-left p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer bg-white shadow-2xs ${
               isSelected
-                ? "bg-zinc-100 border-zinc-900 ring-1 ring-zinc-900"
-                : "bg-white border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/50"
+                ? `ring-2 ${stat.activeRing} bg-zinc-50/50 shadow-xs`
+                : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/40"
             }`}
+            title={
+              stat.id === "all"
+                ? "Tampilkan seluruh ide"
+                : `Klik untuk menyaring kuadran ${stat.badge}`
+            }
           >
-            <div className="flex items-center justify-between gap-1 mb-1">
-              <span className="text-xs font-medium text-zinc-500 truncate">
-                {stat.label}
+            {/* Baris Atas: Badge Kategori di Kiri & Subtitle di Kanan */}
+            <div className="flex items-center justify-between gap-2 mb-2.5 sm:mb-3">
+              <span
+                className={`px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border ${stat.badgeStyle}`}
+              >
+                {stat.badge}
               </span>
-              <span className={`w-2 h-2 rounded-full shrink-0 ${stat.dot}`}></span>
+              <span className="text-xs text-zinc-500 font-medium truncate">
+                {stat.subtitle}
+              </span>
             </div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900">
+
+            {/* Baris Bawah: Angka Jumlah di Kiri & Keterangan di Kanan */}
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 font-sans">
                 {stat.count}
               </span>
-              {stat.name && (
-                <span className="text-[11px] font-medium text-zinc-500 truncate">
-                  {stat.name}
-                </span>
-              )}
+              <span className="text-xs text-zinc-500 text-right truncate">
+                {stat.detail}
+              </span>
             </div>
-            <p className="text-[10px] text-zinc-400 mt-0.5 truncate font-mono">
-              {stat.sub}
-            </p>
           </button>
         );
       })}

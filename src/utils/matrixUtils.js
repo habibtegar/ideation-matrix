@@ -27,29 +27,29 @@ export const QUADRANTS = {
   },
   III: {
     id: "III",
-    name: "TIME SINKS",
-    title: "Kuadran III – TIME SINKS",
-    position: "Kiri Bawah",
-    badge: "Pertimbangkan Kembali",
-    description: "Ide dengan prioritas rendah.",
-    rule: "Feasibility < 4 & Impact < 4",
-    tagColor: "bg-rose-50 text-rose-800 border-rose-200",
-    dotColor: "bg-rose-600",
-    priority: "Rendah (P4)",
-    recommendation: "Tunda atau evaluasi ulang. Fitur ini memiliki dampak rendah namun memerlukan usaha atau biaya yang cukup tinggi untuk UMKM."
-  },
-  IV: {
-    id: "IV",
     name: "FILL-INS",
-    title: "Kuadran IV – FILL-INS",
+    title: "Kuadran III – FILL-INS",
     position: "Kanan Bawah",
-    badge: "Pengisi Waktu",
+    badge: "Sambilan",
     description: "Ide mudah diterapkan tetapi dampaknya relatif rendah.",
     rule: "Feasibility ≥ 4 & Impact < 4",
     tagColor: "bg-amber-50 text-amber-800 border-amber-200",
     dotColor: "bg-amber-600",
     priority: "Sedang (P3)",
     recommendation: "Kerjakan ketika ada waktu luang setelah fitur Quick Wins selesai, atau saat tim membutuhkan pekerjaan cepat tanpa risiko besar."
+  },
+  IV: {
+    id: "IV",
+    name: "TUNDA / HINDARI",
+    title: "Kuadran IV – TUNDA / HINDARI",
+    position: "Kiri Bawah",
+    badge: "Evaluasi",
+    description: "Ide dengan prioritas rendah dan dampak minim yang memerlukan evaluasi ulang.",
+    rule: "Feasibility < 4 & Impact < 4",
+    tagColor: "bg-rose-50 text-rose-800 border-rose-200",
+    dotColor: "bg-rose-600",
+    priority: "Rendah (P4)",
+    recommendation: "Tunda atau evaluasi ulang. Fitur ini memiliki dampak rendah namun memerlukan usaha atau biaya yang cukup tinggi untuk UMKM."
   },
   pool: {
     id: "pool",
@@ -69,10 +69,10 @@ export const QUADRANTS = {
 /**
  * Determine quadrant based on Feasibility & Impact scores.
  * Exact rule:
- * - Kuadran I: Feasibility ≥ 4 dan Impact ≥ 4
- * - Kuadran II: Feasibility < 4 dan Impact ≥ 4
- * - Kuadran III: Feasibility < 4 dan Impact < 4
- * - Kuadran IV: Feasibility ≥ 4 dan Impact < 4
+ * - Kuadran I: Feasibility ≥ 4 dan Impact ≥ 4 (Quick Wins)
+ * - Kuadran II: Feasibility < 4 dan Impact ≥ 4 (Major Projects)
+ * - Kuadran III: Feasibility ≥ 4 dan Impact < 4 (Fill-Ins)
+ * - Kuadran IV: Feasibility < 4 dan Impact < 4 (Tunda / Hindari)
  * Missing/incomplete scores → pool
  */
 export function calculateQuadrant(feasibility, impact) {
@@ -83,8 +83,8 @@ export function calculateQuadrant(feasibility, impact) {
 
   if (f >= 4 && i >= 4) return "I";
   if (f < 4 && i >= 4) return "II";
-  if (f < 4 && i < 4) return "III";
-  if (f >= 4 && i < 4) return "IV";
+  if (f >= 4 && i < 4) return "III";
+  if (f < 4 && i < 4) return "IV";
 
   return "pool";
 }
@@ -107,11 +107,11 @@ export function getScoresForQuadrant(quadrantId, currentF, currentI) {
       if (i < 4) i = 4;
       break;
     case "III":
-      if (f >= 4) f = 3;
+      if (f < 4) f = 4;
       if (i >= 4) i = 3;
       break;
     case "IV":
-      if (f < 4) f = 4;
+      if (f >= 4) f = 3;
       if (i >= 4) i = 3;
       break;
   }
@@ -220,8 +220,8 @@ export function formatSummaryForClipboard(ideas) {
   text += `  • Target Penjual: ${countPenjual} ide\n`;
   text += `- Kuadran I (Quick Wins): ${countI} ide\n`;
   text += `- Kuadran II (Major Projects): ${countII} ide\n`;
-  text += `- Kuadran III (Time Sinks): ${countIII} ide\n`;
-  text += `- Kuadran IV (Fill-Ins): ${countIV} ide\n`;
+  text += `- Kuadran III (Fill-Ins): ${countIII} ide\n`;
+  text += `- Kuadran IV (Tunda / Hindari): ${countIV} ide\n`;
   if (countPool > 0) {
     text += `- Idea Pool (Belum Diplot): ${countPool} ide\n`;
   }

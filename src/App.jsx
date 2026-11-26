@@ -349,9 +349,9 @@ export default function App() {
                       : idea.quadrant === "II"
                       ? "II (Major Projects)"
                       : idea.quadrant === "III"
-                      ? "III (Time Sinks)"
+                      ? "III (Fill-Ins)"
                       : idea.quadrant === "IV"
-                      ? "IV (Fill-Ins)"
+                      ? "IV (Tunda / Hindari)"
                       : "Idea Pool"}
                   </td>
                 </tr>
