@@ -299,7 +299,7 @@ export default function App() {
                 Tabel Rangkuman LKPD - Rekapitulasi 10 Fitur Produk
               </h2>
               <p className="text-xs text-zinc-600">
-                E-Commerce Sepatu &amp; Sandal UMKM • Feasibility vs Impact Matrix
+                E-Commerce Sepatu &amp; Sandal UMKM • Feasibility vs Impact Matriks
               </p>
             </div>
             <div className="text-xs text-zinc-500 font-mono text-right">
@@ -364,7 +364,7 @@ export default function App() {
       {/* Footer */}
       <footer className="border-t border-zinc-200 bg-white py-4 text-center text-xs text-zinc-400 no-print mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>Ideation Matrix UMKM • E-Commerce Sepatu &amp; Sandal</span>
+          <span>Ideation Matriks UMKM • E-Commerce Sepatu &amp; Sandal</span>
           <span className="font-mono text-[11px] text-zinc-400">
             10 Ide Fitur Resmi LKPD Guru
           </span>

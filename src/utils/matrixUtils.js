@@ -211,7 +211,7 @@ export function formatSummaryForClipboard(ideas) {
   const countPembeli = ideas.filter((item) => item.target === "Pembeli").length;
   const countPenjual = ideas.filter((item) => item.target === "Penjual").length;
 
-  let text = `# LEMBAR KERJA PESERTA DIDIK (LKPD): IDEATION PRIORITY MATRIX\n`;
+  let text = `# LEMBAR KERJA PESERTA DIDIK (LKPD): IDEATION PRIORITY MATRIKS\n`;
   text += `## E-Commerce Sepatu & Sandal UMKM (Metode Feasibility vs Impact)\n\n`;
 
   text += `### RINGKASAN METRIK PROYEK\n`;

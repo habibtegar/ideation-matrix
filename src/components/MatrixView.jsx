@@ -101,7 +101,7 @@ export default function MatrixView({
                 {/* Center Origin Dot - sitting precisely at the crossroads of Sumbu X and Sumbu Y */}
                 <div
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border border-[#d4d4d8] flex items-center justify-center pointer-events-none z-20 shadow-xs"
-                  title="Titik Pusat Matrix (Feasibility: 3.5, Impact: 3.5)"
+                  title="Titik Pusat Matriks (Feasibility: 3.5, Impact: 3.5)"
                 >
                   <div className="w-1.5 h-1.5 rounded-full bg-zinc-600"></div>
                 </div>

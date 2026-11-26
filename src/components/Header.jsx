@@ -19,7 +19,7 @@ export default function Header({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-lg sm:text-xl font-bold tracking-tight text-zinc-900">
-                  Ideation Matrix
+                  Ideation Matriks
                 </h1>
                 <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -27,7 +27,7 @@ export default function Header({
                 </span>
               </div>
               <p className="text-xs text-zinc-500">
-                E-Commerce Sepatu &amp; Sandal UMKM • Feasibility vs Impact Matrix
+                E-Commerce Sepatu &amp; Sandal UMKM • Feasibility vs Impact Matriks
               </p>
             </div>
           </div>
