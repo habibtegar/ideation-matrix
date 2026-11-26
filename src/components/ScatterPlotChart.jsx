@@ -680,20 +680,20 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                       <circle
                         cx={cx}
                         cy={cy}
-                        r="22"
+                        r="20"
                         fill="transparent"
                         className="cursor-pointer"
                       />
 
-                      {/* Selected Outer Ring (Persis seperti lingkaran hitam pada titik #3 di gambar) */}
+                      {/* Selected Outer Ring */}
                       {isSelected && (
                         <circle
                           cx={cx}
                           cy={cy}
-                          r="19"
+                          r="15"
                           fill="none"
                           stroke="#0f172a"
-                          strokeWidth="2.8"
+                          strokeWidth="2.5"
                         />
                       )}
 
@@ -702,36 +702,23 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                         <circle
                           cx={cx}
                           cy={cy}
-                          r="18"
+                          r="14"
                           fill={conf.fill}
                           fillOpacity="0.25"
                         />
                       )}
 
-                      {/* Main Circular Dot */}
+                      {/* Main Circular Dot (Hanya bulat padat elegan tanpa teks/angka di dalam) */}
                       <circle
                         cx={cx}
                         cy={cy}
-                        r={isActive ? "14.5" : "12.5"}
+                        r={isActive ? "10.5" : "8.5"}
                         fill={conf.fill}
                         stroke="#ffffff"
-                        strokeWidth="2.2"
+                        strokeWidth="2"
                         filter="url(#point-shadow)"
                         className="transition-all duration-150 ease-out"
                       />
-
-                      {/* Point Identity Number (#1, #2, ..., #10) */}
-                      <text
-                        x={cx}
-                        y={cy}
-                        textAnchor="middle"
-                        dominantBaseline="central"
-                        className={`font-sans font-bold fill-white select-none pointer-events-none ${
-                          idea.seqNumber >= 10 ? "text-[9.5px]" : "text-[10.5px]"
-                        }`}
-                      >
-                        #{idea.seqNumber}
-                      </text>
                     </g>
                   );
                 })}
@@ -753,7 +740,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
               >
                 <div className="flex items-center gap-1.5 font-bold text-white mb-0.5">
                   <span className="bg-white/20 text-white px-1.5 py-0.2 rounded font-mono text-[10px]">
-                    #{hoveredPoint.idea.seqNumber}
+                    {hoveredPoint.idea.seqNumber}
                   </span>
                   <span className="truncate">{hoveredPoint.idea.title}</span>
                 </div>
@@ -804,7 +791,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                           : "bg-zinc-900 text-white"
                       }`}
                     >
-                      #{activeIdea.seqNumber}
+                      {activeIdea.seqNumber}
                     </span>
 
                     <h4

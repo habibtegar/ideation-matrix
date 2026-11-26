@@ -332,7 +332,7 @@ export default function App() {
               {ideas.map((idea, idx) => (
                 <tr key={idea.id} className="border-b border-zinc-200">
                   <td className="p-2 border-r border-zinc-200 text-center font-mono font-medium">
-                    #{idea.seqNumber || idx + 1}
+                    {idea.seqNumber || idx + 1}
                   </td>
                   <td className="p-2 border-r border-zinc-200 font-medium">
                     {idea.title}

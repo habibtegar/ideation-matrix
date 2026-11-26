@@ -106,7 +106,7 @@ export default function TableView({
               onChange={(e) => handleSort(e.target.value)}
               className="bg-white border border-zinc-200 rounded-md px-2 py-1 text-xs text-zinc-800 focus:outline-none focus:ring-1 focus:ring-zinc-900 cursor-pointer"
             >
-              <option value="seqNumber">Nomor (#1–#10)</option>
+              <option value="seqNumber">Nomor (1–10)</option>
               <option value="totalScore">Total Skor</option>
               <option value="impact">Impact</option>
               <option value="feasibility">Feasibility</option>
@@ -148,24 +148,24 @@ export default function TableView({
         <table className="w-full table-fixed border-collapse text-xs">
           {/* Definisi Lebar Proporsional Setiap Kolom (Total = 100%) */}
           <colgroup>
-            <col className="w-[4%]" />  {/* 1. No */}
-            <col className="w-[18%]" /> {/* 2. Nama Ide */}
-            <col className="w-[24%]" /> {/* 3. Deskripsi */}
-            <col className="w-[10%]" /> {/* 4. Target Pengguna */}
-            <col className="w-[6%]" />  {/* 5. Feasibility */}
-            <col className="w-[6%]" />  {/* 6. Impact */}
-            <col className="w-[6%]" />  {/* 7. Total Skor */}
-            <col className="w-[12%]" /> {/* 8. Kuadran */}
-            <col className="w-[8%]" />  {/* 9. Prioritas */}
-            <col className="w-[6%]" />  {/* 10. Aksi */}
+            <col className="w-[4%]" />   {/* 1. No */}
+            <col className="w-[18%]" />  {/* 2. Nama Ide */}
+            <col className="w-[24%]" />  {/* 3. Deskripsi */}
+            <col className="w-[9.5%]" /> {/* 4. Target Pengguna */}
+            <col className="w-[5.5%]" /> {/* 5. Feasibility */}
+            <col className="w-[5.5%]" /> {/* 6. Impact */}
+            <col className="w-[5.5%]" /> {/* 7. Total Skor */}
+            <col className="w-[12%]" />  {/* 8. Kuadran */}
+            <col className="w-[9%]" />   {/* 9. Prioritas */}
+            <col className="w-[7%]" />   {/* 10. Aksi */}
           </colgroup>
 
           <thead>
-            <tr className="border-b border-zinc-200 bg-zinc-50/80 text-zinc-600 font-semibold uppercase tracking-wider text-[11px]">
+            <tr className="border-b border-zinc-200 bg-zinc-50/90 text-zinc-600 font-semibold uppercase tracking-wider text-[11px]">
               {/* 1. No */}
               <th
                 onClick={() => handleSort("seqNumber")}
-                className="py-2.5 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-3 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
                 title="Urutkan berdasarkan Nomor Urut LKPD"
               >
                 <div className="flex items-center justify-center gap-0.5">
@@ -177,7 +177,7 @@ export default function TableView({
               {/* 2. Nama Ide */}
               <th
                 onClick={() => handleSort("title")}
-                className="py-2.5 px-2 text-left cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-3 px-3.5 text-left cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
                 <div className="flex items-center gap-1">
                   <span className="truncate">Nama Ide</span>
@@ -186,12 +186,12 @@ export default function TableView({
               </th>
 
               {/* 3. Deskripsi */}
-              <th className="py-2.5 px-2 text-left">Deskripsi</th>
+              <th className="py-3 px-3.5 text-left">Deskripsi</th>
 
               {/* 4. Target Pengguna */}
               <th
                 onClick={() => handleSort("target")}
-                className="py-2.5 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-3 px-2.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
                 <div className="flex items-center justify-center gap-1">
                   <span className="truncate">Target</span>
@@ -202,7 +202,7 @@ export default function TableView({
               {/* 5. Feasibility */}
               <th
                 onClick={() => handleSort("feasibility")}
-                className="py-2.5 px-1.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-3 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
                 <div className="flex items-center justify-center gap-0.5">
                   <span className="truncate">Feas</span>
@@ -213,7 +213,7 @@ export default function TableView({
               {/* 6. Impact */}
               <th
                 onClick={() => handleSort("impact")}
-                className="py-2.5 px-1.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-3 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
                 <div className="flex items-center justify-center gap-0.5">
                   <span className="truncate">Impact</span>
@@ -224,7 +224,7 @@ export default function TableView({
               {/* 7. Total Skor */}
               <th
                 onClick={() => handleSort("totalScore")}
-                className="py-2.5 px-1.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-3 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
                 <div className="flex items-center justify-center gap-0.5">
                   <span className="truncate">Total</span>
@@ -235,7 +235,7 @@ export default function TableView({
               {/* 8. Kuadran */}
               <th
                 onClick={() => handleSort("quadrant")}
-                className="py-2.5 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-3 px-2.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
                 <div className="flex items-center justify-center gap-1">
                   <span className="truncate">Kuadran</span>
@@ -244,17 +244,17 @@ export default function TableView({
               </th>
 
               {/* 9. Prioritas */}
-              <th className="py-2.5 px-2 text-center">Prioritas</th>
+              <th className="py-3 px-2.5 text-center">Prioritas</th>
 
               {/* 10. Aksi */}
-              <th className="py-2.5 px-2 text-center">Aksi</th>
+              <th className="py-3 px-2.5 text-center">Aksi</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-zinc-200/70">
+          <tbody className="divide-y divide-zinc-200/80">
             {sortedIdeas.length === 0 ? (
               <tr>
-                <td colSpan={10} className="py-10 text-center text-zinc-400">
+                <td colSpan={10} className="py-12 text-center text-zinc-400">
                   Tidak ada ide yang cocok dengan filter.
                 </td>
               </tr>
@@ -268,26 +268,26 @@ export default function TableView({
                 return (
                   <tr
                     key={idea.id}
-                    className="hover:bg-zinc-50/70 transition-colors"
+                    className="hover:bg-zinc-50/80 transition-colors"
                   >
                     {/* 1. No */}
-                    <td className="py-2.5 px-2 text-center text-zinc-700 font-mono text-xs font-semibold align-middle">
-                      #{idea.seqNumber || index + 1}
+                    <td className="py-3.5 px-2 text-center text-zinc-700 font-mono text-xs font-semibold align-middle">
+                      {idea.seqNumber || index + 1}
                     </td>
 
                     {/* 2. Nama Ide (Text Wrapping, tidak memaksa horizontal scroll) */}
-                    <td className="py-2.5 px-2 font-semibold text-zinc-900 break-words leading-snug align-middle">
+                    <td className="py-3.5 px-3.5 font-semibold text-zinc-900 break-words leading-snug align-middle">
                       {idea.title}
                     </td>
 
                     {/* 3. Deskripsi (Text Wrapping rapi ke baris berikutnya) */}
-                    <td className="py-2.5 px-2 text-zinc-600 text-xs leading-relaxed break-words align-middle">
+                    <td className="py-3.5 px-3.5 text-zinc-600 text-xs leading-relaxed break-words align-middle">
                       {idea.description || "-"}
                     </td>
 
                     {/* 4. Target Pengguna (Badge ringkas) */}
-                    <td className="py-2.5 px-2 text-center align-middle">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+                    <td className="py-3.5 px-2.5 text-center align-middle">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 shrink-0">
                         {isPembeli ? (
                           <ShoppingBag className="w-3 h-3 text-zinc-500 shrink-0" />
                         ) : (
@@ -298,9 +298,9 @@ export default function TableView({
                     </td>
 
                     {/* 5. Feasibility */}
-                    <td className="py-2.5 px-1.5 text-center font-mono text-xs font-semibold text-zinc-800 align-middle">
+                    <td className="py-3.5 px-2 text-center font-mono text-xs font-semibold text-zinc-800 align-middle">
                       <span
-                        className={`inline-block px-1.5 py-0.5 rounded border ${
+                        className={`inline-block px-2 py-0.5 rounded border ${
                           idea.feasibility >= 4
                             ? "bg-zinc-100 text-zinc-900 border-zinc-300 font-bold"
                             : "bg-white text-zinc-600 border-zinc-200"
@@ -311,9 +311,9 @@ export default function TableView({
                     </td>
 
                     {/* 6. Impact */}
-                    <td className="py-2.5 px-1.5 text-center font-mono text-xs font-semibold text-zinc-800 align-middle">
+                    <td className="py-3.5 px-2 text-center font-mono text-xs font-semibold text-zinc-800 align-middle">
                       <span
-                        className={`inline-block px-1.5 py-0.5 rounded border ${
+                        className={`inline-block px-2 py-0.5 rounded border ${
                           idea.impact >= 4
                             ? "bg-zinc-100 text-zinc-900 border-zinc-300 font-bold"
                             : "bg-white text-zinc-600 border-zinc-200"
@@ -324,16 +324,16 @@ export default function TableView({
                     </td>
 
                     {/* 7. Total Skor */}
-                    <td className="py-2.5 px-1.5 text-center align-middle">
-                      <span className="inline-block font-mono text-xs font-bold px-2 py-0.5 rounded bg-zinc-900 text-white shadow-2xs">
+                    <td className="py-3.5 px-2 text-center align-middle">
+                      <span className="inline-block font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-zinc-900 text-white shadow-2xs">
                         {totalScore}
                       </span>
                     </td>
 
                     {/* 8. Kuadran */}
-                    <td className="py-2.5 px-2 text-center align-middle">
+                    <td className="py-3.5 px-2.5 text-center align-middle">
                       <span
-                        className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${
+                        className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-md border ${
                           quad.tagColor
                         }`}
                         title={`Kuadran ${quad.id} - ${quad.name}`}
@@ -346,7 +346,7 @@ export default function TableView({
                     </td>
 
                     {/* 9. Prioritas */}
-                    <td className="py-2.5 px-2 text-center align-middle">
+                    <td className="py-3.5 px-2.5 text-center align-middle">
                       <div className="flex flex-col items-center">
                         <span className="text-xs font-semibold text-zinc-800">
                           {quad.priority}
@@ -357,13 +357,13 @@ export default function TableView({
                       </div>
                     </td>
 
-                    {/* 10. Aksi (Ikon ringkas berjarak rapi) */}
-                    <td className="py-2.5 px-2 text-center align-middle">
-                      <div className="flex items-center justify-center gap-0.5">
+                    {/* 10. Aksi (Ikon ringkas berjarak lega & nyaman) */}
+                    <td className="py-3.5 px-2.5 text-center align-middle">
+                      <div className="flex items-center justify-center gap-1.5">
                         <button
                           type="button"
                           onClick={() => onViewDetail && onViewDetail(idea)}
-                          className="p-1 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded transition-colors cursor-pointer"
+                          className="p-1.5 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-md transition-colors cursor-pointer"
                           title="Lihat Detail Lengkap"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -371,7 +371,7 @@ export default function TableView({
                         <button
                           type="button"
                           onClick={() => onEditIdea(idea)}
-                          className="p-1 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded transition-colors cursor-pointer"
+                          className="p-1.5 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-md transition-colors cursor-pointer"
                           title="Edit Fitur"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -379,7 +379,7 @@ export default function TableView({
                         <button
                           type="button"
                           onClick={() => onDeleteIdea(idea.id)}
-                          className="p-1 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer"
+                          className="p-1.5 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
                           title="Hapus Fitur"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -420,7 +420,7 @@ export default function TableView({
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                      #{idea.seqNumber || index + 1}
+                      {idea.seqNumber || index + 1}
                     </span>
                     <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
                       {isPembeli ? (
