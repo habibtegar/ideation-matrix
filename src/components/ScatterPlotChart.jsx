@@ -291,12 +291,12 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
   return (
     <section
       aria-label="Grafik Analisis Feasibility vs Impact"
-      className="bg-white border border-zinc-200 rounded-xl p-4 sm:p-5 shadow-2xs transition-all"
+      className="bg-white border border-zinc-200 rounded-xl p-3 sm:p-5 shadow-2xs transition-all"
     >
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-zinc-200">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-2xs">
+        <div className="flex items-start sm:items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5 sm:mt-0">
             <ScatterChart className="w-4 h-4 text-emerald-400" />
           </div>
           <div>
@@ -318,7 +318,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
         <button
           type="button"
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-600 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-lg transition-colors cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-600 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-lg transition-colors cursor-pointer self-start sm:self-auto shrink-0"
           title={isCollapsed ? "Buka Tampilan Grafik" : "Sembunyikan Grafik"}
         >
           <span>{isCollapsed ? "Buka Grafik" : "Tutup Grafik"}</span>
@@ -333,155 +333,181 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
       {!isCollapsed && (
         <div className="pt-3.5 space-y-4">
           {/* Interactive Legend Bar (with Toggle Show/Hide for each Quadrant) */}
-          <div className="flex flex-wrap items-center justify-between gap-2.5 text-xs">
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span className="font-semibold text-zinc-700 text-xs mr-1">
-                Filter Legenda Kuadran:
-              </span>
-
-              {/* Kuadran I: Quick Wins */}
-              <button
-                type="button"
-                onClick={() => toggleQuadrantVisibility("I")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
-                  visibleQuadrants.I
-                    ? "bg-emerald-50 hover:bg-emerald-100/70 text-emerald-800 border-emerald-300 shadow-2xs"
-                    : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
-                }`}
-                title={
-                  visibleQuadrants.I
-                    ? "Klik untuk sembunyikan titik Kuadran I"
-                    : "Klik untuk tampilkan titik Kuadran I"
-                }
-              >
-                {visibleQuadrants.I ? (
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-2xs"></span>
-                ) : (
-                  <EyeOff className="w-3 h-3 text-zinc-400" />
-                )}
-                <span className={!visibleQuadrants.I ? "line-through" : "font-semibold"}>
-                  Kuadran I: Quick Wins
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 text-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+              <div className="flex items-center justify-between w-full sm:w-auto">
+                <span className="font-semibold text-zinc-700 text-xs mr-1">
+                  Filter Legenda Kuadran:
                 </span>
-                <span
-                  className={`font-mono font-bold text-[11px] px-1.5 py-0.2 rounded-full border ${
+                {isAnyQuadrantHidden && (
+                  <button
+                    type="button"
+                    onClick={showAllQuadrants}
+                    className="sm:hidden inline-flex items-center gap-1 text-[11px] text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200/80 px-2 py-0.5 rounded font-medium transition-colors cursor-pointer"
+                  >
+                    <span>Tampilkan Semua</span>
+                  </button>
+                )}
+              </div>
+
+              {/* 4 Quadrant Filter Buttons in a 2x2 grid on mobile, inline-flex on sm+ */}
+              <div className="grid grid-cols-2 sm:inline-flex sm:flex-wrap gap-1.5 sm:gap-2 w-full sm:w-auto">
+                {/* Kuadran I: Quick Wins */}
+                <button
+                  type="button"
+                  onClick={() => toggleQuadrantVisibility("I")}
+                  className={`inline-flex items-center justify-between sm:justify-start gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border text-[11px] sm:text-xs font-medium transition-all cursor-pointer ${
                     visibleQuadrants.I
-                      ? "bg-white text-emerald-800 border-emerald-200"
-                      : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                      ? "bg-emerald-50 hover:bg-emerald-100/70 text-emerald-800 border-emerald-300 shadow-2xs"
+                      : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
                   }`}
+                  title={
+                    visibleQuadrants.I
+                      ? "Klik untuk sembunyikan titik Kuadran I"
+                      : "Klik untuk tampilkan titik Kuadran I"
+                  }
                 >
-                  {quadrantCounts.I}
-                </span>
-              </button>
+                  <div className="flex items-center gap-1.5 truncate">
+                    {visibleQuadrants.I ? (
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-2xs shrink-0"></span>
+                    ) : (
+                      <EyeOff className="w-3 h-3 text-zinc-400 shrink-0" />
+                    )}
+                    <span className={`truncate ${!visibleQuadrants.I ? "line-through" : "font-semibold"}`}>
+                      <span className="sm:hidden">Q.I Quick Wins</span>
+                      <span className="hidden sm:inline">Kuadran I: Quick Wins</span>
+                    </span>
+                  </div>
+                  <span
+                    className={`font-mono font-bold text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full border shrink-0 ${
+                      visibleQuadrants.I
+                        ? "bg-white text-emerald-800 border-emerald-200"
+                        : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                    }`}
+                  >
+                    {quadrantCounts.I}
+                  </span>
+                </button>
 
-              {/* Kuadran II: Major Projects */}
-              <button
-                type="button"
-                onClick={() => toggleQuadrantVisibility("II")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
-                  visibleQuadrants.II
-                    ? "bg-blue-50 hover:bg-blue-100/70 text-blue-800 border-blue-300 shadow-2xs"
-                    : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
-                }`}
-                title={
-                  visibleQuadrants.II
-                    ? "Klik untuk sembunyikan titik Kuadran II"
-                    : "Klik untuk tampilkan titik Kuadran II"
-                }
-              >
-                {visibleQuadrants.II ? (
-                  <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-2xs"></span>
-                ) : (
-                  <EyeOff className="w-3 h-3 text-zinc-400" />
-                )}
-                <span className={!visibleQuadrants.II ? "line-through" : "font-semibold"}>
-                  Kuadran II: Major Projects
-                </span>
-                <span
-                  className={`font-mono font-bold text-[11px] px-1.5 py-0.2 rounded-full border ${
+                {/* Kuadran II: Major Projects */}
+                <button
+                  type="button"
+                  onClick={() => toggleQuadrantVisibility("II")}
+                  className={`inline-flex items-center justify-between sm:justify-start gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border text-[11px] sm:text-xs font-medium transition-all cursor-pointer ${
                     visibleQuadrants.II
-                      ? "bg-white text-blue-800 border-blue-200"
-                      : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                      ? "bg-blue-50 hover:bg-blue-100/70 text-blue-800 border-blue-300 shadow-2xs"
+                      : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
                   }`}
+                  title={
+                    visibleQuadrants.II
+                      ? "Klik untuk sembunyikan titik Kuadran II"
+                      : "Klik untuk tampilkan titik Kuadran II"
+                  }
                 >
-                  {quadrantCounts.II}
-                </span>
-              </button>
+                  <div className="flex items-center gap-1.5 truncate">
+                    {visibleQuadrants.II ? (
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-2xs shrink-0"></span>
+                    ) : (
+                      <EyeOff className="w-3 h-3 text-zinc-400 shrink-0" />
+                    )}
+                    <span className={`truncate ${!visibleQuadrants.II ? "line-through" : "font-semibold"}`}>
+                      <span className="sm:hidden">Q.II Major Projects</span>
+                      <span className="hidden sm:inline">Kuadran II: Major Projects</span>
+                    </span>
+                  </div>
+                  <span
+                    className={`font-mono font-bold text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full border shrink-0 ${
+                      visibleQuadrants.II
+                        ? "bg-white text-blue-800 border-blue-200"
+                        : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                    }`}
+                  >
+                    {quadrantCounts.II}
+                  </span>
+                </button>
 
-              {/* Kuadran III: Time Sinks */}
-              <button
-                type="button"
-                onClick={() => toggleQuadrantVisibility("III")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
-                  visibleQuadrants.III
-                    ? "bg-rose-50 hover:bg-rose-100/70 text-rose-800 border-rose-300 shadow-2xs"
-                    : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
-                }`}
-                title={
-                  visibleQuadrants.III
-                    ? "Klik untuk sembunyikan titik Kuadran III"
-                    : "Klik untuk tampilkan titik Kuadran III"
-                }
-              >
-                {visibleQuadrants.III ? (
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-2xs"></span>
-                ) : (
-                  <EyeOff className="w-3 h-3 text-zinc-400" />
-                )}
-                <span className={!visibleQuadrants.III ? "line-through" : "font-semibold"}>
-                  Kuadran III: Time Sinks
-                </span>
-                <span
-                  className={`font-mono font-bold text-[11px] px-1.5 py-0.2 rounded-full border ${
+                {/* Kuadran III: Time Sinks */}
+                <button
+                  type="button"
+                  onClick={() => toggleQuadrantVisibility("III")}
+                  className={`inline-flex items-center justify-between sm:justify-start gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border text-[11px] sm:text-xs font-medium transition-all cursor-pointer ${
                     visibleQuadrants.III
-                      ? "bg-white text-rose-800 border-rose-200"
-                      : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                      ? "bg-rose-50 hover:bg-rose-100/70 text-rose-800 border-rose-300 shadow-2xs"
+                      : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
                   }`}
+                  title={
+                    visibleQuadrants.III
+                      ? "Klik untuk sembunyikan titik Kuadran III"
+                      : "Klik untuk tampilkan titik Kuadran III"
+                  }
                 >
-                  {quadrantCounts.III}
-                </span>
-              </button>
+                  <div className="flex items-center gap-1.5 truncate">
+                    {visibleQuadrants.III ? (
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-2xs shrink-0"></span>
+                    ) : (
+                      <EyeOff className="w-3 h-3 text-zinc-400 shrink-0" />
+                    )}
+                    <span className={`truncate ${!visibleQuadrants.III ? "line-through" : "font-semibold"}`}>
+                      <span className="sm:hidden">Q.III Time Sinks</span>
+                      <span className="hidden sm:inline">Kuadran III: Time Sinks</span>
+                    </span>
+                  </div>
+                  <span
+                    className={`font-mono font-bold text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full border shrink-0 ${
+                      visibleQuadrants.III
+                        ? "bg-white text-rose-800 border-rose-200"
+                        : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                    }`}
+                  >
+                    {quadrantCounts.III}
+                  </span>
+                </button>
 
-              {/* Kuadran IV: Fill-Ins */}
-              <button
-                type="button"
-                onClick={() => toggleQuadrantVisibility("IV")}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
-                  visibleQuadrants.IV
-                    ? "bg-amber-50 hover:bg-amber-100/70 text-amber-800 border-amber-300 shadow-2xs"
-                    : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
-                }`}
-                title={
-                  visibleQuadrants.IV
-                    ? "Klik untuk sembunyikan titik Kuadran IV"
-                    : "Klik untuk tampilkan titik Kuadran IV"
-                }
-              >
-                {visibleQuadrants.IV ? (
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-2xs"></span>
-                ) : (
-                  <EyeOff className="w-3 h-3 text-zinc-400" />
-                )}
-                <span className={!visibleQuadrants.IV ? "line-through" : "font-semibold"}>
-                  Kuadran IV: Fill-Ins
-                </span>
-                <span
-                  className={`font-mono font-bold text-[11px] px-1.5 py-0.2 rounded-full border ${
+                {/* Kuadran IV: Fill-Ins */}
+                <button
+                  type="button"
+                  onClick={() => toggleQuadrantVisibility("IV")}
+                  className={`inline-flex items-center justify-between sm:justify-start gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border text-[11px] sm:text-xs font-medium transition-all cursor-pointer ${
                     visibleQuadrants.IV
-                      ? "bg-white text-amber-800 border-amber-200"
-                      : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                      ? "bg-amber-50 hover:bg-amber-100/70 text-amber-800 border-amber-300 shadow-2xs"
+                      : "bg-zinc-100 text-zinc-400 border-zinc-200 opacity-60 hover:opacity-80"
                   }`}
+                  title={
+                    visibleQuadrants.IV
+                      ? "Klik untuk sembunyikan titik Kuadran IV"
+                      : "Klik untuk tampilkan titik Kuadran IV"
+                  }
                 >
-                  {quadrantCounts.IV}
-                </span>
-              </button>
+                  <div className="flex items-center gap-1.5 truncate">
+                    {visibleQuadrants.IV ? (
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-2xs shrink-0"></span>
+                    ) : (
+                      <EyeOff className="w-3 h-3 text-zinc-400 shrink-0" />
+                    )}
+                    <span className={`truncate ${!visibleQuadrants.IV ? "line-through" : "font-semibold"}`}>
+                      <span className="sm:hidden">Q.IV Fill-Ins</span>
+                      <span className="hidden sm:inline">Kuadran IV: Fill-Ins</span>
+                    </span>
+                  </div>
+                  <span
+                    className={`font-mono font-bold text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full border shrink-0 ${
+                      visibleQuadrants.IV
+                        ? "bg-white text-amber-800 border-amber-200"
+                        : "bg-zinc-200/60 text-zinc-400 border-zinc-200"
+                    }`}
+                  >
+                    {quadrantCounts.IV}
+                  </span>
+                </button>
+              </div>
             </div>
 
-            {/* Restore all quadrants button if any quadrant is hidden */}
+            {/* Restore all quadrants button if any quadrant is hidden (desktop) */}
             {isAnyQuadrantHidden && (
               <button
                 type="button"
                 onClick={showAllQuadrants}
-                className="inline-flex items-center gap-1 text-xs text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200/80 px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer"
+                className="hidden sm:inline-flex items-center gap-1 text-xs text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200/80 px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer shrink-0"
               >
                 <span>Tampilkan Semua Kuadran</span>
               </button>
@@ -493,11 +519,12 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
             className="relative w-full rounded-xl border border-zinc-200 bg-white overflow-hidden shadow-2xs"
             onClick={() => setSelectedIdeaId(null)}
           >
-            {/* SVG Visualizer Container */}
-            <div className="w-full overflow-x-auto">
+            {/* SVG Visualizer Container (100% fluid responsive, zero horizontal scrollbar) */}
+            <div className="w-full overflow-hidden">
               <svg
                 viewBox={`0 0 ${VIEW_BOX_WIDTH} ${VIEW_BOX_HEIGHT}`}
-                className="w-full min-w-[620px] h-auto select-none overflow-visible block"
+                className="w-full h-auto select-none block"
+                style={{ aspectRatio: `${VIEW_BOX_WIDTH} / ${VIEW_BOX_HEIGHT}` }}
               >
                 <defs>
                   {/* Clip path for quadrant background fills */}
@@ -642,35 +669,35 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="210"
-                    height="30"
+                    width="200"
+                    height="32"
                     rx="6"
                     fill="#ffffff"
                     stroke="#a7f3d0"
                     strokeWidth="1.2"
                     filter="url(#badge-shadow)"
                   />
-                  <rect x="4" y="4" width="22" height="22" rx="4" fill="#059669" />
+                  <rect x="4" y="4" width="24" height="24" rx="4" fill="#059669" />
                   <text
-                    x="15"
-                    y="15"
+                    x="16"
+                    y="16"
                     textAnchor="middle"
                     dominantBaseline="central"
-                    className="text-[11px] font-bold font-serif fill-white"
+                    className="text-[12px] font-bold font-serif fill-white"
                   >
                     I
                   </text>
                   <text
-                    x="33"
-                    y="13"
+                    x="34"
+                    y="14"
                     className="text-[11px] font-bold fill-zinc-900 tracking-tight"
                   >
                     KUADRAN I • QUICK WINS
                   </text>
                   <text
-                    x="33"
-                    y="24"
-                    className="text-[9px] font-mono fill-emerald-700 font-semibold"
+                    x="34"
+                    y="25"
+                    className="text-[9.5px] font-mono fill-emerald-700 font-semibold"
                   >
                     Feasibility ≥ 4 &amp; Impact ≥ 4
                   </text>
@@ -682,35 +709,35 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="210"
-                    height="30"
+                    width="200"
+                    height="32"
                     rx="6"
                     fill="#ffffff"
                     stroke="#bfdbfe"
                     strokeWidth="1.2"
                     filter="url(#badge-shadow)"
                   />
-                  <rect x="4" y="4" width="22" height="22" rx="4" fill="#2563eb" />
+                  <rect x="4" y="4" width="24" height="24" rx="4" fill="#2563eb" />
                   <text
-                    x="15"
-                    y="15"
+                    x="16"
+                    y="16"
                     textAnchor="middle"
                     dominantBaseline="central"
-                    className="text-[11px] font-bold font-serif fill-white"
+                    className="text-[12px] font-bold font-serif fill-white"
                   >
                     II
                   </text>
                   <text
-                    x="33"
-                    y="13"
+                    x="34"
+                    y="14"
                     className="text-[11px] font-bold fill-zinc-900 tracking-tight"
                   >
                     KUADRAN II • MAJOR PROJECTS
                   </text>
                   <text
-                    x="33"
-                    y="24"
-                    className="text-[9px] font-mono fill-blue-700 font-semibold"
+                    x="34"
+                    y="25"
+                    className="text-[9.5px] font-mono fill-blue-700 font-semibold"
                   >
                     Feasibility &lt; 4 &amp; Impact ≥ 4
                   </text>
@@ -719,40 +746,40 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 {/* Bottom-Left: Kuadran III (Time Sinks) */}
                 <g
                   transform={`translate(${PADDING_LEFT + 14}, ${
-                    PADDING_TOP + INNER_HEIGHT - 40
+                    PADDING_TOP + INNER_HEIGHT - 42
                   })`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="210"
-                    height="30"
+                    width="200"
+                    height="32"
                     rx="6"
                     fill="#ffffff"
                     stroke="#fecdd3"
                     strokeWidth="1.2"
                     filter="url(#badge-shadow)"
                   />
-                  <rect x="4" y="4" width="22" height="22" rx="4" fill="#e11d48" />
+                  <rect x="4" y="4" width="24" height="24" rx="4" fill="#e11d48" />
                   <text
-                    x="15"
-                    y="15"
+                    x="16"
+                    y="16"
                     textAnchor="middle"
                     dominantBaseline="central"
-                    className="text-[11px] font-bold font-serif fill-white"
+                    className="text-[12px] font-bold font-serif fill-white"
                   >
                     III
                   </text>
                   <text
-                    x="33"
-                    y="13"
+                    x="34"
+                    y="14"
                     className="text-[11px] font-bold fill-zinc-900 tracking-tight"
                   >
                     KUADRAN III • TIME SINKS
                   </text>
                   <text
-                    x="33"
-                    y="24"
-                    className="text-[9px] font-mono fill-rose-700 font-semibold"
+                    x="34"
+                    y="25"
+                    className="text-[9.5px] font-mono fill-rose-700 font-semibold"
                   >
                     Feasibility &lt; 4 &amp; Impact &lt; 4
                   </text>
@@ -761,40 +788,40 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 {/* Bottom-Right: Kuadran IV (Fill-Ins) */}
                 <g
                   transform={`translate(${BOUNDARY_X + 14}, ${
-                    PADDING_TOP + INNER_HEIGHT - 40
+                    PADDING_TOP + INNER_HEIGHT - 42
                   })`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="210"
-                    height="30"
+                    width="200"
+                    height="32"
                     rx="6"
                     fill="#ffffff"
                     stroke="#fde68a"
                     strokeWidth="1.2"
                     filter="url(#badge-shadow)"
                   />
-                  <rect x="4" y="4" width="22" height="22" rx="4" fill="#d97706" />
+                  <rect x="4" y="4" width="24" height="24" rx="4" fill="#d97706" />
                   <text
-                    x="15"
-                    y="15"
+                    x="16"
+                    y="16"
                     textAnchor="middle"
                     dominantBaseline="central"
-                    className="text-[11px] font-bold font-serif fill-white"
+                    className="text-[12px] font-bold font-serif fill-white"
                   >
                     IV
                   </text>
                   <text
-                    x="33"
-                    y="13"
+                    x="34"
+                    y="14"
                     className="text-[11px] font-bold fill-zinc-900 tracking-tight"
                   >
                     KUADRAN IV • FILL-INS
                   </text>
                   <text
-                    x="33"
-                    y="24"
-                    className="text-[9px] font-mono fill-amber-700 font-semibold"
+                    x="34"
+                    y="25"
+                    className="text-[9.5px] font-mono fill-amber-700 font-semibold"
                   >
                     Feasibility ≥ 4 &amp; Impact &lt; 4
                   </text>
@@ -899,6 +926,15 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                       onMouseLeave={() => setHoveredIdeaId(null)}
                       onClick={(e) => handlePointClick(idea.id, e)}
                     >
+                      {/* Expanded Invisible Touch Target for easy finger tapping on mobile */}
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r="24"
+                        fill="transparent"
+                        className="cursor-pointer"
+                      />
+
                       {/* Active outer pulse ring */}
                       {isActive && (
                         <circle
@@ -957,10 +993,10 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
             {/* Hover Tooltip Overlay (Direction-aware: flips below point if point is in upper half) */}
             {hoveredPoint && !selectedIdeaId && visibleQuadrants[hoveredPoint.idea.quadrant] !== false && (
               <div
-                className={`absolute z-30 pointer-events-none transform -translate-x-1/2 bg-zinc-900 text-white rounded-lg px-3 py-2 text-xs shadow-xl border border-zinc-700/80 animate-in fade-in zoom-in-95 duration-150 max-w-xs ${
+                className={`absolute z-30 pointer-events-none transform -translate-x-1/2 bg-zinc-900 text-white rounded-lg px-2.5 py-1.5 sm:px-3 sm:py-2 text-[11px] sm:text-xs shadow-xl border border-zinc-700/80 animate-in fade-in zoom-in-95 duration-150 max-w-[210px] sm:max-w-xs ${
                   hoveredPoint.cy < VIEW_BOX_HEIGHT / 2
-                    ? "translate-y-4"
-                    : "-translate-y-full -mt-3.5"
+                    ? "translate-y-3 sm:translate-y-4"
+                    : "-translate-y-full -mt-3 sm:-mt-3.5"
                 }`}
                 style={{
                   left: `${(hoveredPoint.cx / VIEW_BOX_WIDTH) * 100}%`,
@@ -1089,10 +1125,10 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                 </div>
 
                 {/* Score Pill & Action Buttons */}
-                <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-between sm:justify-start shrink-0 self-start sm:self-auto">
                   {/* Score Pill */}
                   <div
-                    className={`flex items-center gap-2 px-2.5 py-1 rounded-lg border text-xs font-mono ${
+                    className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1 rounded-lg border text-[11px] sm:text-xs font-mono ${
                       selectedIdeaId
                         ? "bg-zinc-800 text-zinc-200 border-zinc-700"
                         : "bg-white text-zinc-700 border-zinc-200"
@@ -1117,34 +1153,37 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                     </span>
                   </div>
 
-                  {/* Button Detail */}
-                  {onViewDetail && (
-                    <button
-                      type="button"
-                      onClick={() => onViewDetail(activeIdea)}
-                      className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-lg transition-colors cursor-pointer shadow-xs ${
-                        selectedIdeaId
-                          ? "bg-white text-zinc-900 hover:bg-zinc-100"
-                          : "bg-zinc-900 text-white hover:bg-zinc-800"
-                      }`}
-                      title="Lihat Detail Lengkap Fitur (Modal)"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>Detail</span>
-                    </button>
-                  )}
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-1.5">
+                    {/* Button Detail */}
+                    {onViewDetail && (
+                      <button
+                        type="button"
+                        onClick={() => onViewDetail(activeIdea)}
+                        className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-lg transition-colors cursor-pointer shadow-xs ${
+                          selectedIdeaId
+                            ? "bg-white text-zinc-900 hover:bg-zinc-100"
+                            : "bg-zinc-900 text-white hover:bg-zinc-800"
+                        }`}
+                        title="Lihat Detail Lengkap Fitur (Modal)"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Detail</span>
+                      </button>
+                    )}
 
-                  {/* Close Selection */}
-                  {selectedIdeaId && (
-                    <button
-                      type="button"
-                      onClick={() => setSelectedIdeaId(null)}
-                      className="p-1 text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800 transition-colors cursor-pointer"
-                      title="Tutup Panel Terpilih"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
+                    {/* Close Selection */}
+                    {selectedIdeaId && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedIdeaId(null)}
+                        className="p-1 text-zinc-400 hover:text-white rounded-md hover:bg-zinc-800 transition-colors cursor-pointer"
+                        title="Tutup Panel Terpilih"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
