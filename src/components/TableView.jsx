@@ -87,24 +87,24 @@ export default function TableView({
   return (
     <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-xs">
       {/* Header Bar Tabel */}
-      <div className="p-3.5 sm:p-4 border-b border-zinc-200 bg-zinc-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-3.5 sm:p-4 border-b border-zinc-200 bg-zinc-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
         <div>
           <h2 className="text-sm sm:text-base font-bold text-zinc-900 tracking-tight">
             Tabel Rangkuman Analisis LKPD
           </h2>
-          <p className="text-xs text-zinc-500 mt-0.5">
+          <p className="text-[11px] sm:text-xs text-zinc-500 mt-0.5">
             Daftar lengkap fitur produk dengan penilaian Feasibility, Impact, dan status kuadran.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+        <div className="flex items-center justify-between sm:justify-start gap-2 self-stretch sm:self-auto flex-wrap">
           {/* Quick Sort Selector untuk Tampilan Tablet & Mobile */}
-          <div className="flex items-center gap-1.5 lg:hidden text-xs">
-            <span className="text-zinc-500 font-medium">Urut:</span>
+          <div className="flex items-center gap-1.5 lg:hidden text-xs flex-1 sm:flex-initial">
+            <span className="text-zinc-500 font-medium shrink-0">Urut:</span>
             <select
               value={sortField}
               onChange={(e) => handleSort(e.target.value)}
-              className="bg-white border border-zinc-200 rounded-md px-2 py-1 text-xs text-zinc-800 focus:outline-none focus:ring-1 focus:ring-zinc-900 cursor-pointer"
+              className="bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs text-zinc-800 focus:outline-none focus:ring-1 focus:ring-zinc-900 cursor-pointer min-h-[34px] touch-manipulation flex-1 sm:flex-initial"
             >
               <option value="seqNumber">Nomor (1–10)</option>
               <option value="totalScore">Total Skor</option>
@@ -117,7 +117,7 @@ export default function TableView({
             <button
               type="button"
               onClick={() => setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))}
-              className="p-1 bg-white border border-zinc-200 rounded-md text-zinc-700 hover:bg-zinc-50 cursor-pointer"
+              className="p-2 bg-white border border-zinc-200 rounded-lg text-zinc-700 hover:bg-zinc-50 active:bg-zinc-100 cursor-pointer min-h-[34px] min-w-[34px] flex items-center justify-center touch-manipulation"
               title={
                 sortDirection === "asc"
                   ? "Urutan Naik (A-Z / Rendah ke Tinggi)"
@@ -132,8 +132,8 @@ export default function TableView({
             </button>
           </div>
 
-          <div className="text-xs font-mono text-zinc-500 bg-white px-3 py-1 rounded-md border border-zinc-200">
-            Total Baris: <strong className="text-zinc-900">{sortedIdeas.length}</strong>
+          <div className="text-[11px] sm:text-xs font-mono text-zinc-500 bg-white px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-md border border-zinc-200 shrink-0">
+            Total: <strong className="text-zinc-900">{sortedIdeas.length}</strong>
           </div>
         </div>
       </div>
@@ -399,7 +399,7 @@ export default function TableView({
           - Memastikan informasi mudah dibaca tanpa terjepit di layar kecil
           - Menampilkan seluruh detail, skor, kuadran, dan tombol aksi
           ======================================================== */}
-      <div className="lg:hidden p-3 sm:p-4 bg-zinc-50/30 divide-y divide-zinc-200/60 sm:divide-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
+      <div className="lg:hidden p-2.5 sm:p-4 bg-zinc-50/40 space-y-2.5 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
         {sortedIdeas.length === 0 ? (
           <div className="py-10 text-center text-zinc-400 col-span-2">
             Tidak ada ide yang cocok dengan filter.
@@ -414,12 +414,12 @@ export default function TableView({
             return (
               <div
                 key={idea.id}
-                className="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-2xs space-y-3 mb-3 sm:mb-0 hover:border-zinc-300 transition-colors"
+                className="bg-white border border-zinc-200 rounded-xl p-3 sm:p-3.5 shadow-2xs space-y-2.5 hover:border-zinc-300 transition-colors"
               >
                 {/* Bar Atas: Nomor, Target Pengguna & Tombol Aksi */}
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-800 font-mono text-xs font-bold flex items-center justify-center shrink-0">
                       {idea.seqNumber || index + 1}
                     </span>
                     <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
@@ -432,12 +432,12 @@ export default function TableView({
                     </span>
                   </div>
 
-                  {/* Tombol Aksi */}
-                  <div className="flex items-center gap-0.5">
+                  {/* Tombol Aksi: Touch Friendly min 32-36px */}
+                  <div className="flex items-center gap-1">
                     <button
                       type="button"
                       onClick={() => onViewDetail && onViewDetail(idea)}
-                      className="p-1.5 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors cursor-pointer"
+                      className="p-1.5 sm:p-2 text-zinc-500 hover:text-zinc-900 active:bg-zinc-200/70 hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer touch-manipulation min-h-[32px] min-w-[32px] flex items-center justify-center"
                       title="Lihat Detail Lengkap"
                     >
                       <Eye className="w-3.5 h-3.5" />
@@ -445,7 +445,7 @@ export default function TableView({
                     <button
                       type="button"
                       onClick={() => onEditIdea(idea)}
-                      className="p-1.5 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors cursor-pointer"
+                      className="p-1.5 sm:p-2 text-zinc-500 hover:text-zinc-900 active:bg-zinc-200/70 hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer touch-manipulation min-h-[32px] min-w-[32px] flex items-center justify-center"
                       title="Edit Fitur"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -453,7 +453,7 @@ export default function TableView({
                     <button
                       type="button"
                       onClick={() => onDeleteIdea(idea.id)}
-                      className="p-1.5 text-zinc-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
+                      className="p-1.5 sm:p-2 text-zinc-500 hover:text-rose-600 active:bg-rose-100 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer touch-manipulation min-h-[32px] min-w-[32px] flex items-center justify-center"
                       title="Hapus Fitur"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -467,16 +467,16 @@ export default function TableView({
                     {idea.title}
                   </h3>
                   {idea.description && (
-                    <p className="text-xs text-zinc-600 leading-relaxed mt-1">
+                    <p className="text-xs text-zinc-600 leading-relaxed mt-1 line-clamp-3">
                       {idea.description}
                     </p>
                   )}
                 </div>
 
                 {/* Status Kuadran & Tingkat Prioritas */}
-                <div className="flex items-center justify-between gap-2 pt-2 border-t border-zinc-100 text-xs flex-wrap">
+                <div className="flex items-center justify-between gap-1.5 pt-2 border-t border-zinc-100 text-xs flex-wrap">
                   <span
-                    className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${quad.tagColor}`}
+                    className={`inline-flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-md border ${quad.tagColor}`}
                   >
                     <span className={`w-1.5 h-1.5 rounded-full ${quad.dotColor}`} />
                     <span>{quad.id === "pool" ? "Idea Pool" : `Kuadran ${quad.id} (${quad.name})`}</span>
@@ -488,21 +488,21 @@ export default function TableView({
 
                 {/* Skor Matrix Box: Feasibility, Impact, Total */}
                 <div className="grid grid-cols-3 gap-1.5 pt-1 text-center font-mono text-xs">
-                  <div className="bg-zinc-50 border border-zinc-200 rounded p-1.5">
+                  <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-1.5">
                     <span className="text-[9px] text-zinc-400 block uppercase font-medium">Feas</span>
-                    <span className="font-semibold text-zinc-800">
+                    <span className="font-semibold text-zinc-800 text-xs sm:text-sm">
                       {idea.feasibility != null ? idea.feasibility : "-"}/5
                     </span>
                   </div>
-                  <div className="bg-zinc-50 border border-zinc-200 rounded p-1.5">
+                  <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-1.5">
                     <span className="text-[9px] text-zinc-400 block uppercase font-medium">Impact</span>
-                    <span className="font-semibold text-zinc-800">
+                    <span className="font-semibold text-zinc-800 text-xs sm:text-sm">
                       {idea.impact != null ? idea.impact : "-"}/5
                     </span>
                   </div>
-                  <div className="bg-zinc-900 text-white rounded p-1.5">
+                  <div className="bg-zinc-900 text-white rounded-lg p-1.5">
                     <span className="text-[9px] text-zinc-400 block uppercase font-medium">Total</span>
-                    <span className="font-bold text-white">{totalScore}</span>
+                    <span className="font-bold text-white text-xs sm:text-sm">{totalScore}</span>
                   </div>
                 </div>
               </div>

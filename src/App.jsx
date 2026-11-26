@@ -231,7 +231,7 @@ export default function App() {
       />
 
       {/* 2. Main Content Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6">
         {/* Ringkasan Jumlah Seluruh Ide & Kuadran (5 Kartu, tanpa Idea Pool) */}
         <section aria-label="Ringkasan Statistik">
           <StatsSummary
@@ -260,20 +260,20 @@ export default function App() {
 
         {/* Active Filters Indicator banner if search or quadrant active */}
         {((activeQuadrantFilter && activeQuadrantFilter !== "all") || searchQuery) && (
-          <div className="flex items-center justify-between text-xs bg-zinc-100 border border-zinc-200 px-3.5 py-2 rounded-lg text-zinc-600">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs bg-zinc-100 border border-zinc-200 px-3.5 py-2.5 rounded-xl text-zinc-600">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
               <span className="font-semibold text-zinc-800">Filter Aktif:</span>
               {activeQuadrantFilter && activeQuadrantFilter !== "all" && (
-                <span className="bg-white border border-zinc-200 px-2 py-0.5 rounded font-medium text-zinc-800">
+                <span className="bg-white border border-zinc-200 px-2 py-0.5 rounded-md font-medium text-zinc-800 text-[11px] sm:text-xs">
                   {QUADRANTS[activeQuadrantFilter]?.name || `Kuadran ${activeQuadrantFilter}`}
                 </span>
               )}
               {searchQuery && (
-                <span className="bg-white border border-zinc-200 px-2 py-0.5 rounded font-medium text-zinc-800">
+                <span className="bg-white border border-zinc-200 px-2 py-0.5 rounded-md font-medium text-zinc-800 text-[11px] sm:text-xs max-w-[180px] sm:max-w-none truncate">
                   "{searchQuery}"
                 </span>
               )}
-              <span className="text-zinc-500">
+              <span className="text-zinc-500 font-mono text-[11px]">
                 ({filteredIdeas.length} ide ditemukan)
               </span>
             </div>
@@ -283,7 +283,7 @@ export default function App() {
                 setActiveQuadrantFilter(null);
                 setSearchQuery("");
               }}
-              className="font-medium text-zinc-900 underline hover:text-zinc-700 cursor-pointer"
+              className="font-medium text-zinc-900 underline hover:text-zinc-700 cursor-pointer self-start sm:self-auto touch-manipulation"
             >
               Reset Filter
             </button>
@@ -371,10 +371,12 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 bg-white py-4 text-center text-xs text-zinc-400 no-print mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>Ideation Matriks UMKM • E-Commerce Sepatu &amp; Sandal</span>
-          <span className="font-mono text-[11px] text-zinc-400">
+      <footer className="border-t border-zinc-200 bg-white py-3.5 sm:py-4 text-center sm:text-left text-xs text-zinc-400 no-print mt-auto">
+        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-2">
+          <span className="text-[11px] sm:text-xs text-zinc-500">
+            Ideation Matriks UMKM • E-Commerce Sepatu &amp; Sandal
+          </span>
+          <span className="font-mono text-[10.5px] sm:text-[11px] text-zinc-400">
             10 Ide Fitur Resmi LKPD Guru
           </span>
         </div>

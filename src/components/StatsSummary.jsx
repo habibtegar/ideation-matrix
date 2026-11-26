@@ -54,12 +54,14 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-2 sm:gap-3 lg:gap-3.5">
       {stats.map((stat) => {
         const isSelected =
           stat.id === "all"
             ? !activeQuadrantFilter || activeQuadrantFilter === "all"
             : activeQuadrantFilter === stat.id;
+        const isTotalCard = stat.id === "all";
+
         return (
           <button
             key={stat.id}
@@ -71,10 +73,12 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
                 onSelectQuadrant(stat.id);
               }
             }}
-            className={`text-left p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer bg-white shadow-2xs ${
+            className={`text-left p-2.5 sm:p-3.5 lg:p-4 rounded-xl border transition-all cursor-pointer bg-white shadow-2xs touch-manipulation min-w-0 ${
+              isTotalCard ? "col-span-2 md:col-span-1" : "col-span-1"
+            } ${
               isSelected
                 ? `ring-2 ${stat.activeRing} bg-zinc-50/50 shadow-xs`
-                : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/40"
+                : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/40 active:bg-zinc-100"
             }`}
             title={
               stat.id === "all"
@@ -82,27 +86,60 @@ export default function StatsSummary({ ideas, activeQuadrantFilter, onSelectQuad
                 : `Klik untuk menyaring kuadran ${stat.badge}`
             }
           >
-            {/* Baris Atas: Badge Kategori di Kiri & Subtitle di Kanan */}
-            <div className="flex items-center justify-between gap-2 mb-2.5 sm:mb-3">
-              <span
-                className={`px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border ${stat.badgeStyle}`}
-              >
-                {stat.badge}
-              </span>
-              <span className="text-xs text-zinc-500 font-medium truncate">
-                {stat.subtitle}
-              </span>
-            </div>
+            {/* Tampilan Khusus Hero untuk TOTAL IDE pada Mobile */}
+            {isTotalCard ? (
+              <div className="flex items-center justify-between gap-3 md:block">
+                <div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1 md:mb-2.5 lg:mb-3">
+                    <span
+                      className={`px-1.5 sm:px-2 py-0.5 rounded text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-wider border ${stat.badgeStyle}`}
+                    >
+                      {stat.badge}
+                    </span>
+                    <span className="text-[10px] sm:text-xs text-zinc-500 font-medium truncate">
+                      {stat.subtitle}
+                    </span>
+                  </div>
+                  <span className="text-[10px] sm:text-xs text-zinc-500 block md:hidden">
+                    {stat.detail}
+                  </span>
+                </div>
 
-            {/* Baris Bawah: Angka Jumlah di Kiri & Keterangan di Kanan */}
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 font-sans">
-                {stat.count}
-              </span>
-              <span className="text-xs text-zinc-500 text-right truncate">
-                {stat.detail}
-              </span>
-            </div>
+                <div className="flex items-baseline md:justify-between gap-2">
+                  <span className="text-2xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900 font-sans">
+                    {stat.count}
+                  </span>
+                  <span className="text-xs text-zinc-500 text-right truncate hidden md:inline">
+                    {stat.detail}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              /* Kartu Kuadran I, II, III, IV */
+              <div className="flex flex-col justify-between h-full">
+                {/* Baris Atas: Badge Kategori & Subtitle */}
+                <div className="flex items-center justify-between gap-1 mb-2 sm:mb-2.5 lg:mb-3 flex-wrap min-w-0">
+                  <span
+                    className={`px-1.5 sm:px-2 py-0.5 rounded text-[9px] xs:text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider border truncate max-w-full ${stat.badgeStyle}`}
+                  >
+                    {stat.badge}
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-zinc-500 font-medium truncate">
+                    {stat.subtitle}
+                  </span>
+                </div>
+
+                {/* Baris Bawah: Angka Jumlah & Keterangan */}
+                <div className="flex items-baseline justify-between gap-1.5 mt-auto">
+                  <span className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900 font-sans">
+                    {stat.count}
+                  </span>
+                  <span className="text-[9.5px] xs:text-[10px] sm:text-xs text-zinc-500 text-right truncate min-w-0">
+                    {stat.detail}
+                  </span>
+                </div>
+              </div>
+            )}
           </button>
         );
       })}

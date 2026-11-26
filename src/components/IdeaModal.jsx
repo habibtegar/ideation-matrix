@@ -46,31 +46,31 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
 
   return (
     <div
-      className="w-full max-w-lg bg-white border border-zinc-200 rounded-xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-150"
+      className="w-full max-w-lg max-h-[92dvh] flex flex-col bg-white border border-zinc-200 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 my-auto"
       onClick={(e) => e.stopPropagation()}
     >
       {/* Modal Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-200 shrink-0 bg-white">
         <div>
-          <h2 className="text-base font-bold text-zinc-900 tracking-tight">
+          <h2 className="text-sm sm:text-base font-bold text-zinc-900 tracking-tight">
             {editingIdea ? "Edit Ide Fitur" : "Tambah Ide Baru"}
           </h2>
-          <p className="text-xs text-zinc-500 mt-0.5">
+          <p className="text-[11px] sm:text-xs text-zinc-500 mt-0.5">
             Tentukan parameter fitur produk UMKM E-Commerce Sepatu &amp; Sandal.
           </p>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="p-1.5 text-zinc-400 hover:text-zinc-700 rounded-md hover:bg-zinc-100 transition-colors cursor-pointer"
+          className="p-1.5 text-zinc-400 hover:text-zinc-700 active:bg-zinc-100 rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer touch-manipulation"
           aria-label="Tutup modal"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Modal Body Form */}
-      <form onSubmit={handleSubmit} className="p-6 space-y-5">
+      {/* Modal Body Form: Scrollable on mobile/short viewports */}
+      <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5">
         {/* Judul Fitur (Wajib) */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
@@ -91,7 +91,7 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
               setTitle(e.target.value);
               if (errors.title) setErrors((prev) => ({ ...prev, title: null }));
             }}
-            className={`w-full px-3 py-2 text-sm bg-white border rounded-lg text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-1 transition-all ${
+            className={`w-full px-3 py-2 text-xs sm:text-sm bg-white border rounded-lg text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-1 transition-all min-h-[38px] ${
               errors.title
                 ? "border-rose-400 focus:ring-rose-400 focus:border-rose-400"
                 : "border-zinc-300 focus:ring-zinc-900 focus:border-zinc-900"
@@ -120,7 +120,7 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
             placeholder="Jelaskan fungsi fitur dan manfaatnya bagi pembeli atau UMKM sepatu..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 text-sm bg-white border border-zinc-300 rounded-lg text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-900 focus:border-zinc-900 transition-all resize-none"
+            className="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-zinc-300 rounded-lg text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-900 focus:border-zinc-900 transition-all resize-none"
           />
         </div>
 
@@ -133,10 +133,10 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
             <button
               type="button"
               onClick={() => setTarget("Pembeli")}
-              className={`py-2 px-3 text-xs sm:text-sm font-medium rounded-lg border transition-all cursor-pointer ${
+              className={`py-2 px-2.5 text-xs sm:text-sm font-medium rounded-lg border transition-all cursor-pointer touch-manipulation min-h-[40px] flex items-center justify-center text-center ${
                 target === "Pembeli"
-                  ? "bg-zinc-900 text-white border-zinc-900 shadow-2xs"
-                  : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50"
+                  ? "bg-zinc-900 text-white border-zinc-900 shadow-2xs font-semibold"
+                  : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100"
               }`}
             >
               Pembeli (Customer)
@@ -144,10 +144,10 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
             <button
               type="button"
               onClick={() => setTarget("Penjual")}
-              className={`py-2 px-3 text-xs sm:text-sm font-medium rounded-lg border transition-all cursor-pointer ${
+              className={`py-2 px-2.5 text-xs sm:text-sm font-medium rounded-lg border transition-all cursor-pointer touch-manipulation min-h-[40px] flex items-center justify-center text-center ${
                 target === "Penjual"
-                  ? "bg-zinc-900 text-white border-zinc-900 shadow-2xs"
-                  : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50"
+                  ? "bg-zinc-900 text-white border-zinc-900 shadow-2xs font-semibold"
+                  : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100"
               }`}
             >
               Penjual (UMKM Seller)
@@ -167,7 +167,7 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
             </span>
           </div>
 
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
             {scoreOptions.map((num) => {
               const isActive = feasibility === num;
               return (
@@ -180,10 +180,10 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
                       setErrors((prev) => ({ ...prev, feasibility: null }));
                     }
                   }}
-                  className={`h-10 text-sm font-bold rounded-lg border transition-all cursor-pointer flex items-center justify-center ${
+                  className={`h-10 sm:h-11 text-xs sm:text-sm font-bold rounded-lg border transition-all cursor-pointer flex items-center justify-center touch-manipulation ${
                     isActive
                       ? "bg-zinc-900 text-white border-zinc-900 shadow-xs"
-                      : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100"
+                      : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100 active:bg-zinc-200"
                   }`}
                 >
                   {num}
@@ -193,7 +193,7 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
           </div>
 
           {/* Label panduan Rendah, Sedang, Tinggi */}
-          <div className="flex items-center justify-between text-[11px] text-zinc-500 mt-1.5 px-1 font-medium">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-zinc-500 mt-1.5 px-0.5 font-medium">
             <span>Rendah (1–2)</span>
             <span>Sedang (3)</span>
             <span>Tinggi (4–5)</span>
@@ -218,7 +218,7 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
             </span>
           </div>
 
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
             {scoreOptions.map((num) => {
               const isActive = impact === num;
               return (
@@ -231,10 +231,10 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
                       setErrors((prev) => ({ ...prev, impact: null }));
                     }
                   }}
-                  className={`h-10 text-sm font-bold rounded-lg border transition-all cursor-pointer flex items-center justify-center ${
+                  className={`h-10 sm:h-11 text-xs sm:text-sm font-bold rounded-lg border transition-all cursor-pointer flex items-center justify-center touch-manipulation ${
                     isActive
                       ? "bg-zinc-900 text-white border-zinc-900 shadow-xs"
-                      : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100"
+                      : "bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100 active:bg-zinc-200"
                   }`}
                 >
                   {num}
@@ -244,7 +244,7 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
           </div>
 
           {/* Label panduan Rendah, Sedang, Tinggi */}
-          <div className="flex items-center justify-between text-[11px] text-zinc-500 mt-1.5 px-1 font-medium">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-zinc-500 mt-1.5 px-0.5 font-medium">
             <span>Rendah (1–2)</span>
             <span>Sedang (3)</span>
             <span>Tinggi (4–5)</span>
@@ -258,37 +258,37 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
         </div>
 
         {/* Real-time Quadrant Preview Pill */}
-        <div className="p-3 rounded-lg border border-zinc-200 bg-zinc-50 flex items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-zinc-600 shrink-0" />
+        <div className="p-3 rounded-lg border border-zinc-200 bg-zinc-50 flex items-center justify-between gap-2.5 text-xs">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <Sparkles className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
             <span className="text-zinc-600 font-medium">Hasil Plot:</span>
           </div>
           {feasibility !== null && impact !== null ? (
-            <div className="flex items-center gap-1.5 font-semibold text-zinc-900">
+            <div className="flex items-center gap-1.5 font-semibold text-zinc-900 text-[11px] sm:text-xs text-right">
               <span
-                className={`w-2 h-2 rounded-full ${quadInfo.dotColor}`}
+                className={`w-2 h-2 rounded-full ${quadInfo.dotColor} shrink-0`}
               ></span>
               <span>{quadInfo.title}</span>
             </div>
           ) : (
-            <span className="text-zinc-400 italic">
+            <span className="text-zinc-400 italic text-[11px] sm:text-xs text-right">
               Akan masuk ke Idea Pool (Belum Diplot)
             </span>
           )}
         </div>
 
         {/* Modal Actions */}
-        <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-zinc-100">
+        <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs sm:text-sm font-medium text-zinc-600 hover:text-zinc-900 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 transition-colors cursor-pointer"
+            className="px-4 py-2 text-xs sm:text-sm font-medium text-zinc-600 hover:text-zinc-900 active:bg-zinc-100 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 transition-colors cursor-pointer touch-manipulation min-h-[38px]"
           >
             Batal
           </button>
           <button
             type="submit"
-            className="px-5 py-2 text-xs sm:text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 rounded-lg transition-colors shadow-xs cursor-pointer"
+            className="px-5 py-2 text-xs sm:text-sm font-semibold text-white bg-zinc-900 hover:bg-zinc-800 active:bg-zinc-950 rounded-lg transition-colors shadow-xs cursor-pointer touch-manipulation min-h-[38px]"
           >
             {editingIdea ? "Perbarui Ide" : "Simpan Ide"}
           </button>
@@ -305,7 +305,9 @@ export default function IdeaModal({ isOpen, onClose, onSave, editingIdea, initia
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/40 backdrop-blur-xs animate-in fade-in duration-150"
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-900/50 backdrop-blur-xs animate-in fade-in duration-150 overflow-y-auto"
       onClick={onClose}
     >
       <IdeaModalForm

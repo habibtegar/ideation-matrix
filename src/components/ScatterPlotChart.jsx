@@ -266,110 +266,112 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
       className="bg-white border border-zinc-200 rounded-xl p-3 sm:p-5 shadow-2xs transition-all"
     >
       {/* Header Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 pb-3 border-b border-zinc-200">
-        <div className="flex items-start sm:items-center gap-2.5">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5 sm:gap-3 pb-3 border-b border-zinc-200">
+        <div className="flex items-start sm:items-center gap-2 sm:gap-2.5 min-w-0">
           <div className="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5 sm:mt-0">
             <ScatterChart className="w-4 h-4 text-emerald-400" />
           </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-sm sm:text-base font-bold text-zinc-900 tracking-tight">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <h2 className="text-sm sm:text-base font-bold text-zinc-900 tracking-tight truncate">
                 Grafik Analisis Feasibility vs Impact
               </h2>
-              <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+              <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 shrink-0">
                 Matriks Prioritas
               </span>
             </div>
-            <p className="text-xs text-zinc-500 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-zinc-500 mt-0.5 line-clamp-2 sm:line-clamp-none">
               Sebaran 4 kuadran fitur produk UMKM: Sumbu X: Feasibility (1 Sulit → 5 Sangat Layak) • Sumbu Y: Impact (1 Rendah → 5 Tinggi).
             </p>
           </div>
         </div>
 
         {/* Right side: Integrated Filter Buttons & Collapse Toggle */}
-        <div className="flex items-center flex-wrap gap-1.5 self-start lg:self-auto shrink-0">
-          {/* Button 'Semua' */}
-          <button
-            type="button"
-            onClick={() => setActiveFilter("all")}
-            className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer border ${
-              activeFilter === "all"
-                ? "bg-zinc-900 text-white border-zinc-900 shadow-2xs"
-                : "bg-white text-zinc-700 border-zinc-300 hover:bg-zinc-50"
-            }`}
-          >
-            Semua ({plottableIdeas.length})
-          </button>
+        <div className="flex items-center flex-wrap gap-1 sm:gap-1.5 self-start lg:self-auto shrink-0 w-full sm:w-auto justify-between sm:justify-start">
+          <div className="flex items-center flex-wrap gap-1 sm:gap-1.5">
+            {/* Button 'Semua' */}
+            <button
+              type="button"
+              onClick={() => setActiveFilter("all")}
+              className={`inline-flex items-center px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-semibold transition-colors cursor-pointer border touch-manipulation min-h-[30px] sm:min-h-0 ${
+                activeFilter === "all"
+                  ? "bg-zinc-900 text-white border-zinc-900 shadow-2xs"
+                  : "bg-white text-zinc-700 border-zinc-300 hover:bg-zinc-50 active:bg-zinc-100"
+              }`}
+            >
+              Semua ({plottableIdeas.length})
+            </button>
 
-          {/* Button '★ Quick Wins' */}
-          <button
-            type="button"
-            onClick={() => handleFilterClick("I")}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer border ${
-              activeFilter === "I"
-                ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-bold shadow-2xs"
-                : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
-            }`}
-            title="Filter Kuadran I: Quick Wins"
-          >
-            <span className="text-emerald-600 font-bold">★</span>
-            <span>Quick Wins</span>
-            <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.I})</span>
-          </button>
+            {/* Button '★ Quick Wins' */}
+            <button
+              type="button"
+              onClick={() => handleFilterClick("I")}
+              className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors cursor-pointer border touch-manipulation min-h-[30px] sm:min-h-0 ${
+                activeFilter === "I"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-bold shadow-2xs"
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100"
+              }`}
+              title="Filter Kuadran I: Quick Wins"
+            >
+              <span className="text-emerald-600 font-bold">★</span>
+              <span>Quick Wins</span>
+              <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.I})</span>
+            </button>
 
-          {/* Button '◆ Major Projects' */}
-          <button
-            type="button"
-            onClick={() => handleFilterClick("II")}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer border ${
-              activeFilter === "II"
-                ? "bg-blue-50 text-blue-800 border-blue-400 font-bold shadow-2xs"
-                : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
-            }`}
-            title="Filter Kuadran II: Major Projects"
-          >
-            <span className="text-blue-600 font-bold">◆</span>
-            <span>Major Projects</span>
-            <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.II})</span>
-          </button>
+            {/* Button '◆ Major Projects' */}
+            <button
+              type="button"
+              onClick={() => handleFilterClick("II")}
+              className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors cursor-pointer border touch-manipulation min-h-[30px] sm:min-h-0 ${
+                activeFilter === "II"
+                  ? "bg-blue-50 text-blue-800 border-blue-400 font-bold shadow-2xs"
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100"
+              }`}
+              title="Filter Kuadran II: Major Projects"
+            >
+              <span className="text-blue-600 font-bold">◆</span>
+              <span>Major Projects</span>
+              <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.II})</span>
+            </button>
 
-          {/* Button '● Fill-Ins' */}
-          <button
-            type="button"
-            onClick={() => handleFilterClick("III")}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer border ${
-              activeFilter === "III"
-                ? "bg-amber-50 text-amber-800 border-amber-400 font-bold shadow-2xs"
-                : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
-            }`}
-            title="Filter Kuadran III: Fill-Ins"
-          >
-            <span className="text-amber-600 font-bold">●</span>
-            <span>Fill-Ins</span>
-            <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.III})</span>
-          </button>
+            {/* Button '● Fill-Ins' */}
+            <button
+              type="button"
+              onClick={() => handleFilterClick("III")}
+              className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors cursor-pointer border touch-manipulation min-h-[30px] sm:min-h-0 ${
+                activeFilter === "III"
+                  ? "bg-amber-50 text-amber-800 border-amber-400 font-bold shadow-2xs"
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100"
+              }`}
+              title="Filter Kuadran III: Fill-Ins"
+            >
+              <span className="text-amber-600 font-bold">●</span>
+              <span>Fill-Ins</span>
+              <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.III})</span>
+            </button>
 
-          {/* Button '✕ Tunda / Hindari' */}
-          <button
-            type="button"
-            onClick={() => handleFilterClick("IV")}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer border ${
-              activeFilter === "IV"
-                ? "bg-rose-50 text-rose-800 border-rose-400 font-bold shadow-2xs"
-                : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
-            }`}
-            title="Filter Kuadran IV: Tunda / Hindari"
-          >
-            <span className="text-rose-600 font-bold">✕</span>
-            <span>Tunda / Hindari</span>
-            <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.IV})</span>
-          </button>
+            {/* Button '✕ Tunda / Hindari' */}
+            <button
+              type="button"
+              onClick={() => handleFilterClick("IV")}
+              className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-colors cursor-pointer border touch-manipulation min-h-[30px] sm:min-h-0 ${
+                activeFilter === "IV"
+                  ? "bg-rose-50 text-rose-800 border-rose-400 font-bold shadow-2xs"
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100"
+              }`}
+              title="Filter Kuadran IV: Tunda / Hindari"
+            >
+              <span className="text-rose-600 font-bold">✕</span>
+              <span>Tunda / Hindari</span>
+              <span className="text-[10px] opacity-75 font-mono">({quadrantCounts.IV})</span>
+            </button>
+          </div>
 
           {/* Toggle Collapse/Expand */}
           <button
             type="button"
             onClick={() => setIsCollapsed((prev) => !prev)}
-            className="inline-flex items-center justify-center gap-1 px-2.5 py-1 text-xs font-medium text-zinc-600 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-md transition-colors cursor-pointer ml-1"
+            className="inline-flex items-center justify-center gap-1 px-2.5 py-1 text-xs font-medium text-zinc-600 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 active:bg-zinc-200 border border-zinc-200 rounded-md transition-colors cursor-pointer touch-manipulation min-h-[30px] sm:min-h-0"
             title={isCollapsed ? "Buka Tampilan Grafik" : "Sembunyikan Grafik"}
           >
             <span>{isCollapsed ? "Buka" : "Tutup"}</span>
@@ -676,13 +678,13 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                       onMouseLeave={() => setHoveredIdeaId(null)}
                       onClick={(e) => handlePointClick(idea.id, e)}
                     >
-                      {/* Expanded Invisible Touch Target */}
+                      {/* Expanded Invisible Touch Target (Besar & Nyaman untuk Layar Sentuh Mobile) */}
                       <circle
                         cx={cx}
                         cy={cy}
-                        r="20"
+                        r="28"
                         fill="transparent"
-                        className="cursor-pointer"
+                        className="cursor-pointer touch-manipulation"
                       />
 
                       {/* Selected Outer Ring */}
@@ -924,14 +926,14 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
           )}
 
           {/* Quick Helper Hint */}
-          <div className="flex items-center justify-between text-[11px] text-zinc-500 pt-1 border-t border-zinc-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-zinc-500 pt-1 border-t border-zinc-100">
             <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
               <span>
-                Tip: Titik koordinat terplot otomatis berdasarkan nilai Feasibility &amp; Impact (1–5). Arahkan kursor atau klik titik untuk melihat detail.
+                Tip: Titik koordinat terplot otomatis berdasarkan nilai Feasibility &amp; Impact (1–5). Arahkan kursor atau sentuh titik untuk melihat detail.
               </span>
             </span>
-            <span className="font-mono text-zinc-400 hidden sm:inline">
+            <span className="font-mono text-zinc-400 shrink-0 text-left sm:text-right">
               Terplot: {plottableIdeas.length} / {ideas.length} Ide
             </span>
           </div>
