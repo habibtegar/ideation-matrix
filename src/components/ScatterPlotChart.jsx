@@ -40,13 +40,13 @@ const BOUNDARY_Y = PADDING_TOP + INNER_HEIGHT / 2; // 206
 const getX = (feasibility) => {
   const val = Number(feasibility);
   if (val <= 3.5) {
-    const minX = PADDING_LEFT + 60;
-    const maxX = BOUNDARY_X - 50;
+    const minX = PADDING_LEFT + 75;
+    const maxX = BOUNDARY_X - 55;
     const clamped = Math.max(1, Math.min(3.5, val));
     return minX + ((clamped - 1) / 2.5) * (maxX - minX);
   } else {
-    const minX = BOUNDARY_X + 50;
-    const maxX = PADDING_LEFT + INNER_WIDTH - 60;
+    const minX = BOUNDARY_X + 55;
+    const maxX = PADDING_LEFT + INNER_WIDTH - 75;
     const clamped = Math.max(3.5, Math.min(5, val));
     return minX + ((clamped - 3.5) / 1.5) * (maxX - minX);
   }
@@ -55,13 +55,15 @@ const getX = (feasibility) => {
 const getY = (impact) => {
   const val = Number(impact);
   if (val >= 3.5) {
-    const minY = PADDING_TOP + 50;
+    // Sisi Atas: minY berjarak 78px dari PADDING_TOP agar titik tidak mepet dengan pill badge
+    const minY = PADDING_TOP + 78;
     const maxY = BOUNDARY_Y - 45;
     const clamped = Math.max(3.5, Math.min(5, val));
     return minY + ((5 - clamped) / 1.5) * (maxY - minY);
   } else {
+    // Sisi Bawah: maxY berjarak 65px dari bawah agar titik tidak mepet dengan pill badge bawah
     const minY = BOUNDARY_Y + 45;
-    const maxY = PADDING_TOP + INNER_HEIGHT - 50;
+    const maxY = PADDING_TOP + INNER_HEIGHT - 65;
     const clamped = Math.max(1, Math.min(3.5, val));
     return minY + ((3.5 - clamped) / 2.5) * (maxY - minY);
   }
@@ -78,7 +80,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
     return ideas
       .map((idea, index) => ({
         ...idea,
-        seqNumber: index + 1,
+        seqNumber: idea.seqNumber || index + 1,
       }))
       .filter((item) => item.feasibility != null && item.impact != null);
   }, [ideas]);
@@ -501,19 +503,19 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
 
                 {/* Top-Left: Kuadran II (Major Projects) */}
                 <g
-                  transform={`translate(${PADDING_LEFT + 14}, ${PADDING_TOP + 14})`}
+                  transform={`translate(${PADDING_LEFT + 14}, ${PADDING_TOP + 12})`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="122"
+                    width="126"
                     height="26"
                     rx="6"
                     fill="#eff6ff"
                     stroke="#bfdbfe"
                     strokeWidth="1"
                   />
-                  {/* Diamond Icon ◆ */}
-                  <polygon points="12,13 16,8 20,13 16,18" fill="#1d4ed8" />
+                  {/* Diamond Icon ◆ (Crisp Vector Polygon) */}
+                  <polygon points="14,7.5 19,13 14,18.5 9,13" fill="#1d4ed8" />
                   <text
                     x="27"
                     y="17"
@@ -525,28 +527,24 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
 
                 {/* Top-Right: Kuadran I (Quick Wins) */}
                 <g
-                  transform={`translate(${PADDING_LEFT + INNER_WIDTH - 116}, ${PADDING_TOP + 14})`}
+                  transform={`translate(${PADDING_LEFT + INNER_WIDTH - 116}, ${PADDING_TOP + 12})`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="102"
+                    width="112"
                     height="26"
                     rx="6"
                     fill="#ecfdf5"
                     stroke="#a7f3d0"
                     strokeWidth="1"
                   />
-                  {/* Star Icon ★ */}
+                  {/* Star Icon ★ (Symmetrical 5-Point Vector Polygon, centered at x=14, y=13) */}
+                  <polygon
+                    points="14,6 16.2,10.8 21.5,11.3 17.5,14.8 18.7,19.8 14,17.2 9.3,19.8 10.5,14.8 6.5,11.3 11.8,10.8"
+                    fill="#059669"
+                  />
                   <text
-                    x="12"
-                    y="17.5"
-                    dominantBaseline="central"
-                    className="text-[13px] fill-emerald-600 font-bold"
-                  >
-                    ★
-                  </text>
-                  <text
-                    x="25"
+                    x="27"
                     y="17"
                     className="text-[12px] font-bold fill-emerald-800 font-sans"
                   >
@@ -560,24 +558,34 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="132"
+                    width="134"
                     height="26"
                     rx="6"
                     fill="#fff1f2"
                     stroke="#fecdd3"
                     strokeWidth="1"
                   />
-                  {/* Cross Icon ✕ */}
+                  {/* Cross Icon ✕ (Crisp Vector Cross, perfectly centered at x=14, y=13) */}
+                  <line
+                    x1="10"
+                    y1="9"
+                    x2="18"
+                    y2="17"
+                    stroke="#e11d48"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
+                  <line
+                    x1="18"
+                    y1="9"
+                    x2="10"
+                    y2="17"
+                    stroke="#e11d48"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
                   <text
-                    x="12"
-                    y="17.5"
-                    dominantBaseline="central"
-                    className="text-[13px] fill-rose-600 font-bold"
-                  >
-                    ✕
-                  </text>
-                  <text
-                    x="25"
+                    x="27"
                     y="17"
                     className="text-[12px] font-bold fill-rose-800 font-sans"
                   >
@@ -587,11 +595,11 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
 
                 {/* Bottom-Right: Kuadran III (Fill-Ins) */}
                 <g
-                  transform={`translate(${PADDING_LEFT + INNER_WIDTH - 94}, ${PADDING_TOP + INNER_HEIGHT - 38})`}
+                  transform={`translate(${PADDING_LEFT + INNER_WIDTH - 96}, ${PADDING_TOP + INNER_HEIGHT - 38})`}
                   className="pointer-events-none select-none"
                 >
                   <rect
-                    width="80"
+                    width="86"
                     height="26"
                     rx="6"
                     fill="#fffbeb"
@@ -601,7 +609,7 @@ export default function ScatterPlotChart({ ideas = [], onViewDetail }) {
                   {/* Dot Icon ● */}
                   <circle cx="14" cy="13" r="3.5" fill="#d97706" />
                   <text
-                    x="24"
+                    x="25"
                     y="17"
                     className="text-[12px] font-bold fill-amber-800 font-sans"
                   >

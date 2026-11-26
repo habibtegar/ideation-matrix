@@ -25,15 +25,15 @@ export default function TableView({
   onDeleteIdea,
   onViewDetail,
 }) {
-  const [sortField, setSortField] = useState("impact");
-  const [sortDirection, setSortDirection] = useState("desc"); // 'asc' or 'desc'
+  const [sortField, setSortField] = useState("seqNumber");
+  const [sortDirection, setSortDirection] = useState("asc"); // 'asc' or 'desc'
 
   const handleSort = (field) => {
     if (sortField === field) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortField(field);
-      setSortDirection(field === "title" || field === "target" ? "asc" : "desc");
+      setSortDirection(field === "title" || field === "target" || field === "seqNumber" ? "asc" : "desc");
     }
   };
 
@@ -43,17 +43,21 @@ export default function TableView({
       let valB = b[sortField];
 
       // Custom field sorting
-      if (sortField === "totalScore") {
+      if (sortField === "seqNumber") {
+        valA = a.seqNumber ?? 999;
+        valB = b.seqNumber ?? 999;
+      } else if (sortField === "totalScore") {
         valA = (a.feasibility ?? 0) + (a.impact ?? 0);
         valB = (b.feasibility ?? 0) + (b.impact ?? 0);
       } else if (sortField === "quadrant") {
-        const order = { I: 1, II: 2, IV: 3, III: 4, pool: 5 };
+        const order = { I: 1, II: 2, III: 3, IV: 4, pool: 5 };
         valA = order[a.quadrant || "pool"] || 99;
         valB = order[b.quadrant || "pool"] || 99;
       }
 
+      // Tie-breaker: preserve natural LKPD sequence number order (#1, #2, #3, ...)
       if (valA === valB) {
-        return a.title.localeCompare(b.title);
+        return (a.seqNumber ?? 0) - (b.seqNumber ?? 0);
       }
 
       if (valA == null) return 1;
@@ -102,6 +106,7 @@ export default function TableView({
               onChange={(e) => handleSort(e.target.value)}
               className="bg-white border border-zinc-200 rounded-md px-2 py-1 text-xs text-zinc-800 focus:outline-none focus:ring-1 focus:ring-zinc-900 cursor-pointer"
             >
+              <option value="seqNumber">Nomor (#1–#10)</option>
               <option value="totalScore">Total Skor</option>
               <option value="impact">Impact</option>
               <option value="feasibility">Feasibility</option>
@@ -158,7 +163,16 @@ export default function TableView({
           <thead>
             <tr className="border-b border-zinc-200 bg-zinc-50/80 text-zinc-600 font-semibold uppercase tracking-wider text-[11px]">
               {/* 1. No */}
-              <th className="py-2.5 px-2 text-center">No.</th>
+              <th
+                onClick={() => handleSort("seqNumber")}
+                className="py-2.5 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
+                title="Urutkan berdasarkan Nomor Urut LKPD"
+              >
+                <div className="flex items-center justify-center gap-0.5">
+                  <span className="truncate">No.</span>
+                  {renderSortIcon("seqNumber")}
+                </div>
+              </th>
 
               {/* 2. Nama Ide */}
               <th
@@ -257,8 +271,8 @@ export default function TableView({
                     className="hover:bg-zinc-50/70 transition-colors"
                   >
                     {/* 1. No */}
-                    <td className="py-2.5 px-2 text-center text-zinc-400 font-mono text-xs align-middle">
-                      {index + 1}
+                    <td className="py-2.5 px-2 text-center text-zinc-700 font-mono text-xs font-semibold align-middle">
+                      #{idea.seqNumber || index + 1}
                     </td>
 
                     {/* 2. Nama Ide (Text Wrapping, tidak memaksa horizontal scroll) */}
@@ -406,7 +420,7 @@ export default function TableView({
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                      #{index + 1}
+                      #{idea.seqNumber || index + 1}
                     </span>
                     <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
                       {isPembeli ? (

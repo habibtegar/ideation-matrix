@@ -24,8 +24,15 @@ export default function App() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved !== null) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((item, idx) => ({
+            ...item,
+            seqNumber:
+              item.seqNumber ||
+              (item.id?.startsWith("lkpd-")
+                ? parseInt(item.id.replace("lkpd-", ""), 10)
+                : idx + 1),
+          }));
         }
       }
     } catch (e) {
@@ -160,8 +167,10 @@ export default function App() {
       showToast(`Ide "${ideaData.title}" berhasil diperbarui.`);
     } else {
       // Create new
+      const nextSeq = ideas.length > 0 ? Math.max(...ideas.map((i) => i.seqNumber || 0)) + 1 : 1;
       const newIdea = {
         id: generateUniqueId(),
+        seqNumber: nextSeq,
         ...ideaData,
         quadrant: autoQuadrant,
         createdAt: Date.now(),
@@ -323,7 +332,7 @@ export default function App() {
               {ideas.map((idea, idx) => (
                 <tr key={idea.id} className="border-b border-zinc-200">
                   <td className="p-2 border-r border-zinc-200 text-center font-mono font-medium">
-                    {idx + 1}
+                    #{idea.seqNumber || idx + 1}
                   </td>
                   <td className="p-2 border-r border-zinc-200 font-medium">
                     {idea.title}
@@ -375,6 +384,7 @@ export default function App() {
       {isModalOpen && (
         <IdeaModal
           isOpen={isModalOpen}
+          editingIdea={editingIdea}
           initialData={editingIdea}
           onClose={() => {
             setIsModalOpen(false);

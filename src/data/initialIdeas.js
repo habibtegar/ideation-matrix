@@ -6,6 +6,7 @@
 export const INITIAL_IDEAS = [
   {
     id: "lkpd-1",
+    seqNumber: 1,
     title: "Saved Foot Profile / Foot ID",
     description: "Penyimpanan profil ukuran kaki otomatis di akun.",
     target: "Pembeli",
@@ -17,6 +18,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-2",
+    seqNumber: 2,
     title: "Interactive Foot-Ruler Modal",
     description: "Kalkulator ukuran kaki berbasis panjang cm.",
     target: "Pembeli",
@@ -28,6 +30,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-3",
+    seqNumber: 3,
     title: "1-Click Size Exchange Guarantee",
     description: "Garansi tukar size 1-klik tanpa form rumit.",
     target: "Pembeli",
@@ -39,6 +42,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-4",
+    seqNumber: 4,
     title: "Batch Footwear Variant Manager",
     description: "Memodifikasi form input menjadi form tabel massal untuk update harga dan stok ukuran 36–45 sekaligus.",
     target: "Penjual",
@@ -50,6 +54,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-5",
+    seqNumber: 5,
     title: "Automated Restock Alert",
     description: "Mengganti pengecekan gudang manual dengan sistem notifikasi otomatis saat stok ukuran tertentu tinggal kurang dari 3 pasang.",
     target: "Penjual",
@@ -61,6 +66,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-6",
+    seqNumber: 6,
     title: "Midtrans Auto Payment Verification",
     description: "Menjadikan konfirmasi pembayaran manual dengan sistem verifikasi pembayaran otomatis.",
     target: "Pembeli",
@@ -72,6 +78,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-7",
+    seqNumber: 7,
     title: "Dynamic Cart Timer",
     description: "Memodifikasi keranjang belanja dengan timer penahanan stok sepatu 15 menit saat checkout promo terbatas.",
     target: "Pembeli",
@@ -83,6 +90,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-8",
+    seqNumber: 8,
     title: "Footwear & Care-Kit Bundling",
     description: "Menggabungkan penjualan sepatu/sandal dengan kit pembersih dalam satu paket hemat di dashboard seller.",
     target: "Penjual",
@@ -94,6 +102,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-9",
+    seqNumber: 9,
     title: "Modified Review Filter by Size",
     description: "Memodifikasi fitur ulasan produk agar pembeli bisa menyaring ulasan berdasarkan ukuran kaki.",
     target: "Pembeli",
@@ -105,6 +114,7 @@ export const INITIAL_IDEAS = [
   },
   {
     id: "lkpd-10",
+    seqNumber: 10,
     title: "In-App Barcode Inventory Scanner",
     description: "Mengadaptasi pemindai barcode minimarket menggunakan kamera HP/webcam untuk cek stok sepatu gudang.",
     target: "Penjual",

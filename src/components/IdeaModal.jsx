@@ -298,8 +298,10 @@ function IdeaModalForm({ onClose, onSave, editingIdea }) {
   );
 }
 
-export default function IdeaModal({ isOpen, onClose, onSave, editingIdea }) {
+export default function IdeaModal({ isOpen, onClose, onSave, editingIdea, initialData }) {
   if (!isOpen) return null;
+
+  const currentIdea = editingIdea || initialData;
 
   return (
     <div
@@ -307,10 +309,10 @@ export default function IdeaModal({ isOpen, onClose, onSave, editingIdea }) {
       onClick={onClose}
     >
       <IdeaModalForm
-        key={editingIdea?.id || "new"}
+        key={currentIdea?.id || "new"}
         onClose={onClose}
         onSave={onSave}
-        editingIdea={editingIdea}
+        editingIdea={currentIdea}
       />
     </div>
   );
