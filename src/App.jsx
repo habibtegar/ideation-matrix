@@ -4,7 +4,6 @@ import StatsSummary from "./components/StatsSummary";
 import ScatterPlotChart from "./components/ScatterPlotChart";
 import FilterBar from "./components/FilterBar";
 import TableView from "./components/TableView";
-import AnalysisSummary from "./components/AnalysisSummary";
 import IdeaModal from "./components/IdeaModal";
 import IdeaDetailModal from "./components/IdeaDetailModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
@@ -290,11 +289,6 @@ export default function App() {
             onDeleteIdea={handleDeleteClick}
             onViewDetail={handleOpenDetailModal}
           />
-        </section>
-
-        {/* 4. Kesimpulan Analisis Otomatis & Rekomendasi Prioritas (LKPD) */}
-        <section aria-label="Kesimpulan Analisis dan Rekomendasi Prioritas LKPD">
-          <AnalysisSummary ideas={ideas} />
         </section>
 
         {/* Print-Only: Rekapitulasi Lengkap Seluruh Ide LKPD untuk Ekspor PDF / Cetak */}

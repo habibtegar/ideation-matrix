@@ -11,6 +11,14 @@ import {
 } from "lucide-react";
 import { QUADRANTS } from "../utils/matrixUtils";
 
+/**
+ * TableView Component
+ * - Tampilan tabel 100% responsive mengikuti container dengan `table-layout: fixed`.
+ * - Seluruh kolom terlihat dalam satu layar desktop tanpa horizontal scrollbar.
+ * - Padding cell compact dan ukuran font proporsional.
+ * - Kolom nama ide & deskripsi menggunakan text wrapping yang rapi tanpa memperlebar tabel.
+ * - Untuk layar tablet dan HP disediakan Responsive Card Layout.
+ */
 export default function TableView({
   ideas,
   onEditIdea,
@@ -63,18 +71,19 @@ export default function TableView({
 
   const renderSortIcon = (field) => {
     if (sortField !== field) {
-      return <ArrowUpDown className="w-3 h-3 text-zinc-300 group-hover:text-zinc-500" />;
+      return <ArrowUpDown className="w-3 h-3 text-zinc-300 group-hover:text-zinc-500 shrink-0" />;
     }
     return sortDirection === "asc" ? (
-      <ArrowUp className="w-3 h-3 text-zinc-900" />
+      <ArrowUp className="w-3 h-3 text-zinc-900 shrink-0" />
     ) : (
-      <ArrowDown className="w-3 h-3 text-zinc-900" />
+      <ArrowDown className="w-3 h-3 text-zinc-900 shrink-0" />
     );
   };
 
   return (
     <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-xs">
-      <div className="p-4 border-b border-zinc-200 bg-zinc-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      {/* Header Bar Tabel */}
+      <div className="p-3.5 sm:p-4 border-b border-zinc-200 bg-zinc-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-sm sm:text-base font-bold text-zinc-900 tracking-tight">
             Tabel Rangkuman Analisis LKPD
@@ -83,79 +92,155 @@ export default function TableView({
             Daftar lengkap fitur produk dengan penilaian Feasibility, Impact, dan status kuadran.
           </p>
         </div>
-        <div className="text-xs font-mono text-zinc-500 bg-white px-3 py-1 rounded-md border border-zinc-200 self-start sm:self-auto">
-          Total Baris: <strong className="text-zinc-900">{sortedIdeas.length}</strong>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          {/* Quick Sort Selector untuk Tampilan Tablet & Mobile */}
+          <div className="flex items-center gap-1.5 lg:hidden text-xs">
+            <span className="text-zinc-500 font-medium">Urut:</span>
+            <select
+              value={sortField}
+              onChange={(e) => handleSort(e.target.value)}
+              className="bg-white border border-zinc-200 rounded-md px-2 py-1 text-xs text-zinc-800 focus:outline-none focus:ring-1 focus:ring-zinc-900 cursor-pointer"
+            >
+              <option value="totalScore">Total Skor</option>
+              <option value="impact">Impact</option>
+              <option value="feasibility">Feasibility</option>
+              <option value="title">Nama Ide</option>
+              <option value="target">Target Pengguna</option>
+              <option value="quadrant">Kuadran</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))}
+              className="p-1 bg-white border border-zinc-200 rounded-md text-zinc-700 hover:bg-zinc-50 cursor-pointer"
+              title={
+                sortDirection === "asc"
+                  ? "Urutan Naik (A-Z / Rendah ke Tinggi)"
+                  : "Urutan Turun (Z-A / Tinggi ke Rendah)"
+              }
+            >
+              {sortDirection === "asc" ? (
+                <ArrowUp className="w-3.5 h-3.5 text-zinc-700" />
+              ) : (
+                <ArrowDown className="w-3.5 h-3.5 text-zinc-700" />
+              )}
+            </button>
+          </div>
+
+          <div className="text-xs font-mono text-zinc-500 bg-white px-3 py-1 rounded-md border border-zinc-200">
+            Total Baris: <strong className="text-zinc-900">{sortedIdeas.length}</strong>
+          </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-xs sm:text-sm">
+      {/* ========================================================
+          1. TAMPILAN TABEL DESKTOP (lg:table)
+          - table-layout: fixed dengan 100% lebar container
+          - Bebas horizontal scrollbar pada layar desktop
+          - Pembagian kolom proporsional dan text wrapping aman
+          ======================================================== */}
+      <div className="hidden lg:block w-full overflow-hidden">
+        <table className="w-full table-fixed border-collapse text-xs">
+          {/* Definisi Lebar Proporsional Setiap Kolom (Total = 100%) */}
+          <colgroup>
+            <col className="w-[4%]" />  {/* 1. No */}
+            <col className="w-[18%]" /> {/* 2. Nama Ide */}
+            <col className="w-[24%]" /> {/* 3. Deskripsi */}
+            <col className="w-[10%]" /> {/* 4. Target Pengguna */}
+            <col className="w-[6%]" />  {/* 5. Feasibility */}
+            <col className="w-[6%]" />  {/* 6. Impact */}
+            <col className="w-[6%]" />  {/* 7. Total Skor */}
+            <col className="w-[12%]" /> {/* 8. Kuadran */}
+            <col className="w-[8%]" />  {/* 9. Prioritas */}
+            <col className="w-[6%]" />  {/* 10. Aksi */}
+          </colgroup>
+
           <thead>
             <tr className="border-b border-zinc-200 bg-zinc-50/80 text-zinc-600 font-semibold uppercase tracking-wider text-[11px]">
-              <th className="py-3 px-3.5 w-12 text-center">No.</th>
+              {/* 1. No */}
+              <th className="py-2.5 px-2 text-center">No.</th>
+
+              {/* 2. Nama Ide */}
               <th
                 onClick={() => handleSort("title")}
-                className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-2.5 px-2 text-left cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
-                <div className="flex items-center gap-1.5">
-                  <span>Nama Ide</span>
+                <div className="flex items-center gap-1">
+                  <span className="truncate">Nama Ide</span>
                   {renderSortIcon("title")}
                 </div>
               </th>
-              <th className="py-3 px-3.5 min-w-[200px]">Deskripsi</th>
+
+              {/* 3. Deskripsi */}
+              <th className="py-2.5 px-2 text-left">Deskripsi</th>
+
+              {/* 4. Target Pengguna */}
               <th
                 onClick={() => handleSort("target")}
-                className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-2.5 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
-                <div className="flex items-center gap-1.5">
-                  <span>Target Pengguna</span>
+                <div className="flex items-center justify-center gap-1">
+                  <span className="truncate">Target</span>
                   {renderSortIcon("target")}
                 </div>
               </th>
+
+              {/* 5. Feasibility */}
               <th
                 onClick={() => handleSort("feasibility")}
-                className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group text-center"
+                className="py-2.5 px-1.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
-                <div className="flex items-center justify-center gap-1.5">
-                  <span>Feasibility</span>
+                <div className="flex items-center justify-center gap-0.5">
+                  <span className="truncate">Feas</span>
                   {renderSortIcon("feasibility")}
                 </div>
               </th>
+
+              {/* 6. Impact */}
               <th
                 onClick={() => handleSort("impact")}
-                className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group text-center"
+                className="py-2.5 px-1.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
-                <div className="flex items-center justify-center gap-1.5">
-                  <span>Impact</span>
+                <div className="flex items-center justify-center gap-0.5">
+                  <span className="truncate">Impact</span>
                   {renderSortIcon("impact")}
                 </div>
               </th>
+
+              {/* 7. Total Skor */}
               <th
                 onClick={() => handleSort("totalScore")}
-                className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group text-center"
+                className="py-2.5 px-1.5 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
-                <div className="flex items-center justify-center gap-1.5">
-                  <span>Total Skor</span>
+                <div className="flex items-center justify-center gap-0.5">
+                  <span className="truncate">Total</span>
                   {renderSortIcon("totalScore")}
                 </div>
               </th>
+
+              {/* 8. Kuadran */}
               <th
                 onClick={() => handleSort("quadrant")}
-                className="py-3 px-3.5 cursor-pointer hover:bg-zinc-100/80 select-none group"
+                className="py-2.5 px-2 text-center cursor-pointer hover:bg-zinc-100/80 select-none group"
               >
-                <div className="flex items-center gap-1.5">
-                  <span>Kuadran</span>
+                <div className="flex items-center justify-center gap-1">
+                  <span className="truncate">Kuadran</span>
                   {renderSortIcon("quadrant")}
                 </div>
               </th>
-              <th className="py-3 px-3.5">Prioritas</th>
-              <th className="py-3 px-3.5 text-right w-24">Aksi</th>
+
+              {/* 9. Prioritas */}
+              <th className="py-2.5 px-2 text-center">Prioritas</th>
+
+              {/* 10. Aksi */}
+              <th className="py-2.5 px-2 text-center">Aksi</th>
             </tr>
           </thead>
+
           <tbody className="divide-y divide-zinc-200/70">
             {sortedIdeas.length === 0 ? (
               <tr>
-                <td colSpan={10} className="py-12 text-center text-zinc-400">
+                <td colSpan={10} className="py-10 text-center text-zinc-400">
                   Tidak ada ide yang cocok dengan filter.
                 </td>
               </tr>
@@ -171,39 +256,39 @@ export default function TableView({
                     key={idea.id}
                     className="hover:bg-zinc-50/70 transition-colors"
                   >
-                    {/* No. */}
-                    <td className="py-3 px-3.5 text-center text-zinc-400 font-mono text-xs">
+                    {/* 1. No */}
+                    <td className="py-2.5 px-2 text-center text-zinc-400 font-mono text-xs align-middle">
                       {index + 1}
                     </td>
 
-                    {/* Nama Ide */}
-                    <td className="py-3 px-3.5 font-semibold text-zinc-900 whitespace-nowrap">
+                    {/* 2. Nama Ide (Text Wrapping, tidak memaksa horizontal scroll) */}
+                    <td className="py-2.5 px-2 font-semibold text-zinc-900 break-words leading-snug align-middle">
                       {idea.title}
                     </td>
 
-                    {/* Deskripsi */}
-                    <td className="py-3 px-3.5 text-zinc-600 text-xs leading-relaxed max-w-xs">
+                    {/* 3. Deskripsi (Text Wrapping rapi ke baris berikutnya) */}
+                    <td className="py-2.5 px-2 text-zinc-600 text-xs leading-relaxed break-words align-middle">
                       {idea.description || "-"}
                     </td>
 
-                    {/* Target Pengguna */}
-                    <td className="py-3 px-3.5 whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+                    {/* 4. Target Pengguna (Badge ringkas) */}
+                    <td className="py-2.5 px-2 text-center align-middle">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
                         {isPembeli ? (
-                          <ShoppingBag className="w-3 h-3 text-zinc-500" />
+                          <ShoppingBag className="w-3 h-3 text-zinc-500 shrink-0" />
                         ) : (
-                          <Store className="w-3 h-3 text-zinc-500" />
+                          <Store className="w-3 h-3 text-zinc-500 shrink-0" />
                         )}
                         <span>{idea.target}</span>
                       </span>
                     </td>
 
-                    {/* Feasibility */}
-                    <td className="py-3 px-3.5 text-center whitespace-nowrap">
+                    {/* 5. Feasibility */}
+                    <td className="py-2.5 px-1.5 text-center font-mono text-xs font-semibold text-zinc-800 align-middle">
                       <span
-                        className={`inline-block font-mono text-xs font-semibold px-2 py-0.5 rounded border ${
+                        className={`inline-block px-1.5 py-0.5 rounded border ${
                           idea.feasibility >= 4
-                            ? "bg-zinc-100 text-zinc-900 border-zinc-300"
+                            ? "bg-zinc-100 text-zinc-900 border-zinc-300 font-bold"
                             : "bg-white text-zinc-600 border-zinc-200"
                         }`}
                       >
@@ -211,12 +296,12 @@ export default function TableView({
                       </span>
                     </td>
 
-                    {/* Impact */}
-                    <td className="py-3 px-3.5 text-center whitespace-nowrap">
+                    {/* 6. Impact */}
+                    <td className="py-2.5 px-1.5 text-center font-mono text-xs font-semibold text-zinc-800 align-middle">
                       <span
-                        className={`inline-block font-mono text-xs font-semibold px-2 py-0.5 rounded border ${
+                        className={`inline-block px-1.5 py-0.5 rounded border ${
                           idea.impact >= 4
-                            ? "bg-zinc-100 text-zinc-900 border-zinc-300"
+                            ? "bg-zinc-100 text-zinc-900 border-zinc-300 font-bold"
                             : "bg-white text-zinc-600 border-zinc-200"
                         }`}
                       >
@@ -224,43 +309,43 @@ export default function TableView({
                       </span>
                     </td>
 
-                    {/* Total Skor */}
-                    <td className="py-3 px-3.5 text-center whitespace-nowrap">
-                      <span className="inline-block font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-zinc-900 text-white shadow-2xs">
+                    {/* 7. Total Skor */}
+                    <td className="py-2.5 px-1.5 text-center align-middle">
+                      <span className="inline-block font-mono text-xs font-bold px-2 py-0.5 rounded bg-zinc-900 text-white shadow-2xs">
                         {totalScore}
                       </span>
                     </td>
 
-                    {/* Kuadran (Dihitung Otomatis Berdasarkan Skor) */}
-                    <td className="py-3 px-3.5 whitespace-nowrap">
+                    {/* 8. Kuadran */}
+                    <td className="py-2.5 px-2 text-center align-middle">
                       <span
-                        className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md border ${
+                        className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${
                           quad.tagColor
                         }`}
                         title={`Kuadran ${quad.id} - ${quad.name}`}
                       >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${quad.dotColor}`}
-                        ></span>
-                        <span>{quad.id === "pool" ? "Idea Pool" : `Kuadran ${quad.id} (${quad.name})`}</span>
+                          className={`w-1.5 h-1.5 rounded-full shrink-0 ${quad.dotColor}`}
+                        />
+                        <span>{quad.id === "pool" ? "Pool" : `Kuadran ${quad.id}`}</span>
                       </span>
                     </td>
 
-                    {/* Prioritas */}
-                    <td className="py-3 px-3.5 whitespace-nowrap">
-                      <div className="flex flex-col">
+                    {/* 9. Prioritas */}
+                    <td className="py-2.5 px-2 text-center align-middle">
+                      <div className="flex flex-col items-center">
                         <span className="text-xs font-semibold text-zinc-800">
                           {quad.priority}
                         </span>
-                        <span className="text-[10px] text-zinc-400">
+                        <span className="text-[10px] text-zinc-400 truncate max-w-full">
                           {quad.name}
                         </span>
                       </div>
                     </td>
 
-                    {/* Aksi */}
-                    <td className="py-3 px-3.5 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1">
+                    {/* 10. Aksi (Ikon ringkas berjarak rapi) */}
+                    <td className="py-2.5 px-2 text-center align-middle">
+                      <div className="flex items-center justify-center gap-0.5">
                         <button
                           type="button"
                           onClick={() => onViewDetail && onViewDetail(idea)}
@@ -293,6 +378,123 @@ export default function TableView({
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* ========================================================
+          2. TAMPILAN RESPONSIVE CARD LAYOUT UNTUK TABLET & HP (lg:hidden)
+          - Memastikan informasi mudah dibaca tanpa terjepit di layar kecil
+          - Menampilkan seluruh detail, skor, kuadran, dan tombol aksi
+          ======================================================== */}
+      <div className="lg:hidden p-3 sm:p-4 bg-zinc-50/30 divide-y divide-zinc-200/60 sm:divide-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
+        {sortedIdeas.length === 0 ? (
+          <div className="py-10 text-center text-zinc-400 col-span-2">
+            Tidak ada ide yang cocok dengan filter.
+          </div>
+        ) : (
+          sortedIdeas.map((idea, index) => {
+            const qid = idea.quadrant || "pool";
+            const quad = QUADRANTS[qid];
+            const isPembeli = idea.target === "Pembeli";
+            const totalScore = (idea.feasibility ?? 0) + (idea.impact ?? 0);
+
+            return (
+              <div
+                key={idea.id}
+                className="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-2xs space-y-3 mb-3 sm:mb-0 hover:border-zinc-300 transition-colors"
+              >
+                {/* Bar Atas: Nomor, Target Pengguna & Tombol Aksi */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-700 font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                      #{index + 1}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+                      {isPembeli ? (
+                        <ShoppingBag className="w-3 h-3 text-zinc-500" />
+                      ) : (
+                        <Store className="w-3 h-3 text-zinc-500" />
+                      )}
+                      <span>{idea.target}</span>
+                    </span>
+                  </div>
+
+                  {/* Tombol Aksi */}
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() => onViewDetail && onViewDetail(idea)}
+                      className="p-1.5 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors cursor-pointer"
+                      title="Lihat Detail Lengkap"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onEditIdea(idea)}
+                      className="p-1.5 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors cursor-pointer"
+                      title="Edit Fitur"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDeleteIdea(idea.id)}
+                      className="p-1.5 text-zinc-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
+                      title="Hapus Fitur"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Nama Ide & Deskripsi */}
+                <div>
+                  <h3 className="font-bold text-zinc-900 text-sm leading-snug">
+                    {idea.title}
+                  </h3>
+                  {idea.description && (
+                    <p className="text-xs text-zinc-600 leading-relaxed mt-1">
+                      {idea.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Status Kuadran & Tingkat Prioritas */}
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-zinc-100 text-xs flex-wrap">
+                  <span
+                    className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${quad.tagColor}`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${quad.dotColor}`} />
+                    <span>{quad.id === "pool" ? "Idea Pool" : `Kuadran ${quad.id} (${quad.name})`}</span>
+                  </span>
+                  <span className="text-[11px] font-medium text-zinc-600">
+                    Prioritas: <strong className="text-zinc-800">{quad.priority}</strong>
+                  </span>
+                </div>
+
+                {/* Skor Matrix Box: Feasibility, Impact, Total */}
+                <div className="grid grid-cols-3 gap-1.5 pt-1 text-center font-mono text-xs">
+                  <div className="bg-zinc-50 border border-zinc-200 rounded p-1.5">
+                    <span className="text-[9px] text-zinc-400 block uppercase font-medium">Feas</span>
+                    <span className="font-semibold text-zinc-800">
+                      {idea.feasibility != null ? idea.feasibility : "-"}/5
+                    </span>
+                  </div>
+                  <div className="bg-zinc-50 border border-zinc-200 rounded p-1.5">
+                    <span className="text-[9px] text-zinc-400 block uppercase font-medium">Impact</span>
+                    <span className="font-semibold text-zinc-800">
+                      {idea.impact != null ? idea.impact : "-"}/5
+                    </span>
+                  </div>
+                  <div className="bg-zinc-900 text-white rounded p-1.5">
+                    <span className="text-[9px] text-zinc-400 block uppercase font-medium">Total</span>
+                    <span className="font-bold text-white">{totalScore}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
